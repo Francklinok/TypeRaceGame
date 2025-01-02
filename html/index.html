@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TypeRacer Game V1.0</title>
+    <link rel="stylesheet" href="../css/index.css" />
+    <link rel="icon" type="image/webp" href="./favicon.webp" />
+  </head>
+  <body>
+    <script src="../js/index.js" defer></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script> -->
+    <header>
+      <div class="title">
+        <h1>TypeRacer Game V1.0</h1>
+        <img class="logo" src="#" alt="Logo of the game" />
+      </div>
+    </header>
+    <main>
+      <section class="main-section">
+        <!-- Left Section -->
+        <section class="left-section">
+          <div class="container">
+            <div class="first-race">
+              <h2>You vs Computer Race</h2>
+              <p>
+                Run against a bot that will have a random speed between 20wpm
+                and 100wpm. Your mission is to type the text faster than the
+                bot. Good Luck!!!
+              </p>
+              <span>Try It!</span>
+            </div>
+            <div class="second-race">
+                <h2>Custom Race</h2>
+                <p>
+                  Choose exactly what you want for your next race. You can
+                  choose your bots (challengers), their name, their speed, and
+                  the number of bots. Good Luck!!!
+                </p>
+                <span>Try It!</span>
+              </div>
+              
+            <div class="third-race">
+              <h2>Normal Race</h2>
+              <p>
+                Train on your own before taking on the incredibly fast bots.
+                Good Luck!!!
+              </p>
+              <span>Try It!</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Center Section -->
+        <section class="center-section">
+
+          <section class= "select-area">
+
+            <div class="creat">
+
+                <div class="custom-race">
+                  <h2>Custom Computer Race</h2>
+                  <p>
+                    Choose exactly what you want for your next race. You can
+                    choose your bots (challengers) , their name, their speed and
+                    the number of bot. Good Luck!!!
+                  </p>
+                </div>
+
+                <div class="select">
+
+                  <div class="name">
+                    <span>name</span>
+                    <!-- <div class = "names">
+                      <span>user</span>
+                    </div> -->
+                  </div>
+
+                  <div class="power">
+                    <span>powers</span>
+                    <!-- <div class = "powers">
+                      <span>power</span>
+                    </div> -->
+                  </div>
+
+                  <div class="add">
+                    <span>add</span>
+                    </div>
+                  <div class="remove">
+                    <span>remove</span>
+                 
+                </div>
+
+                 <div class = "submit">
+                    <button>Start</button>
+                </div>
+
+              </div>
+            </div>
+            
+          </section>
+
+          <section class = "add-section">
+
+            <div class = "text-register">
+              <p>Register</p>
+            </div>
+
+            <div class = "addElement">
+              
+              <div class = user-name">
+                <span>Add name: </span>
+                <input type ="text" placeholder=""/>
+              </div>
+
+              <div class = "user-power">
+                <span>Add power: </span> 
+                <input type = "text" placeholder=""/>
+              </div>
+
+              <div class = "bot-color">
+                <!-- <span >color</span> -->
+                <button>Choose color</button>
+              </div>
+
+            </div>
+
+            <div class = "register">
+              <button>Register</button>
+            </div>
+          </section>
+
+          <section class = "other">
+            <div class = "names">
+              <span>jacques</span>
+              <span>firmain</span>
+              <span>christelle</span>
+              <span>paul</span>
+            </div>
+            
+            <div class= "power">
+              <span> 4 wpm</span>
+              <span>7 wpm</span>
+            </div>
+          </section>
+          
+          <section class = "open">
+            <div class = "container">
+              <h2>You Vs Computer Race </h2>
+              <p> Run against a bot that will have a 
+                random speed between 20wpm and 100wpm. 
+                Your mission is to type the text faster 
+                than the bot.
+              </p>
+             <span>Good Luck!!!</span>
+             <button>Start</button>
+
+            </div>
+          </section>
+
+          <section class = "main-area">
+            <div class="race">
+            <!-- Users -->
+            <div class="user-left">
+              <div class="first-user">
+                <p>me</p>
+              </div>
+              <div class="second-user">
+                <p>bot</p>
+              </div>
+            </div>
+
+            <!-- Cars and Road -->
+            <div class="car-center">
+              <div class="first-container">
+                <div class="road" id="race-track">
+                  <img
+                    class="user-car"
+                    src="../public/car.svg"
+                    alt="Car for user"
+                  />
+                  <div class="line"></div>
+                </div>
+                <div class="flag">
+                  <span>Finish</span>
+                  <div class=""></div>
+                </div>
+              </div>
+
+              <div class="second-container">
+                <div class="road">
+                  <img
+                    class="bot-car"
+                    src="../public/car6.svg"
+                    alt="Car for bot"
+                  />
+                  <div class="line"></div>
+                </div>
+                <div class="flag">
+                  <span>Finish</span>
+                  <div class=""></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Parameters -->
+            <div class="params-right">
+              <div class="first-params">
+                <p>wpm</p>
+                <p>pm</p>
+              </div>
+              <div class="second-params">
+                <p>wpm</p>
+                <p>pm</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Container -->
+          <div class="text-container">
+            <div class="text">
+              <p class="full"></p>
+            </div>
+            <div class="form">
+              <input
+                class="text-input"
+                type="text"
+                placeholder="Start typing here..."
+              />
+            </div>
+            <span>Time spent</span>
+            <button>Presse to start</button>
+          </div>
+
+          <!-- Graph Section -->
+          <div class="graph">
+            <div class="graph-section">
+              <div class="performance">
+                <canvas id="startChart" width="200" height="150"></canvas>
+                <span>Course Performance</span>
+              </div>
+              <div class="result">
+                <span>Result</span>
+              </div>
+            </div>
+            <div class="replay">
+              <button class="start">
+                <span>Start New Race</span>
+              </button>
+            </div>
+          </div>
+          </section>
+          
+        </section>
+
+      </section>
+    </main>
+    <footer></footer>
+  </body>
+</html>
