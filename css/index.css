@@ -644,17 +644,58 @@ main {
   border-radius: 10px;
   position: relative;
 }
-.main-section .center-section .main-area .text-container .text {
+.main-section .center-section .main-area .text-container .full {
+  display: flex;
+  padding: 10px;
   /* text-align: center; */
   border: 1px solid rgb(190, 183, 183);
-  padding: 10px;
-  box-shadow: 0px 1px 5px 1px rgb(234, 239, 243);
+  /* padding: 10px; */
+  /* box-shadow: 0px 1px 5px 1px rgb(234, 239, 243); */
   border-radius: 10px;
   height: 100px;
 }
-/* .main-section .center-section .text-container .text p {
-  font-size: 15px;
-} */
+
+.main-section .center-section .main-area .text-container .counter {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content:center;
+  font-size: 100px;
+  width: 100px;
+  height: 100px;
+  padding: 50px;
+  border: 5px solid white;
+  border-radius: 50%;
+  box-shadow: 1px 1px 2px 1px white;
+  z-index: 1000;
+  position: absolute;
+  right: 50%;
+  bottom: 40%;
+  font-weight: bold;
+  color: white;
+  background-color: black;
+}
+
+.main-section .center-section .main-area .text-container .togo {
+  display: flex;
+  font-size: 16px;
+  font-weight: bold;
+
+  padding: 20px;
+  border: 1px solid white;
+  text-align: center;
+  align-items: center;
+  position: absolute;
+  right: 50%;
+  bottom: 50%;
+  z-index: 1000;
+}
+
+.main-section .center-section .text-container .text .full span {
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
 .main-section .center-section .main-area .text-container .form {
   padding: 8px;
   border: 1px solid rgb(194, 182, 182);
@@ -668,13 +709,13 @@ main {
   width: 95%;
 }
 
-.main-section .center-section .main-area .text-container span {
+.main-section .center-section .main-area .text-container .time {
   position: absolute;
   right: 0;
   border: 1px solid rgb(209, 192, 192);
-  padding: 20px;
+  padding: 10px;
   margin-right: 10px;
-  bottom: 120px;
+  bottom: 110px;
   border-radius: 10px;
 }
 

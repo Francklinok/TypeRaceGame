@@ -8,6 +8,7 @@ let startTime;
 const textContainer = [
   "Choose exactly what you want for your next race. You can choose your bots (challengers).",
 ];
+
 // Initialiser les lignes sur la piste
 function initializeRoadLines() {
   const lineCounters = document.querySelectorAll(".line");
@@ -24,21 +25,125 @@ function initializeRoadLines() {
   });
 }
 
-function check() {
-  inputArea = document.querySelector()
-}
 // Afficher le texte d'introduction
 function displayText() {
   const textElement = document.querySelector(".full"); // Assurez-vous que l'élément avec la classe "full" existe dans votre HTML
 
-  const p = document.createElement("p");
+  const span = document.createElement("span");
   const text = textContainer[0];
-  p.textContent = text;
-  p.style.fontSize = "16px";
-  p.style.fontFamily = "Roboto";
-  textElement.appendChild(p);
+
+  span.textContent = text;
+  span.style.fontSize = "14px";
+  span.style.fontFamily = "Roboto";
+  textElement.appendChild(span);
 }
 
+// function check() {
+//   const inputArea = document.querySelector(".text-input").value;
+//   const targetText = textContainer[0]; // Utilisez directement le texte de référence
+//   const result = document.querySelector(".result");
+
+//   // Vider le conteneur de résultat
+//   result.innerHTML = "";
+
+//   // Créer un fragment pour optimiser les performances
+//   const fragment = document.createDocumentFragment();
+
+//   // Parcourir chaque caractère du texte cible
+//   targetText.split("").forEach((char, index) => {
+//     const span = document.createElement("span");
+//     span.textContent = char;
+
+//     // Si l'utilisateur a tapé quelque chose à cette position
+//     if (index < inputArea.length) {
+//       if (inputArea[index] === char) {
+//         span.style.color = "green"; // Caractère correct
+//       } else {
+//         span.style.color = "red"; // Caractère incorrect
+//       }
+//     } else {
+//       span.style.color = "gray"; // Pas encore tapé
+//     }
+
+//     fragment.appendChild(span);
+//   });
+
+//   // Ajouter tous les spans en une seule fois
+//   result.appendChild(fragment);
+// }
+
+// function displayText() {
+//   const textElement = document.querySelector(".full");
+//   const resultElement = document.querySelector(".result");
+
+//   // Afficher le texte original dans .full
+//   textElement.textContent = textContainer[0];
+
+//   // Préparer le texte coloré dans .result
+//   const fragment = document.createDocumentFragment();
+//   textContainer[0].split("").forEach((char) => {
+//     const span = document.createElement("span");
+//     span.textContent = char;
+//     span.style.color = "gray"; // Couleur par défaut
+//     fragment.appendChild(span);
+//   });
+
+//   resultElement.innerHTML = ""; // Vider d'abord
+//   resultElement.appendChild(fragment);
+// }
+
+// function check() {
+//   const inputText = document.querySelector(".text-input").value;
+//   const resultElement = document.querySelector(".result");
+//   const spans = resultElement.getElementsByTagName("span");
+
+//   // Colorer chaque caractère
+//   for (let i = 0; i < textContainer[0].length; i++) {
+//     if (i < inputText.length) {
+//       if (inputText[i] === textContainer[0][i]) {
+//         spans[i].style.color = "green";
+//       } else {
+//         spans[i].style.color = "red";
+//       }
+//     } else {
+//       spans[i].style.color = "gray";
+//     }
+//   }
+// }
+
+// function displayText() {
+//   const textElement = document.querySelector(".full");
+
+//   // Créer un span pour chaque caractère
+//   const fragment = document.createDocumentFragment();
+//   textContainer[0].split("").forEach((char) => {
+//     const span = document.createElement("span");
+//     span.textContent = textContainer[0];
+//     fragment.appendChild(span);
+//   });
+//   textElement.appendChild(fragment);
+//   // textElement.innerHTML = ""; // Vider d'abord
+// }
+
+// Fonction de vérification et coloration du texte cible
+function check() {
+  const inputText = document.querySelector(".text-input").value;
+  const textElement = document.querySelector(".full");
+  const spans = textElement.getElementsByTagName("span");
+
+  // Colorer chaque caractère du texte cible
+  for (let i = 0; i < textContainer[0].length; i++) {
+    if (i < inputText.length) {
+      if (inputText[i] === textContainer[0][i]) {
+        spans[i].style.color = "green";
+      } else {
+        spans[i].style.color = "black";
+      }
+    } else {
+      spans[i].style.color = "black";
+    }
+  }
+}
 // Réinitialiser les paramètres du jeu
 function resetGame() {
   const userCar = document.querySelector(".user-car");
@@ -63,8 +168,6 @@ function moveCar(car, progress) {
 
   const position = progress * maxPosition;
   car.style.transform = `translateX(${position}px)`;
-
-  // car.style.left = `${progress * maxPosition}px`;
 }
 
 // Vérifier la saisie de l'utilisateur
@@ -106,10 +209,15 @@ function verifyInput() {
 // Mouvement automatique du robot
 function startBot() {
   const botCar = document.querySelector(".bot-car");
+  const textLength = textContainer[0].length;
+
+  const baseSpeed = 10;
+  // const minSpeed = 0.5;
+  const botSpeed = (baseSpeed + Math.random() * 0.5) / textLength;
 
   // Ajustez cette vitesse en fonction de la longueur du texte
-  const botSpeed = Math.random() * (0.01 - 0.005) + 0.5; // Vitesse aléatoire basée sur le texte
-  const textLength = textContainer[0].length;
+  // const botSpeed = baseSpeed + Math.random() * variability; // Vitesse aléatoire basée sur le texte
+  // const textLength = textContainer[0].length;
   const adjustedSpeed = botSpeed / textLength; // Ajustement de la vitesse en fonction du texte
 
   const botInterval = setInterval(() => {
@@ -165,24 +273,49 @@ function startGame() {
   startBot();
 }
 
-// function initializeGame() {
-//   const starter = document.querySelector("button");
-//   if (starter) {
-//     starter.addEventListener("click", () => {
-//       // initializeRoadLines();
-//       // displayText();
-//       // displayScores();
-//       startGame();
-//     });
-//   } else {
-//     console.log("start est introuvable");
-//   }
-// }
+function toStart() {
+  const start = document.querySelector(".starter");
+  start.addEventListener("click", () => {
+    const count = document.querySelector(".counter");
+    count.style.display = "block";
+    startCountdown();
+  });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
-  // initializeGame();
+  toStart();
   initializeRoadLines();
   displayText();
+});
+
+function callTostartGame() {
   displayScores();
   startGame();
-});
+
+  const textInput = document.querySelector(".text-input");
+  textInput.addEventListener("input", check);
+}
+
+async function callTostart() {
+  const togo = document.querySelector(".togo");
+  togo.innerHTML = "Let's Go ...";
+  togo.style.display = "block";
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  togo.innerHTML = "";
+  togo.style.display = "none";
+  callTostartGame();
+}
+
+function startCountdown() {
+  const count = document.querySelector(".counter");
+  let counter = 3;
+  const interval = setInterval(() => {
+    count.textContent = counter;
+    if (counter === 0) {
+      clearInterval(interval);
+      count.style.display = "none";
+      callTostart();
+    }
+    counter--;
+  }, 1000);
+}
