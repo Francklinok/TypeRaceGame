@@ -680,14 +680,13 @@ main {
   display: flex;
   font-size: 16px;
   font-weight: bold;
-
   padding: 20px;
   border: 1px solid white;
   text-align: center;
   align-items: center;
   position: absolute;
   right: 50%;
-  bottom: 50%;
+  bottom: 70%;
   z-index: 1000;
 }
 
