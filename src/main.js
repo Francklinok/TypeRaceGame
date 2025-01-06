@@ -1,4 +1,4 @@
-// import Chart from "chart.js/auto";
+import Chart from "chart.js/auto";
 
 let userProgress = 0;
 let botProgress = 0;
@@ -26,36 +26,44 @@ const textContainer = [
   "Choose exactly what you want for your next race. You can choose your bots (challengers).",
 ];
 
-// Initialiser le graphique (Chart.js requis)
-function initializeChart() {
-  const ctx = document.getElementById("progressChart").getContext("2d");
+const raceStats = {
+  elapsedTime: 0,
+  userWPM: 0,
+  userCPM: 0,
+  userErrors: 0,
+  userAccuracy: 100,
+};
+
+// Afficher le graphique final
+function displayFinalChart() {
+  const ctx = document.getElementById("progressebar").getContext("2d");
   startChart = new Chart(ctx, {
     type: "line",
     data: {
-      labels: [],
+      labels: timeData,
       datasets: [
         {
           label: "User WPM",
           borderColor: "blue",
-          data: [],
+          data: userWPMData,
           fill: false,
         },
         {
           label: "User CPM",
           borderColor: "green",
-          data: [],
+          data: userCPMData,
           fill: false,
         },
         {
           label: "Bot WPM",
           borderColor: "orange",
-          data: [],
+          data: botWPMData,
           fill: false,
         },
         {
           label: "Bot CPM",
           borderColor: "red",
-          data: [],
+          data: botCPMData,
           fill: false,
         },
       ],
@@ -63,10 +71,10 @@ function initializeChart() {
     options: {
       scales: {
         x: {
-          title: { display: true, text: "Time (s)" },
+          title: { display: true, text: "Temps (s)" },
         },
         y: {
-          title: { display: true, text: "Speed" },
+          title: { display: true, text: "Vitesse" },
         },
       },
     },
@@ -91,7 +99,7 @@ function initializeRoadLines() {
 
 // Afficher le texte d'introduction
 function displayText() {
-  const textElement = document.querySelector(".full"); // Assurez-vous que l'élément avec la classe "full" existe dans votre HTML
+  const textElement = document.querySelector(".full");
 
   const span = document.createElement("span");
   const text = textContainer[0];
@@ -106,18 +114,18 @@ function displayText() {
 function check() {
   const inputText = document.querySelector(".text-input").value;
   const textElement = document.querySelector(".full");
-  const spans = textElement.getElementsByTagName("span");
+  let span = textElement.getElementsByTagName("span");
 
   // Colorer chaque caractère du texte cible
   for (let i = 0; i < textContainer[0].length; i++) {
     if (i < inputText.length) {
       if (inputText[i] === textContainer[0][i]) {
-        spans[i].style.color = "green";
+        span[i].style.color = "green";
       } else {
-        spans[i].style.color = "black";
+        span[i].style.color = "black";
       }
     } else {
-      spans[i].style.color = "black";
+      span[i].style.color = "black";
     }
   }
 }
@@ -126,13 +134,35 @@ function resetGame() {
   const userCar = document.querySelector(".user-car");
   const botCar = document.querySelector(".bot-car");
   const inputArea = document.querySelector(".text-input");
-  resetTimer();
-  userCar.style.left = "0px";
-  botCar.style.left = "0px";
-  inputArea.value = "";
+
+  clearInterval(timerInterval);
+  startTime = null;
 
   userProgress = 0;
   botProgress = 0;
+
+  userWPMData = [];
+  userCPMData = [];
+  botWPMData = [];
+  botCPMData = [];
+  timeData = [];
+
+  if (startChart) {
+    startChart.destroy();
+    startChart = null;
+  }
+
+  userCar.style.transform = "translateX(0)";
+  botCar.style.transform = "translateX(0)";
+  inputArea.value = "";
+
+  // resetTimer();
+  // userCar.style.left = "0px";
+  // botCar.style.left = "0px";
+  // inputArea.value = "";
+
+  // userProgress = 0;
+  // botProgress = 0;
 
   // displayScores();
 }
@@ -142,24 +172,37 @@ function moveCar(car, progress) {
   const trackWidth = document.querySelector("#race-track").offsetWidth;
   const carWidth = car.offsetWidth;
   const maxPosition = trackWidth - carWidth;
-
   const position = progress * maxPosition;
   car.style.transform = `translateX(${position}px)`;
 }
+
 // Fonction pour mettre à jour les WPM et CPM
 function updateWPMCPM(wpm, cpm, player) {
   const wpmElement = document.querySelector(`.${player}-wpm`);
   const cpmElement = document.querySelector(`.${player}-cpm`);
   if (wpmElement && cpmElement) {
-    wpmElement.textContent = `WPM: ${wpm.toFixed(2)}`;
-    cpmElement.textContent = `CPM: ${cpm.toFixed(2)}`;
+    wpmElement.innerHTML = `WPM: ${wpm.toFixed(2)}`;
+    cpmElement.innerHTML = `CPM: ${cpm.toFixed(2)}`;
   }
   updateChart(wpm, cpm, player);
+}
+
+function updateWPMCPMRealtime(inputText, targetText, player) {
+  const elapsedTime = (Date.now() - startTime) / 60000; // Temps en minutes
+  const totalCharacters = inputText.length;
+  const words = totalCharacters / 5; //erreur est ici----------------------------
+
+  const wpm = words / elapsedTime; // Calcul du WPM
+  const cpm = totalCharacters / elapsedTime; // Calcul du CPM
+
+  updateWPMCPM(wpm, cpm, player); // Mise à jour dans l'UI
+  // updateChart(wpm, cpm, player); // Stocker pour le graphique
 }
 
 // Mettre à jour le graphique
 function updateChart(wpm, cpm, player) {
   const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(1);
+  // const elapsedTime = raceStats.elapsedTime;
   if (!timeData.includes(elapsedTime)) {
     timeData.push(elapsedTime);
   }
@@ -167,16 +210,17 @@ function updateChart(wpm, cpm, player) {
   if (player === "user") {
     userWPMData.push(wpm);
     userCPMData.push(cpm);
-    startChart.data.datasets[0].data = userWPMData;
-    startChart.data.datasets[1].data = userCPMData;
   } else if (player === "bot") {
     botWPMData.push(wpm);
     botCPMData.push(cpm);
-    startChart.data.datasets[2].data = botWPMData;
-    startChart.data.datasets[3].data = botCPMData;
   }
-
+}
+if (startChart) {
   startChart.data.labels = timeData;
+  startChart.data.datasets[0].data = userWPMData;
+  startChart.data.datasets[1].data = userCPMData;
+  startChart.data.datasets[2].data = botWPMData;
+  startChart.data.datasets[3].data = botCPMData;
   startChart.update();
 }
 
@@ -193,13 +237,32 @@ function countErrors(userInput, targetText) {
 }
 
 // Calculer la précision en %
-// function calculateAccuracy(userInput, targetText) {
-//   const errors = countErrors(userInput, targetText);
-//   const totalCharacters = userInput.length;
-//   if (totalCharacters === 0) return 0;
+function calculateAccuracy(userInput, targetText) {
+  const errors = countErrors(userInput, targetText);
+  const totalCharacters = userInput.length;
+  if (totalCharacters === 0) return 0;
+  let accuracy = ((totalCharacters - errors) / totalCharacters) * 100;
 
-//   return ((totalCharacters - errors) / totalCharacters) * 100;
-// }
+  return accuracy;
+}
+
+function updateRaceStats(userInput, targetText) {
+  const elapsedTime = (Date.now() - startTime) / 1000; // Temps en secondes
+  const totalCharacters = userInput.length;
+  const words = totalCharacters / 5; // Moyenne : 1 mot = 5 caractères
+  const errors = countErrors(userInput, targetText);
+  const accuracy = calculateAccuracy(userInput, targetText);
+
+  // Mettre à jour le conteneur
+  raceStats.elapsedTime = elapsedTime.toFixed(2);
+  raceStats.userWPM = (words / (elapsedTime / 60)).toFixed(2);
+  raceStats.userCPM = (totalCharacters / (elapsedTime / 60)).toFixed(2);
+  raceStats.userErrors = errors;
+  raceStats.userAccuracy = accuracy.toFixed(2);
+
+  // Mettre à jour le graphique
+  updateChart(raceStats.userWPM, raceStats.userCPM, "user");
+}
 
 // Vérifier la saisie de l'utilisateur
 function verifyInput() {
@@ -209,25 +272,28 @@ function verifyInput() {
 
   inputArea.addEventListener("input", () => {
     if (!startTime) startTime = Date.now();
-    const elapsedTime = (Date.now() - startTime) / 60000;
+    // const elapsedTime = (Date.now() - startTime) / 60000;
     const userTyped = inputArea.value;
 
     if (targetText.startsWith(userTyped)) {
       userProgress = userTyped.length / targetText.length;
       moveCar(userCar, userProgress);
 
-      const words = userTyped.split("").length;
-      const characters = userTyped.legnth;
+      // updateRaceStats(userTyped, targetText); // Mettre à jour les stats
 
-      const wpm = words / elapsedTime;
-      const cpm = characters / elapsedTime;
+      // const words = userTyped.split("").length;
+      // const characters = userTyped.legnth;
 
+      // const wpm = words / elapsedTime;
+      // const cpm = characters / elapsedTime;
+
+      // console.log("wpm and cpm", wpm, cpm);
       // const accuracy = calculateAccuracy(userTyped, targetText);
       // document.querySelector(
       //   ".accuracy"
       // ).textContent = `Accuracy: ${accuracy.toFixed(2)}%`;
 
-      updateWPMCPM(wpm, cpm, "user");
+      updateWPMCPMRealtime(userTyped, targetText, "user");
 
       if (userTyped === targetText) {
         endGame("win");
@@ -258,17 +324,19 @@ function startBot() {
 
   const botInterval = setInterval(() => {
     if (!startTime) startTime = Date.now();
-    const elapsedTime = (Date.now() - startTime) / 60000;
+    // const elapsedTime = (Date.now() - startTime) / 60000;
     botProgress += adjustedSpeed;
 
     const botTypedLength = Math.floor(botProgress * textContainer[0].length);
-    const words = botTypedLength / 5;
-    const characters = botTypedLength;
+    const botText = textContainer[0].substring(0, botTypedLength);
+    updateWPMCPMRealtime(botText, textContainer[0], "bot");
+    // const words = botTypedLength / 5;
+    // const characters = botTypedLength;
 
-    const wpm = words / elapsedTime;
-    const cpm = characters / elapsedTime;
+    // const wpm = words / elapsedTime;
+    // const cpm = characters / elapsedTime;
 
-    updateWPMCPM(wpm, cpm, "bot");
+    // updateWPMCPM(wpm, cpm, "bot");
 
     if (botProgress >= 1) {
       botProgress = 1;
@@ -283,7 +351,7 @@ function startBot() {
 
 // Gérer la fin de partie
 function endGame(result) {
-  const inputArea = document.querySelector(".text-input");
+  // const inputArea = document.querySelector(".text-input");
   if (result === "win") {
     userScore++;
     alert("Bravo ! Vous avez gagné !");
@@ -292,7 +360,7 @@ function endGame(result) {
     botScore++;
     alert("Dommage ! Le robot a gagné.");
   }
-
+  displayFinalChart();
   resetGame();
 }
 
@@ -379,8 +447,8 @@ function updateDisplay() {
   const display = document.querySelector(".time");
   const formattedTime =
     `${String(minutes).padStart(2, "0")}:` +
-    `${String(seconds).padStart(2, "0")}:` +
-    `${String(milliseconds).padStart(3, "0")}`;
+    `${String(seconds).padStart(2, "0")}`;
+  // `${String(milliseconds).padStart(3, "0")}`;
   display.textContent = formattedTime;
 }
 

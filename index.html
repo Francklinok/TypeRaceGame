@@ -4,12 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TypeRacer Game V1.0</title>
-    <link rel="stylesheet" href="../css/index.css" />
-    <link rel="icon" type="image/webp" href="./favicon.webp" />
+    <link rel="stylesheet" href="./src/style.css" />
+    <!-- <link rel="icon" type="image/webp" href="./favicon.webp" /> -->
   </head>
   <body>
-    <script src="../js/index.js" defer></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script> -->
+    <script type  ="module" src="./src/main.js" defer></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+
     <header>
       <div class="title">
         <h1>TypeRacer Game V1.0</h1>
@@ -108,7 +109,7 @@
 
             <div class = "addElement">
               
-              <div class = user-name">
+              <div class = "user-name">
                 <span>Add name: </span>
                 <input type ="text" placeholder=""/>
               </div>
@@ -176,7 +177,7 @@
                 <div class="road" id="race-track">
                   <img
                     class="user-car"
-                    src="../public/car.svg"
+                    src="/car.svg"
                     alt="Car for user"
                   />
                   <div class="line"></div>
@@ -191,7 +192,7 @@
                 <div class="road">
                   <img
                     class="bot-car"
-                    src="../public/car6.svg"
+                    src="/car6.svg"
                     alt="Car for bot"
                   />
                   <div class="line"></div>
@@ -206,12 +207,12 @@
             <!-- Parameters -->
             <div class="params-right">
               <div class="first-params">
-                <p class = "user-wpm">wpm</p>
-                <p class = "user-cpm">cpm</p>
+                <p class = "user-wpm">0:wpm</p>
+                <p class = "user-cpm">0:cpm</p>
               </div>
               <div class="second-params">
-                <p class = "bot-wpm">wpm</p>
-                <p class = "bot-wpm">cpm</p>
+                <p class = "bot-wpm">0:wpm</p>
+                <p class = "bot-cpm">0:cpm</p>
               </div>
             </div>
           </div>
@@ -219,7 +220,7 @@
           <!-- Text Container -->
           <div class="text-container">
             <div class="full">
-              <!-- <p class="full"></p> -->
+              <!-- <span> </span> -->
             </div>
           <div class="result"></div>
 
@@ -242,13 +243,21 @@
           <div class="graph">
             <div class="graph-section">
               <div class="performance">
-                <canvas id="startChart" width="200" height="150"></canvas>
+                <canvas id="progressbar" width="300" height="250"></canvas>
                 <span>Course Performance</span>
               </div>
+
               <div class="result">
-                <span>Result</span>
-              </div>
+                <div class ="content" >
+                  <span class = "wpm"></span>
+                  <span class = "cpm"></span>
+                  <span class = "time"></span>
+                  <span class = "accuracy"></span>
+                  <span class = "mistake"></span>
+                  <span class = "numberofword"></span>
+                </div>
             </div>
+
             <div class="replay">
               <button class="start">
                 <span>Start New Race</span>
