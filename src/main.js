@@ -10,16 +10,19 @@ let userCPMData = [];
 let botWPMData = [];
 let botCPMData = [];
 let timeData = [];
-// let userErrors = 0;
+let userErrors = 0;
+
+let startTime; // Le temps de départ
+let elapsedTime = 0; // Temps écoulé en secondes
+let timerInterval = null; // Référence pour l'intervalle du timer
 
 let milliseconds = 0;
 let seconds = 0;
 let minutes = 0;
 
-let startTime;
+let startTimer = null;
 let elapsedTimer = 0;
-let timerInterval = null;
-
+// let timerInterval = null;
 let startChart = null;
 
 const textContainer = [
@@ -34,9 +37,22 @@ const raceStats = {
   userAccuracy: 100,
 };
 
-// Afficher le graphique final
 function displayFinalChart() {
-  const ctx = document.getElementById("progressebar").getContext("2d");
+  // const ctx = document.querySelector(".progressebar").getContext("2d");
+  const canvas = document.querySelector(".progressebar");
+  if (!canvas) {
+    console.error("Canvas avec la classe 'progressebar' introuvable !");
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
+
+  // Détruire un ancien graphique s'il existe
+  if (startChart) {
+    startChart.destroy();
+  }
+
+  // Création du graphique
   startChart = new Chart(ctx, {
     type: "line",
     data: {
@@ -44,43 +60,71 @@ function displayFinalChart() {
       datasets: [
         {
           label: "User WPM",
-          borderColor: "blue",
+          borderColor: "rgba(0, 123, 255, 1)", // Couleur bleue
+          backgroundColor: "rgba(0, 123, 255, 0.2)", // Couleur de remplissage
           data: userWPMData,
-          fill: false,
+          fill: true,
         },
         {
           label: "User CPM",
-          borderColor: "green",
+          borderColor: "rgba(40, 167, 69, 1)", // Couleur verte
+          backgroundColor: "rgba(40, 167, 69, 0.2)", // Couleur de remplissage
           data: userCPMData,
-          fill: false,
+          fill: true,
         },
         {
           label: "Bot WPM",
-          borderColor: "orange",
+          borderColor: "rgba(255, 193, 7, 1)", // Couleur jaune
+          backgroundColor: "rgba(255, 193, 7, 0.2)", // Couleur de remplissage
           data: botWPMData,
-          fill: false,
+          fill: true,
         },
         {
           label: "Bot CPM",
-          borderColor: "red",
+          borderColor: "rgba(220, 53, 69, 1)", // Couleur rouge
+          backgroundColor: "rgba(220, 53, 69, 0.2)", // Couleur de remplissage
           data: botCPMData,
-          fill: false,
+          fill: true,
         },
       ],
     },
     options: {
+      tension: 0.4, // Courbe douce
+      responsive: true, // Graphique adaptatif
+      animation: {
+        duration: 1000, // Durée de l'animation
+        easing: "easeOutBounce", // Type d'animation
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: "top", // Position de la légende
+        },
+      },
       scales: {
         x: {
-          title: { display: true, text: "Temps (s)" },
+          title: { display: true, text: "Temps (s)", font: { size: 14 } },
+          grid: {
+            display: false, // Supprimer la grille horizontale
+          },
         },
         y: {
-          title: { display: true, text: "Vitesse" },
+          title: {
+            display: true,
+            text: "Vitesse (WPM/CPM)",
+            font: { size: 14 },
+          },
+          beginAtZero: true, // Commencer l'axe Y à 0
+          grid: {
+            color: "rgba(200, 200, 200, 0.2)", // Grille discrète
+          },
         },
       },
     },
   });
-}
 
+  console.log("Displaying final chart:", { timeData, userWPMData, botWPMData });
+}
 // Initialiser les lignes sur la piste
 function initializeRoadLines() {
   const lineCounters = document.querySelectorAll(".line");
@@ -100,35 +144,42 @@ function initializeRoadLines() {
 // Afficher le texte d'introduction
 function displayText() {
   const textElement = document.querySelector(".full");
-
-  const span = document.createElement("span");
   const text = textContainer[0];
+  text.split("").forEach((char) => {
+    const span = document.createElement("span");
 
-  span.textContent = text;
-  span.style.fontSize = "14px";
-  span.style.fontFamily = "Roboto";
-  textElement.appendChild(span);
+    if (char === " ") {
+      span.style.marginRight = "8px"; // Ajustez la taille de la marge si nécessaire
+    }
+    span.textContent = char;
+    span.style.fontSize = "14px";
+    span.style.fontFamily = "Roboto";
+    textElement.appendChild(span);
+  });
 }
 
-// Fonction de vérification et coloration du texte cible
 function check() {
-  const inputText = document.querySelector(".text-input").value;
+  const inputText = document.querySelector(".text-input").value; // Texte saisi par l'utilisateur
   const textElement = document.querySelector(".full");
-  let span = textElement.getElementsByTagName("span");
+  const spans = textElement.getElementsByTagName("span"); // Les <span> du texte cible
 
-  // Colorer chaque caractère du texte cible
+  // Parcourt le texte cible caractère par caractère
   for (let i = 0; i < textContainer[0].length; i++) {
-    if (i < inputText.length) {
-      if (inputText[i] === textContainer[0][i]) {
-        span[i].style.color = "green";
+    if (spans[i]) {
+      if (i < inputText.length) {
+        // Vérifie si le caractère saisi correspond au caractère cible
+        if (inputText[i] === textContainer[0][i]) {
+          spans[i].className = "correct"; // Correct
+        } else {
+          spans[i].className = "incorrect"; // Incorrect
+        }
       } else {
-        span[i].style.color = "black";
+        spans[i].className = ""; // Pas encore saisi
       }
-    } else {
-      span[i].style.color = "black";
     }
   }
 }
+
 // Réinitialiser les paramètres du jeu
 function resetGame() {
   const userCar = document.querySelector(".user-car");
@@ -157,6 +208,7 @@ function resetGame() {
   inputArea.value = "";
 
   // resetTimer();
+
   // userCar.style.left = "0px";
   // botCar.style.left = "0px";
   // inputArea.value = "";
@@ -190,9 +242,11 @@ function updateWPMCPM(wpm, cpm, player) {
 function updateWPMCPMRealtime(inputText, targetText, player) {
   const elapsedTime = (Date.now() - startTime) / 60000; // Temps en minutes
   const totalCharacters = inputText.length;
-  const words = totalCharacters / 5; //erreur est ici----------------------------
 
-  const wpm = words / elapsedTime; // Calcul du WPM
+  const wordsArray = inputText.trim().split(/\s+/); //erreur est ici----------------------------
+  const totalwords = wordsArray.length;
+
+  const wpm = totalwords / elapsedTime; // Calcul du WPM
   const cpm = totalCharacters / elapsedTime; // Calcul du CPM
 
   updateWPMCPM(wpm, cpm, player); // Mise à jour dans l'UI
@@ -202,28 +256,41 @@ function updateWPMCPMRealtime(inputText, targetText, player) {
 // Mettre à jour le graphique
 function updateChart(wpm, cpm, player) {
   const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(1);
+  const maxDataPoints = 50;
   // const elapsedTime = raceStats.elapsedTime;
   if (!timeData.includes(elapsedTime)) {
     timeData.push(elapsedTime);
+    if (timeData.length > maxDataPoints) {
+      timeData.shift();
+    }
   }
 
   if (player === "user") {
     userWPMData.push(wpm);
     userCPMData.push(cpm);
+    if (userWPMData.length > maxDataPoints) {
+      userWPMData.shift();
+      userCPMData.shift();
+    }
   } else if (player === "bot") {
     botWPMData.push(wpm);
     botCPMData.push(cpm);
+    if (botWPMData.length > maxDataPoints) {
+      botWPMData.shift();
+      botCPMData.shift();
+    }
   }
-}
-if (startChart) {
-  startChart.data.labels = timeData;
-  startChart.data.datasets[0].data = userWPMData;
-  startChart.data.datasets[1].data = userCPMData;
-  startChart.data.datasets[2].data = botWPMData;
-  startChart.data.datasets[3].data = botCPMData;
-  startChart.update();
-}
 
+  if (startChart) {
+    startChart.data.labels = timeData;
+    startChart.data.datasets[0].data = userWPMData;
+    startChart.data.datasets[1].data = userCPMData;
+    startChart.data.datasets[2].data = botWPMData;
+    startChart.data.datasets[3].data = botCPMData;
+    startChart.update();
+  }
+  console.log("Chart updated:", { timeData, userWPMData, botWPMData });
+}
 // Compter les fautes
 function countErrors(userInput, targetText) {
   let errors = 0;
@@ -246,24 +313,6 @@ function calculateAccuracy(userInput, targetText) {
   return accuracy;
 }
 
-function updateRaceStats(userInput, targetText) {
-  const elapsedTime = (Date.now() - startTime) / 1000; // Temps en secondes
-  const totalCharacters = userInput.length;
-  const words = totalCharacters / 5; // Moyenne : 1 mot = 5 caractères
-  const errors = countErrors(userInput, targetText);
-  const accuracy = calculateAccuracy(userInput, targetText);
-
-  // Mettre à jour le conteneur
-  raceStats.elapsedTime = elapsedTime.toFixed(2);
-  raceStats.userWPM = (words / (elapsedTime / 60)).toFixed(2);
-  raceStats.userCPM = (totalCharacters / (elapsedTime / 60)).toFixed(2);
-  raceStats.userErrors = errors;
-  raceStats.userAccuracy = accuracy.toFixed(2);
-
-  // Mettre à jour le graphique
-  updateChart(raceStats.userWPM, raceStats.userCPM, "user");
-}
-
 // Vérifier la saisie de l'utilisateur
 function verifyInput() {
   const inputArea = document.querySelector(".text-input");
@@ -278,20 +327,6 @@ function verifyInput() {
     if (targetText.startsWith(userTyped)) {
       userProgress = userTyped.length / targetText.length;
       moveCar(userCar, userProgress);
-
-      // updateRaceStats(userTyped, targetText); // Mettre à jour les stats
-
-      // const words = userTyped.split("").length;
-      // const characters = userTyped.legnth;
-
-      // const wpm = words / elapsedTime;
-      // const cpm = characters / elapsedTime;
-
-      // console.log("wpm and cpm", wpm, cpm);
-      // const accuracy = calculateAccuracy(userTyped, targetText);
-      // document.querySelector(
-      //   ".accuracy"
-      // ).textContent = `Accuracy: ${accuracy.toFixed(2)}%`;
 
       updateWPMCPMRealtime(userTyped, targetText, "user");
 
@@ -317,9 +352,6 @@ function startBot() {
   // const minSpeed = 0.5;
   const botSpeed = (baseSpeed + Math.random() * 0.5) / textLength;
 
-  // Ajustez cette vitesse en fonction de la longueur du texte
-  // const botSpeed = baseSpeed + Math.random() * variability; // Vitesse aléatoire basée sur le texte
-  // const textLength = textContainer[0].length;
   const adjustedSpeed = botSpeed / textLength; // Ajustement de la vitesse en fonction du texte
 
   const botInterval = setInterval(() => {
@@ -330,23 +362,17 @@ function startBot() {
     const botTypedLength = Math.floor(botProgress * textContainer[0].length);
     const botText = textContainer[0].substring(0, botTypedLength);
     updateWPMCPMRealtime(botText, textContainer[0], "bot");
-    // const words = botTypedLength / 5;
-    // const characters = botTypedLength;
-
-    // const wpm = words / elapsedTime;
-    // const cpm = characters / elapsedTime;
-
-    // updateWPMCPM(wpm, cpm, "bot");
 
     if (botProgress >= 1) {
       botProgress = 1;
       moveCar(botCar, botProgress);
+      // requestAnimationFrame(startBot)
       clearInterval(botInterval);
       endGame("lose");
     }
 
     moveCar(botCar, botProgress);
-  }, 50); // Mettre à jour toutes les 50 ms
+  }, 16); // Mettre à jour toutes les 50 ms
 }
 
 // Gérer la fin de partie
@@ -360,8 +386,8 @@ function endGame(result) {
     botScore++;
     alert("Dommage ! Le robot a gagné.");
   }
+  // resetGame();
   displayFinalChart();
-  resetGame();
 }
 
 // Afficher les scores
@@ -373,6 +399,7 @@ function displayScores() {
 // Initialiser le jeu
 function startGame() {
   resetGame();
+  resetTimer();
   verifyInput();
   startBot();
 }
@@ -390,11 +417,19 @@ document.addEventListener("DOMContentLoaded", () => {
   toStart();
   initializeRoadLines();
   displayText();
+  const canvas = document.querySelector(".progressebar");
+  if (!canvas) {
+    console.error("Canvas avec la classe 'progressebar' introuvable !");
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
 });
 
 function callTostartGame() {
   displayScores();
   startGame();
+  startTimerFunction();
 
   const textInput = document.querySelector(".text-input");
   textInput.addEventListener("input", check);
@@ -407,8 +442,8 @@ async function callTostart() {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   togo.innerHTML = "";
   togo.style.display = "none";
-  resetTimer();
-  startTimerFunction();
+
+  // startTimerFunction();
   callTostartGame();
 }
 
@@ -426,10 +461,8 @@ function startCountdown() {
   }, 1000);
 }
 
-/////CHRONO FUNCTIONS///
-
 function updateTimer() {
-  milliseconds += 10; // On incrémente par 10 ms
+  milliseconds += 100; // On incrémente par 10 ms
 
   if (milliseconds >= 1000) {
     milliseconds = 0;
@@ -440,33 +473,40 @@ function updateTimer() {
       minutes++; // Incrémenter les minutes
     }
   }
+
   updateDisplay();
 }
 
 function updateDisplay() {
   const display = document.querySelector(".time");
-  const formattedTime =
-    `${String(minutes).padStart(2, "0")}:` +
-    `${String(seconds).padStart(2, "0")}`;
-  // `${String(milliseconds).padStart(3, "0")}`;
+  display.innerHTML = "";
+  const formattedTime = `${String(minutes).padStart(2, "0")}:${String(
+    seconds
+  ).padStart(2, "0")}`;
   display.textContent = formattedTime;
+  console.log("time", formattedTime);
 }
 
 function startTimerFunction() {
   if (!timerInterval) {
-    startTime = Date.now() + elapsedTimer;
-    timerInterval = setInterval(updateTimer, 10);
+    startTimer = Date.now() + elapsedTimer;
+    timerInterval = setInterval(() => {
+      elapsedTime++;
+      updateTimer();
+    }, 100);
   }
 }
 
 function stopTimer() {
   clearInterval(timerInterval);
   timerInterval = null;
+  // elapsedTimer += Date.now() - startTimer;
 }
 
 function resetTimer() {
   milliseconds = 0;
   seconds = 0;
   minutes = 0;
+  elapsedTimer = 0;
   updateDisplay();
 }

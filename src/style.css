@@ -522,7 +522,7 @@ main {
   gap: 8px;
   width: 100%;
   border: 1px solid #ccc;
-  margin: 5px 1px 25px 1px;
+  margin: 5px 1px 10px 1px;
 }
 
 .main-section .center-section .main-area .race .car-center .first-container {
@@ -610,17 +610,17 @@ main {
   flex-direction: column;
   padding: 5px;
   border: 1px solid #ccc;
-  margin: 30px 1px 35px 8px;
+  margin: 30px 1px 40px 8px;
 }
 
 .main-section .center-section .main-area .race .params-right .first-params {
   grid-row: 1;
   grid-column: 3;
   text-align: center;
-  border: 1px solid white;
+  border: 1px solid rgb(196, 195, 195);
   border-radius: 10px;
   gap: 5px;
-  margin: 20px 10px 10px 2px;
+  margin: 20px 0px 10px 2px;
 }
 
 .main-section .center-section .main-area .race .params-right p {
@@ -628,17 +628,18 @@ main {
   justify-content: space-between;
   padding: 5px;
   font-size: 12px;
+  margin:0;
 }
 
 .main-section .center-section .main-area .race .params-right .second-params {
   text-align: center;
   grid-row: 2;
   grid-column: 3;
-  border: 1px solid white;
+  border: 1px solid rgb(196, 195, 195);
   border-radius: 10px;
-  margin: 1px 10px 15px 2px;
+  margin: 1px 0px 10px 2px;
   /* padding:2px 10px 2px 10px; */
-  gap: 2px;
+  gap: 5px;
 }
 
 .main-section .center-section .main-area .text-container {
@@ -663,6 +664,13 @@ main {
   height: 100px;
 }
 
+.correct{
+  color:green;
+}
+.incorrect{
+  color:red;
+}
+
 .main-section .center-section .main-area .text-container .counter {
   display: flex;
   text-align: center;
@@ -681,7 +689,7 @@ main {
   bottom: 40%;
   font-weight: bold;
   color: white;
-  background-color: black;
+  /* background-color: black; */
 }
 
 .main-section .center-section .main-area .text-container .togo {
@@ -762,6 +770,11 @@ main {
   border: 1px solid white;
   padding: 50px;
 }
+canvas.progressbar {
+  width: 100%; /* Assurez-vous qu'il a une largeur visible */
+  height: auto; /* Ou définissez une hauteur fixe */
+}
+
 .main-section .center-section .main-area .graph .graph-section .result {
   border: 1px solid white;
   padding: 50px;

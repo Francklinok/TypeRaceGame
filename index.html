@@ -9,7 +9,7 @@
   </head>
   <body>
     <script type  ="module" src="./src/main.js" defer></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <header>
       <div class="title">
@@ -226,7 +226,7 @@
 
           <div class="counter" style = "display:none"></div>
           <div class="togo" style = "display:none"></div>
-          <div class = "time"></div>
+          <div class = "time">00:00</div>
 
             <div class="form">
               <input
@@ -243,7 +243,7 @@
           <div class="graph">
             <div class="graph-section">
               <div class="performance">
-                <canvas id="progressbar" width="300" height="250"></canvas>
+                <canvas class="progressbar"></canvas>
                 <span>Course Performance</span>
               </div>
 
