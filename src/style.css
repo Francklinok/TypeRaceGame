@@ -176,7 +176,7 @@ main {
   border: 1px solid rgba(207, 198, 198, 0.801);
   margin: 10px;
   border-radius: 10px;
-  height: 700px;
+  height: 500px;
 }
 
 .main-section .center-section .select-area {
@@ -628,7 +628,7 @@ main {
   justify-content: space-between;
   padding: 5px;
   font-size: 12px;
-  margin:0;
+  margin: 0;
 }
 
 .main-section .center-section .main-area .race .params-right .second-params {
@@ -664,11 +664,11 @@ main {
   height: 100px;
 }
 
-.correct{
-  color:green;
+.correct {
+  color: green;
 }
-.incorrect{
-  color:red;
+.incorrect {
+  color: red;
 }
 
 .main-section .center-section .main-area .text-container .counter {
@@ -755,7 +755,7 @@ main {
   flex-direction: column;
   gap: 20px;
   border: 1px solid white;
-  margin: 10px 300px 10px 300px;
+  margin: 30px 30px 5px 30px;
 }
 
 .main-section .center-section .main-area .graph-section {
@@ -768,12 +768,10 @@ main {
 
 .main-section .center-section .main-area .graph .graph-section .performance {
   border: 1px solid white;
-  padding: 50px;
+  /* padding: 100px; */
+  margin:0;
 }
-canvas.progressbar {
-  width: 100%; /* Assurez-vous qu'il a une largeur visible */
-  height: auto; /* Ou définissez une hauteur fixe */
-}
+
 
 .main-section .center-section .main-area .graph .graph-section .result {
   border: 1px solid white;

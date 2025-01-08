@@ -8,8 +8,8 @@
     <!-- <link rel="icon" type="image/webp" href="./favicon.webp" /> -->
   </head>
   <body>
-    <script type  ="module" src="./src/main.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="./src/main.js" defer></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
 
     <header>
       <div class="title">
@@ -32,15 +32,15 @@
               <span>Try It!</span>
             </div>
             <div class="second-race">
-                <h2>Custom Race</h2>
-                <p>
-                  Choose exactly what you want for your next race. You can
-                  choose your bots (challengers), their name, their speed, and
-                  the number of bots. Good Luck!!!
-                </p>
-                <span>Try It!</span>
-              </div>
-              
+              <h2>Custom Race</h2>
+              <p>
+                Choose exactly what you want for your next race. You can choose
+                your bots (challengers), their name, their speed, and the number
+                of bots. Good Luck!!!
+              </p>
+              <span>Try It!</span>
+            </div>
+
             <div class="third-race">
               <h2>Normal Race</h2>
               <p>
@@ -54,223 +54,205 @@
 
         <!-- Center Section -->
         <section class="center-section">
-
-          <section class= "select-area">
-
+          <section class="select-area">
             <div class="creat">
+              <div class="custom-race">
+                <h2>Custom Computer Race</h2>
+                <p>
+                  Choose exactly what you want for your next race. You can
+                  choose your bots (challengers) , their name, their speed and
+                  the number of bot. Good Luck!!!
+                </p>
+              </div>
 
-                <div class="custom-race">
-                  <h2>Custom Computer Race</h2>
-                  <p>
-                    Choose exactly what you want for your next race. You can
-                    choose your bots (challengers) , their name, their speed and
-                    the number of bot. Good Luck!!!
-                  </p>
-                </div>
-
-                <div class="select">
-
-                  <div class="name">
-                    <span>name</span>
-                    <!-- <div class = "names">
+              <div class="select">
+                <div class="name">
+                  <span>name</span>
+                  <!-- <div class = "names">
                       <span>user</span>
                     </div> -->
-                  </div>
+                </div>
 
-                  <div class="power">
-                    <span>powers</span>
-                    <!-- <div class = "powers">
+                <div class="power">
+                  <span>powers</span>
+                  <!-- <div class = "powers">
                       <span>power</span>
                     </div> -->
-                  </div>
-
-                  <div class="add">
-                    <span>add</span>
-                    </div>
-                  <div class="remove">
-                    <span>remove</span>
-                 
                 </div>
 
-                 <div class = "submit">
-                    <button>Start</button>
+                <div class="add">
+                  <span>add</span>
+                </div>
+                <div class="remove">
+                  <span>remove</span>
                 </div>
 
+                <div class="submit">
+                  <button>Start</button>
+                </div>
               </div>
             </div>
-            
           </section>
 
-          <section class = "add-section">
-
-            <div class = "text-register">
+          <section class="add-section">
+            <div class="text-register">
               <p>Register</p>
             </div>
 
-            <div class = "addElement">
-              
-              <div class = "user-name">
+            <div class="addElement">
+              <div class="user-name">
                 <span>Add name: </span>
-                <input type ="text" placeholder=""/>
+                <input type="text" placeholder="" />
               </div>
 
-              <div class = "user-power">
-                <span>Add power: </span> 
-                <input type = "text" placeholder=""/>
+              <div class="user-power">
+                <span>Add power: </span>
+                <input type="text" placeholder="" />
               </div>
 
-              <div class = "bot-color">
+              <div class="bot-color">
                 <!-- <span >color</span> -->
                 <button>Choose color</button>
               </div>
-
             </div>
 
-            <div class = "register">
+            <div class="register">
               <button>Register</button>
             </div>
           </section>
 
-          <section class = "other">
-            <div class = "names">
+          <section class="other">
+            <div class="names">
               <span>jacques</span>
               <span>firmain</span>
               <span>christelle</span>
               <span>paul</span>
             </div>
-            
-            <div class= "power">
+
+            <div class="power">
               <span> 4 wpm</span>
               <span>7 wpm</span>
             </div>
           </section>
-          
-          <section class = "open">
-            <div class = "container">
-              <h2>You Vs Computer Race </h2>
-              <p> Run against a bot that will have a 
-                random speed between 20wpm and 100wpm. 
-                Your mission is to type the text faster 
-                than the bot.
+
+          <section class="open">
+            <div class="container">
+              <h2>You Vs Computer Race</h2>
+              <p>
+                Run against a bot that will have a random speed between 20wpm
+                and 100wpm. Your mission is to type the text faster than the
+                bot.
               </p>
-             <span>Good Luck!!!</span>
-             <button>Start</button>
-
+              <span>Good Luck!!!</span>
+              <button>Start</button>
             </div>
           </section>
 
-          <section class = "main-area">
+          <section class="main-area">
             <div class="race">
-            <!-- Users -->
-            <div class="user-left">
-              <div class="first-user">
-                <p>me</p>
-              </div>
-              <div class="second-user">
-                <p>bot</p>
-              </div>
-            </div>
-
-            <!-- Cars and Road -->
-            <div class="car-center">
-              <div class="first-container">
-                <div class="road" id="race-track">
-                  <img
-                    class="user-car"
-                    src="/car.svg"
-                    alt="Car for user"
-                  />
-                  <div class="line"></div>
+              <!-- Users -->
+              <div class="user-left">
+                <div class="first-user">
+                  <p>me</p>
                 </div>
-                <div class="flag">
-                  <span>Finish</span>
-                  <div class=""></div>
+                <div class="second-user">
+                  <p>bot</p>
                 </div>
               </div>
 
-              <div class="second-container" >
-                <div class="road">
-                  <img
-                    class="bot-car"
-                    src="/car6.svg"
-                    alt="Car for bot"
-                  />
-                  <div class="line"></div>
+              <!-- Cars and Road -->
+              <div class="car-center">
+                <div class="first-container">
+                  <div class="road" id="race-track">
+                    <img class="user-car" src="/car.svg" alt="Car for user" />
+                    <div class="line"></div>
+                  </div>
+                  <div class="flag">
+                    <span>Finish</span>
+                    <div class=""></div>
+                  </div>
                 </div>
-                <div class="flag">
-                  <span>Finish</span>
-                  <div class=""></div>
+
+                <div class="second-container">
+                  <div class="road">
+                    <img class="bot-car" src="/car6.svg" alt="Car for bot" />
+                    <div class="line"></div>
+                  </div>
+                  <div class="flag">
+                    <span>Finish</span>
+                    <div class=""></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Parameters -->
+              <div class="params-right">
+                <div class="first-params">
+                  <p class="user-wpm">0:wpm</p>
+                  <p class="user-cpm">0:cpm</p>
+                </div>
+                <div class="second-params">
+                  <p class="bot-wpm">0:wpm</p>
+                  <p class="bot-cpm">0:cpm</p>
                 </div>
               </div>
             </div>
 
-            <!-- Parameters -->
-            <div class="params-right">
-              <div class="first-params">
-                <p class = "user-wpm">0:wpm</p>
-                <p class = "user-cpm">0:cpm</p>
+            <!-- Text Container -->
+            <div class="text-container">
+              <div class="full">
+                <!-- <span> </span> -->
               </div>
-              <div class="second-params">
-                <p class = "bot-wpm">0:wpm</p>
-                <p class = "bot-cpm">0:cpm</p>
-              </div>
-            </div>
-          </div>
+              <div class="result"></div>
 
-          <!-- Text Container -->
-          <div class="text-container">
-            <div class="full">
-              <!-- <span> </span> -->
-            </div>
-          <div class="result"></div>
+              <div class="counter" style="display: none"></div>
+              <div class="togo" style="display: none"></div>
+              <div class="time">00:00</div>
 
-          <div class="counter" style = "display:none"></div>
-          <div class="togo" style = "display:none"></div>
-          <div class = "time">00:00</div>
-
-            <div class="form">
-              <input
-                class="text-input"
-                type="text"
-                placeholder="Start typing here..."
-              />
-            </div>
-
-            <button class = "starter">Presse to start</button>
-          </div>
-
-          <!-- Graph Section -->
-          <div class="graph">
-            <div class="graph-section">
-              <div class="performance">
-                <canvas class="progressbar"></canvas>
-                <span>Course Performance</span>
+              <div class="form">
+                <input
+                  class="text-input"
+                  type="text"
+                  placeholder="Start typing here..."
+                />
               </div>
 
-              <div class="result">
-                <div class ="content" >
-                  <span class = "wpm"></span>
-                  <span class = "cpm"></span>
-                  <span class = "time"></span>
-                  <span class = "accuracy"></span>
-                  <span class = "mistake"></span>
-                  <span class = "numberofword"></span>
+              <button class="starter">Presse to start</button>
+            </div>
+
+            <!-- Graph Section -->
+            <div class="graph">
+              <div class="graph-section">
+                <div class="performance">
+                  <canvas
+                    class="chart"
+                    style="width: 500px; height: 300px"
+                  ></canvas>
+                  <span>Course Performance</span>
                 </div>
-            </div>
 
-            <div class="replay">
-              <button class="start">
-                <span>Start New Race</span>
-              </button>
+                <div class="result">
+                  <div class="content">
+                    <span class="wpm"></span>
+                    <span class="cpm"></span>
+                    <span class="time"></span>
+                    <span class="accuracy"></span>
+                    <span class="mistake"></span>
+                    <span class="numberofword"></span>
+                  </div>
+                </div>
+
+                <div class="replay">
+                  <button class="start">
+                    <span>Start New Race</span>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
           </section>
-          
         </section>
-
       </section>
     </main>
     <footer></footer>
   </body>
 </html>
- 
