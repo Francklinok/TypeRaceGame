@@ -193,7 +193,7 @@ main {
   right: 25%;
   top: 50px;
   bottom: 50px;
-  /* z-index: 1000; */
+  z-index: 1000;
 }
 
 .main-section .center-section .select-area .creat {
@@ -313,6 +313,7 @@ main {
   width: 50%;
   height: 130px;
   align-items: center;
+  z-index: 1000;
 }
 .main-section .center-section .add-section .text-register {
   font-size: 14px;
@@ -374,7 +375,7 @@ main {
   width: 80px;
   text-align: center;
   height: 20px;
-  margin: 15px 0px 5px 35px;
+  margin: 15px 0px 5px 200px;
   font-size: 10px;
   border: 1px solid rgb(196, 191, 191);
   /* padding: 8px; */
@@ -769,9 +770,8 @@ main {
 .main-section .center-section .main-area .graph .graph-section .performance {
   border: 1px solid white;
   /* padding: 100px; */
-  margin:0;
+  margin: 0;
 }
-
 
 .main-section .center-section .main-area .graph .graph-section .result {
   border: 1px solid white;
