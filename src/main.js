@@ -1,7 +1,22 @@
 import Chart from "chart.js/auto";
 
-const players = [];
-console.log("users", players.name);
+const namesContainer = ["jacques", "firmain", "sam", "paul"];
+const powerContainer = [
+  "80 wpm",
+  "70 wpm",
+  "60 wpm",
+  "50 wpm",
+  "40 wpm",
+  "30 wpm",
+  "20 wpm",
+  "10 wpm",
+];
+
+let bots = {};
+
+let normal = false;
+let custom = false;
+let computer = false;
 
 let userProgress = 0;
 let botProgress = 0;
@@ -138,47 +153,79 @@ function displayFinalChart() {
 function createUser() {
   const nameInput = document.querySelector(".input-name");
   const wpmInput = document.querySelector(".input-wpm");
-
+  const addSec = document.querySelector(".add-section");
   // Récupérez les valeurs des champs d'entrée
   const name = nameInput.value.trim();
-  const wpm = parseInt(wpmInput.value.trim(), 10) || 0; // Convertir en nombre (par défaut 0 si invalide)
-
+  // const wpm = parseInt(wpmInput.value.trim(), 10) || 0; // Convertir en nombre (par défaut 0 si invalide)
+  const wpm = wpmInput.value.trim();
   if (!name || wpm <= 0) {
     alert("Veuillez entrer un nom valide et une valeur WPM supérieure à 0.");
     return;
   }
+  namesContainer.push(name);
+  powerContainer.push(wpm);
+  addSec.style.display = "none";
 
-  // Créez un joueur
-  let player = {
-    name: name,
-    wpm: wpm,
-    cpm: [],
-    error: 0,
-    precision: 0,
-    finished: false,
-    carColor: Math.floor(Math.random() * 360), // Exemple de couleur aléatoire (teinte HSL)
-  };
-
-  // Ajoutez le joueur au tableau
-  players.push(player);
-  renderPlayerTrack(player);
-
-  // Réinitialisez les champs d'entrée
   nameInput.value = "";
   wpmInput.value = "";
 
-  console.log("Joueur ajouté :", player);
-  console.log("Liste des joueurs :", players);
+  console.log("Joueur ajouté :", name);
+  console.log("power:", wpm);
+  console.log(
+    "liste de joueur et liste des power",
+    namesContainer,
+    powerContainer
+  );
 }
 
-function renderPlayerTrack(player) {
+function displayUser(container, user, element) {
+  // Vérifier si les arguments sont valides
+  if (!Array.isArray(container) || !user || !element) {
+    console.error(
+      "Invalid arguments: 'container' should be an array and 'user' should be a valid DOM element."
+    );
+    return;
+  }
+
+  // Parcourir les éléments du conteneur
+  for (let item of container) {
+    // Créer un élément <span>
+    let span = document.createElement("span");
+
+    // Ajouter le contenu textuel à <span>
+    span.textContent = item;
+    span.addEventListener("click", () => {
+      element.textContent = item;
+      user.style.display = "none";
+    });
+
+    // Ajouter <span> comme enfant de l'élément utilisateur
+    user.appendChild(span);
+  }
+}
+
+function resetElement(domelement, names) {
+  const remove = document.querySelector(".remove-element");
+  remove.addEventListener("click", () => {
+    if (!domelement) {
+      return;
+    }
+    domelement.innerHTML = names;
+  });
+}
+
+function renderPlayerTrack(name) {
+
   const raceTracker = document.querySelector(".car-center");
   const container = document.createElement("div");
-  container.className = "player-container";
+  const bot = bots[name];
+  if (bot) {
+    let player = bot.name;
+    container.className = "player-container";
 
   container.innerHTML = `
     <div class="road">
-      <img class="player-car" src="${player.carImage}" alt="Car for ${player.name}" />
+      <img class="player-car" src="{/car6.svg}" />
       <div class="line"></div>
     </div>
     <div class="flag">
@@ -187,15 +234,22 @@ function renderPlayerTrack(player) {
     </div>
   `;
   raceTracker.appendChild(container);
+  }
+  
 }
 
-function normalRace() {
-  const user = document.querySelector(".second-user");
-  const container = document.querySelector(".second-container");
-  const params = document.querySelector(".second-params");
-  user.innerHTML = "";
-  container.innerHTML = "";
-  params.innerHTML = "";
+function addPlayer() {
+  const name = document.querySelector(".select-name").value;
+  const powers = document.querySelector(".select-power").value;
+  const custom = document.querySelector(".add-section");
+
+  const bot = {
+    name: name,
+    power: powers,
+  };
+
+  bots[name] = bot;
+  custom.style.display = "none";
 }
 
 function manageUser() {
@@ -205,6 +259,7 @@ function manageUser() {
   const items = document.querySelector(".addItems");
   const add = document.querySelector(".add-section");
   const added = document.querySelector(".added");
+  const player = document.querySelector(".start");
 
   normal.addEventListener("click", () => {
     normalRace();
@@ -212,23 +267,104 @@ function manageUser() {
 
   custom.addEventListener("click", () => {
     const addsection = document.querySelector(".select-area");
-    addsection.style.display = "block";
+    if (addsection.style.display === "none") {
+      addsection.style.display = "block";
+    } else {
+      addsection.style.display = "none";
+    }
   });
 
   comput.addEventListener("click", () => {
+    computerRace();
     const center = document.querySelector(".car-center");
-    center.style.display = "block";
+    if (center.style.display === "none") {
+      center.style.display = "block";
+    } else {
+      center.style.display = "none";
+    }
   });
+
   items.addEventListener("click", () => {
-    add.style.display = "block";
+    if (add.style.display === "none") {
+      add.style.display = "block";
+    } else {
+      add.style.display = "none";
+    }
   });
   added.addEventListener("click", () => {
     createUser();
     alert("enregistre avec succes");
   });
+  player.addEventListener("click", () => {
+    customRace();
+  });
 }
 
-// Initialiser les lignes sur la piste
+function renderGame() {
+  resetGame();
+  resetTimer();
+
+  if (normal) {
+    verifyInput();
+  } else if (custom) {
+    verifyInput();
+    startBot(name);
+  } else {
+    verifyInput();
+    startBot();
+  }
+}
+
+function normalRace() {
+  const user = document.querySelector(".second-user");
+  const container = document.querySelector(".second-container");
+  const params = document.querySelector(".second-params");
+  user.innerHTML = "";
+  container.style.display = "none";
+  params.innerHTML = "";
+  normal = true;
+}
+
+function customRace() {
+  custom = true;
+  renderPlayerTrack(bots.name);
+  startBot(bots);
+}
+
+function computerRace() {
+  computer = true;
+}
+
+function select() {
+  const names = document.querySelector(".select-name");
+  const powers = document.querySelector(".select-power");
+
+  const otherN = document.querySelector(".other-names");
+  const otherW = document.querySelector(".other-power");
+
+  names.addEventListener("click", () => {
+    if (otherN.style.display === "none") {
+      otherN.innerHTML = "";
+      displayUser(namesContainer, otherN, names);
+      resetElement(names, "name");
+      otherN.style.display = "flex";
+    } else {
+      otherN.style.display = "none";
+    }
+  });
+  powers.addEventListener("click", () => {
+    if (otherW.style.display === "none") {
+      otherW.innerHTML = "";
+      displayUser(powerContainer, otherW, powers);
+      resetElement(powers, "power");
+
+      otherW.style.display = "flex";
+    } else {
+      otherW.style.display = "none";
+    }
+  });
+}
+
 function initializeRoadLines() {
   const lineCounters = document.querySelectorAll(".line");
   lineCounters.forEach((lineCounter) => {
@@ -311,18 +447,6 @@ function resetGame() {
   inputArea.value = "";
 }
 
-// function chekFinished(progress, player) {
-//   if (progress >= 1) {
-//     if (player === "user" && !userFinished) {
-//       userFinished = true;
-//       console.log("User a terminé la course !");
-//     } else if (player === "bot" && !botFinished) {
-//       botFinished = true;
-//       console.log("Bot a terminé la course !");
-//     }
-//   }
-// }
-
 function moveCar(car, progress) {
   const trackWidth = document.querySelector("#race-track").offsetWidth;
   const carWidth = car.offsetWidth;
@@ -349,11 +473,11 @@ function updateWPMCPMRealtime(inputText, targetText, player) {
   const wordsArray = inputText.trim().split(/\s+/); //erreur est ici----------------------------
   const totalwords = wordsArray.length;
 
-  const wpm = totalwords / elapsedTime; // Calcul du WPM
-  const cpm = totalCharacters / elapsedTime; // Calcul du CPM
+  const wpm = Math.round(totalwords / elapsedTime); // Calcul du WPM
+  const cpm = Math.round(totalCharacters / elapsedTime); // Calcul du CPM
 
   updateWPMCPM(wpm, cpm, player); // Mise à jour dans l'UI
-  // updateChart(wpm, cpm, player); // Stocker pour le graphique
+  console.log(`Joueur: ${player}, WPM: ${wpm}, CPM: ${cpm}`);
 }
 
 // Mettre à jour le graphique
@@ -368,20 +492,6 @@ function updateChart(wpm, cpm, player) {
       timeData.shift();
     }
   }
-
-  // if (!userFinished) {
-  //   const userWPM = Math.random() * 100; // Simulation de données
-  //   const userCPM = userWPM * 5; // Exemple de calcul
-  //   userWPMData.push(userWPM);
-  //   userCPMData.push(userCPM);
-  // }
-
-  // if (!botFinished) {
-  //   const botWPM = Math.random() * 100; // Simulation de données
-  //   const botCPM = botWPM * 5;
-  //   botWPMData.push(botWPM);
-  //   botCPMData.push(botCPM);
-  // }
 
   if (player === "user") {
     if (userProgress >= 1) {
@@ -404,22 +514,6 @@ function updateChart(wpm, cpm, player) {
       botCPMData.push(cpm);
     }
   }
-
-  // if (player === "user") {
-  //   userWPMData.push(wpm);
-  //   userCPMData.push(cpm);
-  //   if (userWPMData.length > maxDataPoints) {
-  //     userWPMData.shift();
-  //     userCPMData.shift();
-  //   }
-  // } else if (player === "bot") {
-  //   botWPMData.push(wpm);
-  //   botCPMData.push(cpm);
-  //   if (botWPMData.length > maxDataPoints) {
-  //     botWPMData.shift();
-  //     botCPMData.shift();
-  //   }
-  // }
 
   if (startChart) {
     startChart.data.labels = timeData;
@@ -491,11 +585,30 @@ function verifyInput() {
 }
 
 // Mouvement automatique du robot
-function startBot() {
+function startBot(name) {
   const botCar = document.querySelector(".bot-car");
   const textLength = textContainer[0].length;
+  let baseSpeed;
+  const bot = bots[name];
+  if (bot) {
+    let wpm = bot.wpm;
+    let cpm = wpm * 5;
+    let player = bot.name;
 
-  const baseSpeed = 8;
+    baseSpeed = bot.wpm / 60;
+    bot.interval = setInterval(() => {
+      if (!startTime) startTime = Date.now();
+      bot.preogress += baseSpeed / 100;
+      if (bot.progress > 1) bot.progress = 1;
+      moveCar(bot.element, bot.progress);
+      if (bot.progress >= 1) {
+        clearInterval(bot.interval);
+        console.log(`Bot avec ${bot.wpm} WPM a terminé !`);
+      }
+    }, 100);
+    updateWPMCPM(wpm, cpm, player);
+  }
+  baseSpeed = 3;
   // const minSpeed = 0.5;
   const botSpeed = (baseSpeed + Math.random() * 0.5) / textLength;
 
@@ -517,19 +630,6 @@ function startBot() {
       clearInterval(botInterval);
       endGame("lose");
     }
-    // const raceInterval = setInterval(() => {
-    //   if (userFinished && botFinished) {
-    //     clearInterval(raceInterval);
-    //     console.log("Course terminée !");
-    //     return;
-    //   }
-    // });
-
-    // if (!botFinished) {
-    //   botProgress += Math.random() * 0.02;
-    //   moveCar(botCar, botProgress, "bot");
-    // }
-
     moveCar(botCar, botProgress);
   }, 16); // Mettre à jour toutes les 50 ms
 }
@@ -557,10 +657,11 @@ function displayScores() {
 
 // Initialiser le jeu
 function startGame() {
-  resetGame();
-  resetTimer();
-  verifyInput();
-  startBot();
+  // resetGame();
+  // resetTimer();
+  // verifyInput();
+  // startBot();
+  renderGame();
 }
 
 function toStart() {
@@ -572,11 +673,16 @@ function toStart() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function initializeGame() {
   toStart();
   initializeRoadLines();
   displayText();
   manageUser();
+  select();
+  addPlayer();
+}
+document.addEventListener("DOMContentLoaded", () => {
+  initializeGame();
 });
 
 function callTostartGame() {
@@ -665,16 +771,3 @@ function resetTimer() {
   elapsedTimer = 0;
   updateDisplay();
 }
-
-// function createElement() {
-//   const user = document.querySelector(".second-user");
-//   const container = document.querySelector(".second-container");
-//   const params = document.querySelector(".second-params");
-//   for (let i = 0; i < 3; i++) {
-//     const div = document.createElement(div);
-//     div[i].textContent = "salut";
-//     user.appendChild(div[i]);
-//   }
-// }
-
-// createElement();

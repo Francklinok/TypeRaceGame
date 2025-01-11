@@ -69,7 +69,11 @@ main {
 } */
 * {
   background-color: rgb(247, 221, 190);
+  font-family: "Times New Roman", Times, serif;
+  font-size: 14px;
+  /* font-weight:12px; */
 }
+
 .title {
   display: flex;
   justify-content: space-between;
@@ -141,7 +145,8 @@ main {
   text-align: center;
   border: 1px solid white;
   gap: 1px;
-  margin: 0px;
+  /* margin: 0px; */
+  margin-top: 10px;
 }
 
 .main-section .left-section .container .first-race p,
@@ -256,6 +261,25 @@ main {
   height: 20px; */
 }
 
+.main-section .center-section .select .name .other-names {
+  display: none;
+  flex-direction: column;
+  height: auto;
+  width: 80px;
+  padding: 15px;
+  border: 1px solid rgb(221, 190, 190);
+  margin: 2px 2px 2px 30px;
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  z-index: 100;
+}
+
+.main-section .center-section .select span {
+  margin-bottom: 8px;
+  text-align: center;
+}
+
 .main-section .center-section .select-area .creat .select .power {
   grid-column: 2;
   grid-row: 1;
@@ -265,6 +289,21 @@ main {
   border-radius: 10px;
   gap: 10px;
   cursor: pointer;
+}
+.main-section .center-section .select .power .other-power {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 8px;
+  width: 95px;
+  height: auto;
+  border: 1px solid rgb(209, 203, 203);
+  position: absolute;
+  border-radius: 8px;
+  bottom: 80px;
+  right: 30px;
+  gap: 2px;
+  z-index: 1000;
 }
 
 .main-section .center-section .select-area .creat .select .add {
@@ -384,35 +423,12 @@ main {
 }
 
 .main-section .center-section .other {
-  display: none;
+  /* display:flex; */
   /* display: flex; */
-  border: 1px solid red;
-  gap: 40px;
+  /* border: 1px solid red;
+  gap: 40px; */
 }
 
-.main-section .center-section .other .names {
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  width: 20px;
-  padding: 5px;
-  border: 1px solid rgb(209, 203, 203);
-  margin: 2px 2px 2px 80px;
-}
-
-.main-section .center-section .other span {
-  margin-bottom: 8px;
-  text-align: center;
-}
-
-.main-section .center-section .other .power {
-  display: flex;
-  flex-direction: column;
-  padding: 8px;
-  width: 50px;
-  height: auto;
-  border: 1px solid rgb(209, 203, 203);
-}
 .main-section .center-section .open {
   display: none;
 }
