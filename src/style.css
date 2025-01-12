@@ -437,7 +437,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid white;
+  border: 1px solid red;
   width: 380px;
   height: auto;
   position: absolute;
@@ -481,17 +481,19 @@ main {
 }
 
 .main-section .center-section .main-area {
-  /* display: none; */
+  display: flex;
+  flex-direction: column;
 }
 
 .main-section .center-section .main-area .race {
   padding: 10px 10px 10px 10px;
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: repeat 1fr 1fr;
   grid-template-columns: 1fr 7fr 1fr;
   border: 1px solid rgb(210, 203, 203);
   max-height: 200px;
-  margin-bottom: 20px;
+  margin-bottom: auto;
+  background-color: blue;
 }
 
 .main-section .center-section .main-area .race .user-left {
@@ -501,11 +503,12 @@ main {
   padding: 10px;
   margin: 35px 8px 30px 5px;
   border: 1px solid #ccc;
+  background-color: red;
 
   /* grid-row: 1/2; */
 }
 
-.main-section .center-section .main-area .race .user-left .first-user p {
+.main-section .center-section .main-area .race .user-left .user p {
   display: flex;
   grid-row: 1;
   grid-column: 1;
@@ -518,7 +521,7 @@ main {
   padding-left: 15px;
 }
 
-.main-section .center-section .main-area .race .user-left .second-user p {
+/* .main-section .center-section .main-area .race .user-left .second-user p {
   display: flex;
   grid-row: 2;
   grid-column: 1;
@@ -529,7 +532,7 @@ main {
   width: 35px;
   padding-left: 15px;
   border-radius: 10px;
-}
+} */
 
 .main-section .center-section .main-area .race .car-center {
   display: flex;
@@ -538,8 +541,10 @@ main {
   align-items: center;
   gap: 8px;
   width: 100%;
+  height: auto;
   border: 1px solid #ccc;
   margin: 5px 1px 10px 1px;
+  background-color: green;
 }
 
 .main-section .center-section .main-area .race .car-center .first-container {
@@ -549,9 +554,11 @@ main {
   grid-column: 2;
   width: 95%;
   padding: 10px;
-  border: 1px solid rgb(201, 191, 191);
+  background-color: red;
+  /* border: 1px solid rgb(201, 191, 191); */
   box-shadow: 1px 1px 0px 1px rgb(247, 228, 228);
   border-radius: 10px;
+  margin: 0;
 }
 
 .main-section .center-section .main-area .race .car-center .road {
@@ -608,9 +615,8 @@ main {
   right: 25px;
 }
 
-.main-section .center-section .main-area .race .car-center .second-container {
+/* .main-section .center-section .main-area .race .car-center .container {
   display: flex;
-  /* flex-direction: column; */
   text-align: center;
   grid-row: 2;
   grid-column: 2;
@@ -618,9 +624,9 @@ main {
   border: 1px solid rgb(201, 191, 191);
   box-shadow: 1px 1px 0px 1px rgb(247, 228, 228);
   border-radius: 10px;
-  /* background-color: blue; */
+  background-color: yellow;
   width: 95%;
-}
+} */
 
 .main-section .center-section .main-area .race .params-right {
   display: flex;
@@ -628,11 +634,16 @@ main {
   padding: 5px;
   border: 1px solid #ccc;
   margin: 30px 1px 40px 8px;
+    background-color:yellow;
+
 }
 
-.main-section .center-section .main-area .race .params-right .first-params {
+.main-section .center-section .main-area .race .params-right .params {
+  
   grid-row: 1;
   grid-column: 3;
+  display:flex;
+  flex-direction:column;
   text-align: center;
   border: 1px solid rgb(196, 195, 195);
   border-radius: 10px;
@@ -647,7 +658,7 @@ main {
   font-size: 12px;
   margin: 0;
 }
-
+/* 
 .main-section .center-section .main-area .race .params-right .second-params {
   text-align: center;
   grid-row: 2;
@@ -655,9 +666,8 @@ main {
   border: 1px solid rgb(196, 195, 195);
   border-radius: 10px;
   margin: 1px 0px 10px 2px;
-  /* padding:2px 10px 2px 10px; */
   gap: 5px;
-}
+} */
 
 .main-section .center-section .main-area .text-container {
   display: flex;

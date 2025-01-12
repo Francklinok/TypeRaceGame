@@ -12,6 +12,8 @@ const powerContainer = [
   "10 wpm",
 ];
 
+const carsConainer = ["car0", "car1", "car2", "car3", "car6"];
+
 let bots = {};
 
 let normal = false;
@@ -215,28 +217,145 @@ function resetElement(domelement, names) {
 }
 
 function renderPlayerTrack(name) {
-
-  const raceTracker = document.querySelector(".car-center");
-  const container = document.createElement("div");
   const bot = bots[name];
-  if (bot) {
-    let player = bot.name;
-    container.className = "player-container";
+  const raceTracker = document.querySelector(".car-center");
 
-  container.innerHTML = `
-    <div class="road">
-      <img class="player-car" src="{/car6.svg}" />
-      <div class="line"></div>
-    </div>
-    <div class="flag">
-      <span>Finish</span>
-      <div class=""></div>
-    </div>
-  `;
-  raceTracker.appendChild(container);
-  }
-  
+  const container = document.createElement("div");
+  container.className = "race";
+
+  // Crée la section des utilisateurs
+  const userLeft = document.createElement("div");
+  userLeft.className = "user-left";
+
+  const firstUser = document.createElement("div");
+  firstUser.className = "user";
+  const firstUserText = document.createElement("p");
+  firstUserText.textContent = bot;
+  firstUser.appendChild(firstUserText);
+
+  // const secondUser = document.createElement("div");
+  // secondUser.className = "second-user";
+  // const secondUserText = document.createElement("p");
+  // secondUserText.textContent = "bot";
+  // secondUser.appendChild(secondUserText);
+
+  userLeft.appendChild(firstUser);
+  // userLeft.appendChild(secondUser);
+
+  // Crée la section des voitures et de la route
+  const carCenter = document.createElement("div");
+  carCenter.className = "car-center";
+
+  const firstContainer = document.createElement("div");
+  firstContainer.className = " first-container";
+
+  const roadFirst = document.createElement("div");
+  roadFirst.className = "road";
+  const userCar = document.createElement("img");
+  userCar.className = "user-car";
+  userCar.src = "/car.svg";
+  userCar.alt = "Car for user";
+  const lineFirst = document.createElement("div");
+  lineFirst.className = "line";
+  roadFirst.appendChild(userCar);
+  roadFirst.appendChild(lineFirst);
+
+  const flagFirst = document.createElement("div");
+  flagFirst.className = "flag";
+  const finishFirst = document.createElement("span");
+  finishFirst.textContent = "Finish";
+  flagFirst.appendChild(finishFirst);
+
+  firstContainer.appendChild(roadFirst);
+  firstContainer.appendChild(flagFirst);
+
+  // const secondContainer = document.createElement("div");
+  // secondContainer.className = "container second-container";
+
+  // const roadSecond = document.createElement("div");
+  // roadSecond.className = "road";
+  // const botCar = document.createElement("img");
+  // botCar.className = "bot-car";
+  // botCar.src = "/car6.svg";
+  // botCar.alt = "Car for bot";
+  // const lineSecond = document.createElement("div");
+  // lineSecond.className = "line";
+  // roadSecond.appendChild(botCar);
+  // roadSecond.appendChild(lineSecond);
+
+  // const flagSecond = document.createElement("div");
+  // flagSecond.className = "flag";
+  // const finishSecond = document.createElement("span");
+  // finishSecond.textContent = "Finish";
+  // flagSecond.appendChild(finishSecond);
+
+  // secondContainer.appendChild(roadSecond);
+  // secondContainer.appendChild(flagSecond);
+
+  carCenter.appendChild(firstContainer);
+  // carCenter.appendChild(secondContainer);
+
+  // Crée la section des paramètres
+  const paramsRight = document.createElement("div");
+  paramsRight.className = "params-right";
+
+  const firstParams = document.createElement("div");
+  firstParams.className = "params";
+  const userWpm = document.createElement("p");
+  userWpm.className = "user-wpm";
+  userWpm.textContent = "0: wpm";
+  const userCpm = document.createElement("p");
+  userCpm.className = "user-cpm";
+  userCpm.textContent = "0: cpm";
+  firstParams.appendChild(userWpm);
+  firstParams.appendChild(userCpm);
+
+  // const secondParams = document.createElement("div");
+  // secondParams.className = "second-params";
+  // const botWpm = document.createElement("p");
+  // botWpm.className = "bot-wpm";
+  // botWpm.textContent = "0: wpm";
+  // const botCpm = document.createElement("p");
+  // botCpm.className = "bot-cpm";
+  // botCpm.textContent = "0: cpm";
+  // secondParams.appendChild(botWpm);
+  // secondParams.appendChild(botCpm);
+
+  paramsRight.appendChild(firstParams);
+  // paramsRight.appendChild(secondParams);
+
+  // Ajouter tous les éléments à la structure principale de la course
+  container.appendChild(userLeft);
+  container.appendChild(carCenter);
+  container.appendChild(paramsRight);
+
+  // Ajouter l'élément container à l'élément du DOM qui doit contenir la course
+  raceTracker.appendChild(container); // Vous pouvez remplacer "document.body" par un autre élément de votre choix.
 }
+
+// Appel de la fonction pour générer la course
+
+// function renderPlayerTrack(name) {
+//   const raceTracker = document.querySelector(".car-center");
+//   const container = document.createElement("div");
+//   const bot = bots[name];
+//   if (bot) {
+//     let player = bot.name;
+//     container.className = "container";
+
+//     container.innerHTML = `
+//     <div class="road">
+//       <img class="player-car" src="{./car6.svg}" />
+//       <div class="line"></div>
+//     </div>
+//     <div class="flag">
+//       <span>Finish</span>
+//       <div class=""></div>
+//     </div>
+//   `;
+//     raceTracker.appendChild(container);
+//   }
+// }
 
 function addPlayer() {
   const name = document.querySelector(".select-name").value;
@@ -260,13 +379,13 @@ function manageUser() {
   const add = document.querySelector(".add-section");
   const added = document.querySelector(".added");
   const player = document.querySelector(".start");
+  const addsection = document.querySelector(".select-area");
 
   normal.addEventListener("click", () => {
     normalRace();
   });
 
   custom.addEventListener("click", () => {
-    const addsection = document.querySelector(".select-area");
     if (addsection.style.display === "none") {
       addsection.style.display = "block";
     } else {
@@ -297,6 +416,7 @@ function manageUser() {
   });
   player.addEventListener("click", () => {
     customRace();
+    addsection.style.display = "none";
   });
 }
 
