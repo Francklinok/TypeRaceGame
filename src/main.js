@@ -15,12 +15,16 @@ const powerContainer = [
 const carsConainer = ["car0", "car1", "car2", "car3", "car6"];
 
 let bots = {};
+let botElement = null;
 
 let normal = false;
 let custom = false;
 let computer = false;
 let botCreated = false;
 
+let selectedName = null;
+let selectedPower = null;
+console.log("selectedName");
 let userProgress = 0;
 let botProgress = 0;
 let userScore = 0;
@@ -48,111 +52,6 @@ let elapsedTimer = 0;
 // let timerInterval = null;
 let startChart = null;
 
-const textContainer = [
-  "Choose exactly what you want for your next race. You can choose your bots (challengers).",
-];
-
-function displayFinalChart() {
-  const canvas = document.querySelector(".chart");
-  if (!canvas) {
-    console.error("Canvas avec la classe 'chart' introuvable !");
-    return;
-  }
-
-  const ctx = canvas.getContext("2d");
-
-  // Détruire un ancien graphique s'il existe
-  if (startChart) {
-    startChart.destroy();
-  }
-
-  // Calcul de l'échelle maximale pour les axes Y
-  const maxWPM = Math.max(...userWPMData, ...botWPMData);
-  const maxCPM = Math.max(...userCPMData, ...botCPMData);
-  const maxYScale = Math.ceil(Math.max(maxWPM, maxCPM) / 10) * 10; // Arrondi supérieur à la dizaine
-
-  // Création du graphique
-  startChart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: timeData, // Les données de temps
-      datasets: [
-        {
-          label: "User WPM",
-          borderColor: "rgba(0, 123, 255, 1)",
-          backgroundColor: "rgba(0, 123, 255, 0.2)",
-          data: userWPMData,
-          fill: true,
-          tension: 0.4,
-        },
-        {
-          label: "User CPM",
-          borderColor: "rgba(40, 167, 69, 1)",
-          backgroundColor: "rgba(40, 167, 69, 0.2)",
-          data: userCPMData,
-          fill: true,
-          tension: 0.4,
-        },
-        {
-          label: "Bot WPM",
-          borderColor: "rgba(255, 193, 7, 1)",
-          backgroundColor: "rgba(255, 193, 7, 0.2)",
-          data: botWPMData,
-          fill: true,
-          tension: 0.4,
-        },
-        {
-          label: "Bot CPM",
-          borderColor: "rgba(220, 53, 69, 1)",
-          backgroundColor: "rgba(220, 53, 69, 0.2)",
-          data: botCPMData,
-          fill: true,
-          tension: 0.4,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          display: true,
-          position: "bottom",
-        },
-        tooltip: {
-          mode: "index",
-          intersect: false,
-        },
-      },
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: "Temps (secondes)",
-          },
-        },
-        y: {
-          title: {
-            display: true,
-            text: "Vitesse (WPM / CPM)",
-          },
-          beginAtZero: true,
-          max: maxYScale, // Limite de l'échelle Y
-        },
-      },
-      animation: {
-        duration: 1000,
-        easing: "easeOutCubic",
-      },
-    },
-  });
-
-  console.log("Graphique final affiché :", {
-    timeData,
-    userWPMData,
-    botWPMData,
-  });
-}
-
 function createUser() {
   const nameInput = document.querySelector(".input-name");
   const wpmInput = document.querySelector(".input-wpm");
@@ -165,8 +64,10 @@ function createUser() {
     alert("Veuillez entrer un nom valide et une valeur WPM supérieure à 0.");
     return;
   }
+
   namesContainer.push(name);
   powerContainer.push(wpm);
+
   addSec.style.display = "none";
 
   nameInput.value = "";
@@ -181,7 +82,12 @@ function createUser() {
   );
 }
 
-function displayUser(container, user, element) {
+// function useSelectBot(selectedBot) {
+//   botElement = selectedBot;
+//   console.log(selectedBot);
+// }
+
+function displayUser(container, user, element, onSelect) {
   // Vérifier si les arguments sont valides
   if (!Array.isArray(container) || !user || !element) {
     console.error(
@@ -200,6 +106,7 @@ function displayUser(container, user, element) {
     span.addEventListener("click", () => {
       element.textContent = item;
       user.style.display = "none";
+      onSelect(item);
     });
 
     // Ajouter <span> comme enfant de l'élément utilisateur
@@ -212,25 +119,59 @@ function resetElement(domelement, names) {
   remove.addEventListener("click", () => {
     if (domelement) {
       domelement.innerHTML = names;
-
     }
   });
 }
 
-function renderPlayerTrack(bots) {
-  let botName;
-  if(bots){
-     botName = bots[name];
-     return  botName;
-  }else{
+function select() {
+  const names = document.querySelector(".select-name");
+  const powers = document.querySelector(".select-power");
+
+  const otherN = document.querySelector(".other-names");
+  const otherW = document.querySelector(".other-power");
+
+  names.addEventListener("click", () => {
+    if (otherN.style.display === "none") {
+      otherN.innerHTML = "";
+      displayUser(namesContainer, otherN, names, (selectedBot) => {
+        selectedName = selectedBot;
+      });
+      resetElement(names, "name");
+      otherN.style.display = "flex";
+    } else {
+      otherN.style.display = "none";
+    }
+  });
+
+  powers.addEventListener("click", () => {
+    if (otherW.style.display === "none") {
+      otherW.innerHTML = "";
+      displayUser(powerContainer, otherW, powers, (selectedBot) => {
+        selectedPower = selectedBot;
+      });
+      resetElement(powers, "power");
+
+      otherW.style.display = "flex";
+    } else {
+      otherW.style.display = "none";
+    }
+  });
+}
+
+function renderPlayerTrack() {
+   let botName;
+
+  // Assigner la valeur de `botName` selon la condition
+  if (custom) {
+    botName = selectedName;
+  } else {
     botName = "bot";
   }
-  
+  console.log("name", botName);
+  if (custom && selectedName) {
+    botName = selectedName;
+  }
   const raceTracker = document.querySelector(".race");
-
-  // const container = document.createElement("div");
-  // container.className = "race";
-
   // Crée la section des utilisateurs
   const userLeft = document.createElement("div");
   userLeft.className = "user-left";
@@ -255,7 +196,7 @@ function renderPlayerTrack(bots) {
   const roadFirst = document.createElement("div");
   roadFirst.className = "road";
   const userCar = document.createElement("img");
-  userCar.className = "bot-car";
+  userCar.className = `${botName}-car`;
   userCar.src = "/car.svg";
   userCar.alt = "Car for user";
   const lineFirst = document.createElement("div");
@@ -282,10 +223,10 @@ function renderPlayerTrack(bots) {
   const firstParams = document.createElement("div");
   firstParams.className = "params";
   const userWpm = document.createElement("p");
-  userWpm.className = "user-wpm";
+  userWpm.className = "bot-wpm";
   userWpm.textContent = "0: wpm";
   const userCpm = document.createElement("p");
-  userCpm.className = "user-cpm";
+  userCpm.className = "bot-cpm";
   userCpm.textContent = "0: cpm";
   firstParams.appendChild(userWpm);
   firstParams.appendChild(userCpm);
@@ -309,11 +250,11 @@ function addPlayer() {
   const powers = document.querySelector(".select-power").value;
   const custom = document.querySelector(".add-section");
 
-  if (!name || !power) {
+  if (!name || !powers) {
     return;
   }
 
-  bots[name] = {name, power};
+  bots[name] = { name, powers };
   custom.style.display = "none";
 }
 
@@ -362,89 +303,38 @@ function manageUser() {
   });
 }
 
-function renderGame() {
- 
-  if (computer) {
-    if (!botCreated) {
-      verifyInput();
-      createBot();
-      botCreated = true;
-    }
-    
-  } else if(custom) {
-    verifyInput();
-    createBot(bots);
-  }
-  resetGame();
-  resetTimer();
-  verifyInput();
-};
-
 function normalRace() {
   resetGame();
   normal = true;
   custom = false;
   computer = false;
-  console.log("normal is click", normal)
-  return normal
+  console.log("normal is click", normal);
+  return normal;
 }
 
 function customRace() {
   normal = false;
   custom = true;
   computer = false;
-  resetGame()
-  createBot(bots)
-  return (custom = true);
-}
-
-function createBot(bots){
-  if(bots){
-    renderPlayerTrack(bots);
-    startBot(bots);
-  }
-  renderPlayerTrack();
-   startBot();
- 
+  resetGame();
+  renderPlayerTrack(true, selectedName);
+  console.log("custom is clicked");
+  console.log("custom = ", custom);
+  return custom;
 }
 
 function computerRace() {
   normal = false;
   custom = false;
   computer = true;
-  resetGame()
-  createBot();
-  return (computer = true);
-}
+  if (!botCreated) {
+    resetGame();
+    renderPlayerTrack();
 
-function select() {
-  const names = document.querySelector(".select-name");
-  const powers = document.querySelector(".select-power");
+    botCreated = true;
+  }
 
-  const otherN = document.querySelector(".other-names");
-  const otherW = document.querySelector(".other-power");
-
-  names.addEventListener("click", () => {
-    if (otherN.style.display === "none") {
-      otherN.innerHTML = "";
-      displayUser(namesContainer, otherN, names);
-      resetElement(names, "name");
-      otherN.style.display = "flex";
-    } else {
-      otherN.style.display = "none";
-    }
-  });
-  powers.addEventListener("click", () => {
-    if (otherW.style.display === "none") {
-      otherW.innerHTML = "";
-      displayUser(powerContainer, otherW, powers);
-      resetElement(powers, "power");
-
-      otherW.style.display = "flex";
-    } else {
-      otherW.style.display = "none";
-    }
-  });
+  return computer;
 }
 
 function initializeRoadLines() {
@@ -503,10 +393,9 @@ function check() {
 
 // Réinitialiser les paramètres du jeu
 function resetGame() {
-    const userCar = document.querySelector(".user-car");
-    const inputArea = document.querySelector(".text-input");
-  if(normal){
-
+  const userCar = document.querySelector(".user-car");
+  const inputArea = document.querySelector(".text-input");
+  if (normal) {
     clearInterval(timerInterval);
     startTime = null;
 
@@ -520,12 +409,12 @@ function resetGame() {
     }
 
     userCar.style.transform = "translateX(0)";
-
-  }else if( custom && computer){
-  const botCar = document.querySelector(".bot-car");
+  } else if (custom && computer && botCreated) {
+    const botCar = document.querySelector(".bot-car");
 
     clearInterval(timerInterval);
     startTime = null;
+    botCreated = false;
 
     userProgress = 0;
     userWPMData = [];
@@ -661,14 +550,6 @@ function verifyInput() {
     if (targetText.startsWith(userTyped)) {
       userProgress = userTyped.length / targetText.length;
       moveCar(userCar, userProgress);
-
-      // const raceInterval = setInterval(() => {
-      //   if (userFinished && botFinished) {
-      //     clearInterval(raceInterval);
-      //     console.log("Course terminée !");
-      //     return;
-      //   }
-      // });
       updateWPMCPMRealtime(userTyped, targetText, "user");
 
       if (userTyped === targetText) {
@@ -685,30 +566,32 @@ function verifyInput() {
 }
 
 // Mouvement automatique du robot
-function startBot(bots) {
+function startBot(bot = null, power = null) {
   const botCar = document.querySelector(".bot-car");
   const textLength = textContainer[0].length;
   let baseSpeed;
 
-  if (bots) {
-    const bot = bots[name];
-    let wpm = bot.wpm;
-    let cpm = wpm * 5;
-    let player = bot.name;
+  if (bot && power) {
+    let wpm = parseInt(power, 10);
+    console.log("wpm", wpm);
 
-    baseSpeed = bot.wpm / 60;
-    bot.interval = setInterval(() => {
+    let cpm = wpm * 5;
+
+    baseSpeed = wpm / 60;
+    const botinterval = setInterval(() => {
       if (!startTime) startTime = Date.now();
-      bot.preogress += baseSpeed / 100;
-      if (bot.progress > 1) bot.progress = 1;
-      moveCar(bot.element, bot.progress);
-      if (bot.progress >= 1) {
-        clearInterval(bot.interval);
+      botProgress += baseSpeed / 100;
+      if (botProgress > 1) botProgress = 1;
+      console.log("botprogresse", botProgress);
+      moveCar(bot, botProgress);
+      if (botProgress >= 1) {
+        clearInterval(botinterval);
         console.log(`Bot avec ${bot.wpm} WPM a terminé !`);
       }
     }, 100);
-    updateWPMCPM(wpm, cpm, player);
+    updateWPMCPM(wpm, cpm, bot);
   }
+
   baseSpeed = 3;
   // const minSpeed = 0.5;
   const botSpeed = (baseSpeed + Math.random() * 0.5) / textLength;
@@ -756,13 +639,55 @@ function displayScores() {
   scoreElement.textContent = `Utilisateur: ${userScore} | Robot: ${botScore}`;
 }
 
-// Initialiser le jeu
+// // Initialiser le jeu
+// function startGame() {
+//   resetGame();
+//   resetTimer();
+
+//   if (computer && botCreated) {
+//     startBot();
+//     verifyInput();
+//   } else if (custom) {
+//     let bot;
+//     let wpm;
+//     console.log("botname = ", bot);
+//     console.log("power = ", wpm);
+
+//     if (botNames) {
+//       return (bot = botElement);
+//     } else if (botPowers) {
+//       return (wpm = parseInt(botElement, 10));
+//     }
+//     verifyInput();
+//     startBot(bot, wpm);
+//   } else {
+//     verifyInput();
+//   }
+// }
 function startGame() {
-  // resetGame();
-  // resetTimer();
-  // verifyInput();
-  // startBot();
-  renderGame();
+  // Réinitialiser le jeu et le minuteur
+  resetGame();
+  resetTimer();
+
+  if (computer && botCreated) {
+    // Lancer le bot et vérifier l'entrée pour le mode ordinateur
+    verifyInput();
+    startBot();
+    // renderPlayerTrack();
+  } else if (custom) {
+    // Gestion des bots personnalisés
+    let bot = selectedName;
+    let power = selectedPower;
+
+    console.log("botname =", bot);
+    console.log("power =", power);
+
+    verifyInput();
+    startBot(bot, power);
+  }
+
+  // Mode par défaut : vérifier uniquement l'entrée
+  verifyInput();
 }
 
 function toStart() {
@@ -871,4 +796,109 @@ function resetTimer() {
   minutes = 0;
   elapsedTimer = 0;
   updateDisplay();
+}
+
+const textContainer = [
+  "Choose exactly what you want for your next race. You can choose your bots (challengers).",
+];
+
+function displayFinalChart() {
+  const canvas = document.querySelector(".chart");
+  if (!canvas) {
+    console.error("Canvas avec la classe 'chart' introuvable !");
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
+
+  // Détruire un ancien graphique s'il existe
+  if (startChart) {
+    startChart.destroy();
+  }
+
+  // Calcul de l'échelle maximale pour les axes Y
+  const maxWPM = Math.max(...userWPMData, ...botWPMData);
+  const maxCPM = Math.max(...userCPMData, ...botCPMData);
+  const maxYScale = Math.ceil(Math.max(maxWPM, maxCPM) / 10) * 10; // Arrondi supérieur à la dizaine
+
+  // Création du graphique
+  startChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: timeData, // Les données de temps
+      datasets: [
+        {
+          label: "User WPM",
+          borderColor: "rgba(0, 123, 255, 1)",
+          backgroundColor: "rgba(0, 123, 255, 0.2)",
+          data: userWPMData,
+          fill: true,
+          tension: 0.4,
+        },
+        {
+          label: "User CPM",
+          borderColor: "rgba(40, 167, 69, 1)",
+          backgroundColor: "rgba(40, 167, 69, 0.2)",
+          data: userCPMData,
+          fill: true,
+          tension: 0.4,
+        },
+        {
+          label: "Bot WPM",
+          borderColor: "rgba(255, 193, 7, 1)",
+          backgroundColor: "rgba(255, 193, 7, 0.2)",
+          data: botWPMData,
+          fill: true,
+          tension: 0.4,
+        },
+        {
+          label: "Bot CPM",
+          borderColor: "rgba(220, 53, 69, 1)",
+          backgroundColor: "rgba(220, 53, 69, 0.2)",
+          data: botCPMData,
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true,
+          position: "bottom",
+        },
+        tooltip: {
+          mode: "index",
+          intersect: false,
+        },
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Temps (secondes)",
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Vitesse (WPM / CPM)",
+          },
+          beginAtZero: true,
+          max: maxYScale, // Limite de l'échelle Y
+        },
+      },
+      animation: {
+        duration: 1000,
+        easing: "easeOutCubic",
+      },
+    },
+  });
+
+  console.log("Graphique final affiché :", {
+    timeData,
+    userWPMData,
+    botWPMData,
+  });
 }
