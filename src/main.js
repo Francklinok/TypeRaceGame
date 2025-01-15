@@ -260,14 +260,14 @@ function renderPlayerTrack(selectName) {
   const firstParams = document.createElement("div");
   firstParams.className = "params";
   const userWpm = document.createElement("p");
-  userWpm.className = "bot-wpm";
+  userWpm.className = `${botName}-wpm`;
   userWpm.textContent = "wpm:0";
   const userCpm = document.createElement("p");
-  userCpm.className = "bot-cpm";
+  userCpm.className = `${botName}-cpm`;
   userCpm.textContent = "cpm:0";
   firstParams.appendChild(userWpm);
   firstParams.appendChild(userCpm);
-
+  console.log("bot name is", botName);
   paramsRight.appendChild(firstParams);
 
   // Ajouter tous les éléments à la structure principale de la course
@@ -531,23 +531,6 @@ function createdBot() {
   });
 }
 
-// function customRace() {
-//   normal = false;
-//   custom = true;
-//   computer = false;
-//   const botExists = bots.some(bot =>bot.name === selectedName)
-//   if(botExists){
-//     return
-//   } else {
-//     bots.push({ name: selectedName, power: selectedPower });
-//     botCount++;
-//   }
-//   resetGame();
-//   console.log("custom is clicked");
-//   console.log("custom = ", custom);
-//   return custom;
-// }
-
 function computerRace() {
   normal = false;
   custom = false;
@@ -683,12 +666,13 @@ function updateWPMCPMRealtime(inputText, targetText, player) {
   const elapsedTime = (Date.now() - startTime) / 60000; // Temps en minutes
   const totalCharacters = inputText.length;
 
-  const wordsArray = inputText.trim().split(/\s+/); //erreur est ici----------------------------
+  const wordsArray = inputText.trim().split(/\s+/);
+  // const wordsArray = inputText.trim().split(/\s+/); //erreur est ici----------------------------
   const totalwords = wordsArray.length;
 
-  const wpm = Math.round(totalwords / elapsedTime); // Calcul du WPM
-  const cpm = Math.round(totalCharacters / elapsedTime); // Calcul du CPM
-
+  const wpm = totalwords / elapsedTime; // Calcul du WPM
+  const cpm = totalCharacters / elapsedTime; // Calcul du CPM
+  console.log(wpm);
   updateWPMCPM(wpm, cpm, player); // Mise à jour dans l'UI
   console.log(`Joueur: ${player}, WPM: ${wpm}, CPM: ${cpm}`);
 }
@@ -789,69 +773,18 @@ function verifyInput() {
   });
 }
 
-// Mouvement automatique du robot
-// function startBot(bot = null, power = null) {
-//   const botCar = document.querySelector(".bot-car");
-//   const textLength = textContainer[0].length;
-//   let baseSpeed;
-
-//   if (bot && power) {
-//     const selectedCar = document.querySelector(`.${bot}-car`);
-//     let wpm = parseInt(power, 10);
-//     console.log("wpm", wpm);
-
-//     let cpm = wpm * 5;
-
-//     baseSpeed = wpm / 60;
-//     const botinterval = setInterval(() => {
-//       if (!startTime) startTime = Date.now();
-//       botProgress += baseSpeed / 100;
-//       if (botProgress > 1) botProgress = 1;
-//       console.log("botprogresse", botProgress);
-//       moveCar(selectedCar, botProgress);
-//       if (botProgress >= 1) {
-//         clearInterval(botinterval);
-//         console.log(`Bot avec ${bot.wpm} WPM a terminé !`);
-//       }
-//     }, 100);
-//     updateWPMCPM(wpm, cpm, bot);
-//   }
-
-//   baseSpeed = 3;
-//   // const minSpeed = 0.5;
-//   const botSpeed = (baseSpeed + Math.random() * 0.5) / textLength;
-
-//   const adjustedSpeed = botSpeed / textLength; // Ajustement de la vitesse en fonction du texte
-
-//   const botInterval = setInterval(() => {
-//     if (!startTime) startTime = Date.now();
-//     // const elapsedTime = (Date.now() - startTime) / 60000;
-//     botProgress += adjustedSpeed;
-
-//     const botTypedLength = Math.floor(botProgress * textContainer[0].length);
-//     const botText = textContainer[0].substring(0, botTypedLength);
-//     updateWPMCPMRealtime(botText, textContainer[0], "bot");
-
-//     if (botProgress >= 1) {
-//       botProgress = 1;
-//       moveCar(botCar, botProgress);
-//       // requestAnimationFrame(startBot)
-//       clearInterval(botInterval);
-//       endGame("lose");
-//     }
-//     moveCar(botCar, botProgress);
-//   }, 16); // Mettre à jour toutes les 50 ms
-// }
-
 function startBot(bot = null, power = null) {
   const botCar = document.querySelector(`.${bot ? bot + "-car" : "bot-car"}`);
   console.log("botcar", botCar);
+
   const textLength = textContainer[0].length;
-  let botProgress = 0;
-  let startTime = null;
+  // let botProgress = 0;
+  // let startTime = null;
 
   // Vérifie si un bot et un WPM (puissance) sont fournis
-  if (bot && power) {
+  if (custom && bot && power) {
+    let botProgress = 0;
+    let startTime = null;
     const wpm = parseInt(power, 10); // Vitesse en mots par minute
     const cpm = wpm * 5; // Caractères par minute
     const baseSpeed = wpm / (60 * textLength); // Progression par intervalle basée sur WPM et longueur du texte
@@ -882,34 +815,40 @@ function startBot(bot = null, power = null) {
         console.log(`Bot "${bot}" a terminé avec ${wpm} WPM !`);
       }
     }, 100); // Mettre à jour toutes les 100 ms
-  } else {
+  } else if (computer) {
     // Cas par défaut si aucun bot ou power n'est défini
-    const defaultBaseSpeed = 3 / textLength; // Ajustement de la vitesse par la longueur du texte
+    bot = "bot";
+    power = 0;
+    const defaultbaseSpeed = 3;
+    // const minSpeed = 0.5;
+    const botSpeed = (defaultbaseSpeed + Math.random() * 0.5) / textLength;
+
+    const adjustedSpeed = botSpeed / textLength; // Ajustement de la vitesse en fonction du texte
 
     const botInterval = setInterval(() => {
       if (!startTime) startTime = Date.now();
-
-      // Mise à jour de la progression
-      botProgress += defaultBaseSpeed;
-      botProgress = Math.min(botProgress, 1);
+      // const elapsedTime = (Date.now() - startTime) / 60000;
+      botProgress += adjustedSpeed;
 
       const botTypedLength = Math.floor(botProgress * textContainer[0].length);
       const botText = textContainer[0].substring(0, botTypedLength);
 
-      // Met à jour WPM et CPM en temps réel
-      updateWPMCPMRealtime(botText, textContainer[0], "bot");
+      updateWPMCPMRealtime(botText, textContainer[0], bot);
+      console.log("botText", botText);
+      console.log("textConntainer", textContainer);
+      console.log(
+        `Débogage: botProgress=${botProgress}, bot=${bot}, textContainer=${textContainer}`
+      );
 
-      // Si le bot atteint la fin
       if (botProgress >= 1) {
         botProgress = 1;
         moveCar(botCar, botProgress);
-        clearInterval(botInterval); // Arrête l'intervalle
+        // requestAnimationFrame(startBot)
+        clearInterval(botInterval);
         endGame("lose");
       }
-
-      // Déplace la voiture
       moveCar(botCar, botProgress);
-    }, 16); // Met à jour toutes les 16 ms (~60 FPS)
+    }, 16); // Mettre à jour toutes les 50 ms
   }
 }
 
@@ -973,9 +912,6 @@ function startGame() {
     verifyInput();
     bots.forEach((bot) => {
       startBot(bot.name, bot.power);
-      //  renderPlayerTrack(bot.name);
-      console.log("botname =", bot.name);
-      console.log("power =", bot.power);
     });
 
     verifyInput();
