@@ -14,17 +14,18 @@ const powerContainer = [
 
 const carsConainer = ["car0", "car1", "car2", "car3", "car6"];
 
-let bots = {};
+let bots = [];
 let botElement = null;
 
 let normal = false;
 let custom = false;
 let computer = false;
 let botCreated = false;
+let botCount = 0;
 
 let selectedName = null;
 let selectedPower = null;
-console.log("selectedName");
+
 let userProgress = 0;
 let botProgress = 0;
 let userScore = 0;
@@ -130,51 +131,89 @@ function select() {
   const otherN = document.querySelector(".other-names");
   const otherW = document.querySelector(".other-power");
 
-  names.addEventListener("click", () => {
-    if (otherN.style.display === "none") {
-      otherN.innerHTML = "";
-      displayUser(namesContainer, otherN, names, (selectedBot) => {
-        selectedName = selectedBot;
+  // Fonction pour gérer l'affichage et la sélection des options
+  const toggleDisplay = (element, container, input, callback) => {
+    if (element.style.display === "none") {
+      element.innerHTML = ""; // Vider l'élément avant d'afficher
+      displayUser(container, element, input, (selectedBot) => {
+        callback(selectedBot); // Mettre à jour le nom ou la puissance sélectionnée
       });
-      resetElement(names, "name");
-      otherN.style.display = "flex";
+      resetElement(
+        input,
+        element.classList.contains("select-name") ? "name" : "power"
+      );
+      element.style.display = "flex"; // Afficher l'élément
     } else {
-      otherN.style.display = "none";
+      element.style.display = "none"; // Cacher l'élément si déjà visible
     }
+  };
+
+  // Gestion du clic sur le nom
+  names.addEventListener("click", () => {
+    toggleDisplay(otherN, namesContainer, names, (selectedBot) => {
+      selectedName = selectedBot; // Mettre à jour le nom du bot sélectionné
+    });
   });
 
+  // Gestion du clic sur la puissance
   powers.addEventListener("click", () => {
-    if (otherW.style.display === "none") {
-      otherW.innerHTML = "";
-      displayUser(powerContainer, otherW, powers, (selectedBot) => {
-        selectedPower = selectedBot;
-      });
-      resetElement(powers, "power");
-
-      otherW.style.display = "flex";
-    } else {
-      otherW.style.display = "none";
-    }
+    toggleDisplay(otherW, powerContainer, powers, (selectedBot) => {
+      selectedPower = selectedBot; // Mettre à jour la puissance du bot sélectionné
+    });
   });
 }
 
-function renderPlayerTrack() {
-   let botName;
+// function select() {
+//   const names = document.querySelector(".select-name");
+//   const powers = document.querySelector(".select-power");
 
-  // Assigner la valeur de `botName` selon la condition
-  if (custom) {
-    botName = selectedName;
-  } else {
-    botName = "bot";
-  }
+//   const otherN = document.querySelector(".other-names");
+//   const otherW = document.querySelector(".other-power");
+
+//   names.addEventListener("click", () => {
+//     if (otherN.style.display === "none") {
+//       otherN.innerHTML = "";
+//       displayUser(namesContainer, otherN, names, (selectedBot) => {
+//         selectedName = selectedBot;
+//       });
+//       resetElement(names, "name");
+//       otherN.style.display = "flex";
+//     } else {
+//       otherN.style.display = "none";
+//     }
+//   });
+// powers.addEventListener("click", () => {
+//   if (otherW.style.display === "none") {
+//     otherW.innerHTML = "";
+//     displayUser(powerContainer, otherW, powers, (selectedBot) => {
+//       selectedPower = selectedBot;
+//     });
+//     resetElement(powers, "power");
+
+//     otherW.style.display = "flex";
+//   } else {
+//     otherW.style.display = "none";
+//   }
+// });
+function renderPlayerTrack(selectName) {
+  let botName = selectName || "bot";
   console.log("name", botName);
-  if (custom && selectedName) {
-    botName = selectedName;
-  }
+
   const raceTracker = document.querySelector(".race");
+
+  // Vérifier si le bot existe déjà dans la course
+  const existingBot = raceTracker.querySelector(`[data-bot-name="${botName}"]`);
+
+  // Si le bot existe déjà, on ne le recrée pas
+  if (existingBot) {
+    console.log(`Bot ${botName} already exists in the race.`);
+    return; // Sortir de la fonction si le bot est déjà affiché
+  }
+
   // Crée la section des utilisateurs
   const userLeft = document.createElement("div");
   userLeft.className = "user-left";
+  userLeft.setAttribute("data-bot-name", botName); // Ajouter un attribut unique pour identifier ce bot
 
   const firstUser = document.createElement("div");
   firstUser.className = "user";
@@ -184,14 +223,13 @@ function renderPlayerTrack() {
   firstUser.appendChild(firstUserText);
 
   userLeft.appendChild(firstUser);
-  // userLeft.appendChild(secondUser);
 
   // Crée la section des voitures et de la route
   const carCenter = document.createElement("div");
   carCenter.className = "car-center";
 
   const firstContainer = document.createElement("div");
-  firstContainer.className = " first-container";
+  firstContainer.className = "first-container";
 
   const roadFirst = document.createElement("div");
   roadFirst.className = "road";
@@ -214,7 +252,6 @@ function renderPlayerTrack() {
   firstContainer.appendChild(flagFirst);
 
   carCenter.appendChild(firstContainer);
-  // carCenter.appendChild(secondContainer);
 
   // Crée la section des paramètres
   const paramsRight = document.createElement("div");
@@ -224,24 +261,99 @@ function renderPlayerTrack() {
   firstParams.className = "params";
   const userWpm = document.createElement("p");
   userWpm.className = "bot-wpm";
-  userWpm.textContent = "0: wpm";
+  userWpm.textContent = "wpm:0";
   const userCpm = document.createElement("p");
   userCpm.className = "bot-cpm";
-  userCpm.textContent = "0: cpm";
+  userCpm.textContent = "cpm:0";
   firstParams.appendChild(userWpm);
   firstParams.appendChild(userCpm);
 
   paramsRight.appendChild(firstParams);
-  // paramsRight.appendChild(secondParams);
 
   // Ajouter tous les éléments à la structure principale de la course
   raceTracker.appendChild(userLeft);
   raceTracker.appendChild(carCenter);
   raceTracker.appendChild(paramsRight);
+
   initializeRoadLines();
-  // Ajouter l'élément container à l'élément du DOM qui doit contenir la course
-  // raceTracker.appendChild(container); // Vous pouvez remplacer "document.body" par un autre élément de votre choix.
 }
+
+// function renderPlayerTrack(selectName) {
+//   let botName = selectName || "bot";
+
+//   console.log("name", botName);
+
+//   const raceTracker = document.querySelector(".race");
+//   // Crée la section des utilisateurs
+//   const userLeft = document.createElement("div");
+//   userLeft.className = "user-left";
+
+//   const firstUser = document.createElement("div");
+//   firstUser.className = "user";
+
+//   const firstUserText = document.createElement("p");
+//   firstUserText.textContent = botName;
+//   firstUser.appendChild(firstUserText);
+
+//   userLeft.appendChild(firstUser);
+//   // userLeft.appendChild(secondUser);
+
+//   // Crée la section des voitures et de la route
+//   const carCenter = document.createElement("div");
+//   carCenter.className = "car-center";
+
+//   const firstContainer = document.createElement("div");
+//   firstContainer.className = " first-container";
+
+//   const roadFirst = document.createElement("div");
+//   roadFirst.className = "road";
+//   const userCar = document.createElement("img");
+//   userCar.className = `${botName}-car`;
+//   userCar.src = "/car.svg";
+//   userCar.alt = "Car for user";
+//   const lineFirst = document.createElement("div");
+//   lineFirst.className = "line";
+//   roadFirst.appendChild(userCar);
+//   roadFirst.appendChild(lineFirst);
+
+//   const flagFirst = document.createElement("div");
+//   flagFirst.className = "flag";
+//   const finishFirst = document.createElement("span");
+//   finishFirst.textContent = "Finish";
+//   flagFirst.appendChild(finishFirst);
+
+//   firstContainer.appendChild(roadFirst);
+//   firstContainer.appendChild(flagFirst);
+
+//   carCenter.appendChild(firstContainer);
+//   // carCenter.appendChild(secondContainer);
+
+//   // Crée la section des paramètres
+//   const paramsRight = document.createElement("div");
+//   paramsRight.className = "params-right";
+
+//   const firstParams = document.createElement("div");
+//   firstParams.className = "params";
+//   const userWpm = document.createElement("p");
+//   userWpm.className = "bot-wpm";
+//   userWpm.textContent = "0: wpm";
+//   const userCpm = document.createElement("p");
+//   userCpm.className = "bot-cpm";
+//   userCpm.textContent = "0: cpm";
+//   firstParams.appendChild(userWpm);
+//   firstParams.appendChild(userCpm);
+
+//   paramsRight.appendChild(firstParams);
+//   // paramsRight.appendChild(secondParams);
+
+//   // Ajouter tous les éléments à la structure principale de la course
+//   raceTracker.appendChild(userLeft);
+//   raceTracker.appendChild(carCenter);
+//   raceTracker.appendChild(paramsRight);
+//   initializeRoadLines();
+//   // Ajouter l'élément container à l'élément du DOM qui doit contenir la course
+//   // raceTracker.appendChild(container); // Vous pouvez remplacer "document.body" par un autre élément de votre choix.
+// }
 
 // Appel de la fonction pour générer la course
 
@@ -293,15 +405,72 @@ function manageUser() {
   });
 
   added.addEventListener("click", () => {
+    // Enregistrer le bot et afficher un message de confirmation
     createUser();
-    alert("enregistre avec succes");
+    alert("Bot enregistré avec succès !");
   });
 
   player.addEventListener("click", () => {
-    customRace();
+    customRace(); // Ajouter le bot
+
+    // Afficher tous les bots créés
+
+    // Cacher la section d'ajout
     addsection.style.display = "none";
+
+    // Réinitialiser la sélection après l'ajout
+    selectedName = ""; // Réinitialiser le nom du bot
+    selectedPower = ""; // Réinitialiser la puissance du bot
   });
 }
+
+// function manageUser() {
+//   const normal = document.querySelector(".normal");
+//   const custom = document.querySelector(".custom");
+//   const comput = document.querySelector(".computer");
+//   const items = document.querySelector(".addItems");
+//   const add = document.querySelector(".add-section");
+//   const added = document.querySelector(".added");
+//   const player = document.querySelector(".start");
+//   const addsection = document.querySelector(".select-area");
+
+//   normal.addEventListener("click", () => {
+//     normalRace();
+//   });
+
+//   custom.addEventListener("click", () => {
+//     if (addsection.style.display === "none") {
+//       addsection.style.display = "block";
+//     } else {
+//       addsection.style.display = "none";
+//     }
+//   });
+
+//   comput.addEventListener("click", () => {
+//     computerRace();
+//   });
+
+//   items.addEventListener("click", () => {
+//     if (add.style.display === "none") {
+//       add.style.display = "block";
+//     } else {
+//       add.style.display = "none";
+//     }
+//   });
+
+//   added.addEventListener("click", () => {
+//     createUser();
+//     alert("enregistre avec succes");
+//   });
+
+//   player.addEventListener("click", () => {
+//     customRace();
+//     bots.forEach((bot) => {
+//       renderPlayerTrack(bot.name);
+//     });
+//     addsection.style.display = "none";
+//   });
+// }
 
 function normalRace() {
   resetGame();
@@ -316,21 +485,76 @@ function customRace() {
   normal = false;
   custom = true;
   computer = false;
-  resetGame();
-  renderPlayerTrack(true, selectedName);
+
+  // Vérification si le bot existe déjà dans la liste des bots
+  const botExists = bots.some((bot) => {
+    bot.name === selectedName, bot.power === selectedPower;
+  });
+
+  if (botExists) {
+    console.log("Ce bot a déjà été ajouté.");
+    return;
+    // Si le bot existe déjà, ne rien faire
+  } else {
+    bots.push({ name: selectedName, power: selectedPower });
+    console.log("container", bots);
+    createdBot();
+    botCount++;
+    console.log("botcount is ", botCount);
+    console.log(
+      `Bot ajouté : ${selectedName} avec la puissance ${selectedPower}`
+    );
+  }
+
+  resetGame(); // Réinitialiser le jeu
+
   console.log("custom is clicked");
   console.log("custom = ", custom);
   return custom;
 }
 
+function createdBot() {
+  bots.forEach((bot) => {
+    // Vérifier si le bot a déjà été ajouté à la course
+    const raceTracker = document.querySelector(".race");
+    const existingBot = raceTracker.querySelector(
+      `[data-bot-name="${bot.name}"]`
+    );
+    console.log("raceTracker", raceTracker);
+
+    // Si le bot n'existe pas, on l'ajoute à la course
+    if (!existingBot) {
+      renderPlayerTrack(bot.name); // Afficher la piste du bot
+    } else {
+      console.log(`Bot ${bot.name} already exists in the race.`);
+    }
+  });
+}
+
+// function customRace() {
+//   normal = false;
+//   custom = true;
+//   computer = false;
+//   const botExists = bots.some(bot =>bot.name === selectedName)
+//   if(botExists){
+//     return
+//   } else {
+//     bots.push({ name: selectedName, power: selectedPower });
+//     botCount++;
+//   }
+//   resetGame();
+//   console.log("custom is clicked");
+//   console.log("custom = ", custom);
+//   return custom;
+// }
+
 function computerRace() {
   normal = false;
   custom = false;
   computer = true;
+  resetGame();
   if (!botCreated) {
-    resetGame();
     renderPlayerTrack();
-
     botCreated = true;
   }
 
@@ -566,56 +790,127 @@ function verifyInput() {
 }
 
 // Mouvement automatique du robot
+// function startBot(bot = null, power = null) {
+//   const botCar = document.querySelector(".bot-car");
+//   const textLength = textContainer[0].length;
+//   let baseSpeed;
+
+//   if (bot && power) {
+//     const selectedCar = document.querySelector(`.${bot}-car`);
+//     let wpm = parseInt(power, 10);
+//     console.log("wpm", wpm);
+
+//     let cpm = wpm * 5;
+
+//     baseSpeed = wpm / 60;
+//     const botinterval = setInterval(() => {
+//       if (!startTime) startTime = Date.now();
+//       botProgress += baseSpeed / 100;
+//       if (botProgress > 1) botProgress = 1;
+//       console.log("botprogresse", botProgress);
+//       moveCar(selectedCar, botProgress);
+//       if (botProgress >= 1) {
+//         clearInterval(botinterval);
+//         console.log(`Bot avec ${bot.wpm} WPM a terminé !`);
+//       }
+//     }, 100);
+//     updateWPMCPM(wpm, cpm, bot);
+//   }
+
+//   baseSpeed = 3;
+//   // const minSpeed = 0.5;
+//   const botSpeed = (baseSpeed + Math.random() * 0.5) / textLength;
+
+//   const adjustedSpeed = botSpeed / textLength; // Ajustement de la vitesse en fonction du texte
+
+//   const botInterval = setInterval(() => {
+//     if (!startTime) startTime = Date.now();
+//     // const elapsedTime = (Date.now() - startTime) / 60000;
+//     botProgress += adjustedSpeed;
+
+//     const botTypedLength = Math.floor(botProgress * textContainer[0].length);
+//     const botText = textContainer[0].substring(0, botTypedLength);
+//     updateWPMCPMRealtime(botText, textContainer[0], "bot");
+
+//     if (botProgress >= 1) {
+//       botProgress = 1;
+//       moveCar(botCar, botProgress);
+//       // requestAnimationFrame(startBot)
+//       clearInterval(botInterval);
+//       endGame("lose");
+//     }
+//     moveCar(botCar, botProgress);
+//   }, 16); // Mettre à jour toutes les 50 ms
+// }
+
 function startBot(bot = null, power = null) {
-  const botCar = document.querySelector(".bot-car");
+  const botCar = document.querySelector(`.${bot ? bot + "-car" : "bot-car"}`);
+  console.log("botcar", botCar);
   const textLength = textContainer[0].length;
-  let baseSpeed;
+  let botProgress = 0;
+  let startTime = null;
 
+  // Vérifie si un bot et un WPM (puissance) sont fournis
   if (bot && power) {
-    let wpm = parseInt(power, 10);
-    console.log("wpm", wpm);
+    const wpm = parseInt(power, 10); // Vitesse en mots par minute
+    const cpm = wpm * 5; // Caractères par minute
+    const baseSpeed = wpm / (60 * textLength); // Progression par intervalle basée sur WPM et longueur du texte
 
-    let cpm = wpm * 5;
+    console.log(
+      `Bot: ${bot}, WPM: ${wpm}, CPM: ${cpm}, Base Speed: ${baseSpeed}`
+    );
 
-    baseSpeed = wpm / 60;
-    const botinterval = setInterval(() => {
-      if (!startTime) startTime = Date.now();
-      botProgress += baseSpeed / 100;
-      if (botProgress > 1) botProgress = 1;
-      console.log("botprogresse", botProgress);
-      moveCar(bot, botProgress);
-      if (botProgress >= 1) {
-        clearInterval(botinterval);
-        console.log(`Bot avec ${bot.wpm} WPM a terminé !`);
-      }
-    }, 100);
-    updateWPMCPM(wpm, cpm, bot);
-  }
+    const botInterval = setInterval(() => {
+      if (!startTime) startTime = Date.now(); // Démarre le chronomètre au début
 
-  baseSpeed = 3;
-  // const minSpeed = 0.5;
-  const botSpeed = (baseSpeed + Math.random() * 0.5) / textLength;
+      // Mise à jour de la progression du bot
+      botProgress += baseSpeed;
+      botProgress = Math.min(botProgress, 1); // Limite la progression à 1 (100%)
 
-  const adjustedSpeed = botSpeed / textLength; // Ajustement de la vitesse en fonction du texte
-
-  const botInterval = setInterval(() => {
-    if (!startTime) startTime = Date.now();
-    // const elapsedTime = (Date.now() - startTime) / 60000;
-    botProgress += adjustedSpeed;
-
-    const botTypedLength = Math.floor(botProgress * textContainer[0].length);
-    const botText = textContainer[0].substring(0, botTypedLength);
-    updateWPMCPMRealtime(botText, textContainer[0], "bot");
-
-    if (botProgress >= 1) {
-      botProgress = 1;
+      // Déplace la voiture
       moveCar(botCar, botProgress);
-      // requestAnimationFrame(startBot)
-      clearInterval(botInterval);
-      endGame("lose");
-    }
-    moveCar(botCar, botProgress);
-  }, 16); // Mettre à jour toutes les 50 ms
+
+      // Met à jour WPM et CPM tant que le bot n'a pas terminé
+      if (botProgress < 1) {
+        updateWPMCPM(wpm, cpm, bot);
+      }
+
+      // Si le bot atteint la fin
+      if (botProgress >= 1) {
+        botProgress = 1; // Assure que la progression ne dépasse pas 1
+        clearInterval(botInterval); // Arrête l'intervalle
+        console.log(`Bot "${bot}" a terminé avec ${wpm} WPM !`);
+      }
+    }, 100); // Mettre à jour toutes les 100 ms
+  } else {
+    // Cas par défaut si aucun bot ou power n'est défini
+    const defaultBaseSpeed = 3 / textLength; // Ajustement de la vitesse par la longueur du texte
+
+    const botInterval = setInterval(() => {
+      if (!startTime) startTime = Date.now();
+
+      // Mise à jour de la progression
+      botProgress += defaultBaseSpeed;
+      botProgress = Math.min(botProgress, 1);
+
+      const botTypedLength = Math.floor(botProgress * textContainer[0].length);
+      const botText = textContainer[0].substring(0, botTypedLength);
+
+      // Met à jour WPM et CPM en temps réel
+      updateWPMCPMRealtime(botText, textContainer[0], "bot");
+
+      // Si le bot atteint la fin
+      if (botProgress >= 1) {
+        botProgress = 1;
+        moveCar(botCar, botProgress);
+        clearInterval(botInterval); // Arrête l'intervalle
+        endGame("lose");
+      }
+
+      // Déplace la voiture
+      moveCar(botCar, botProgress);
+    }, 16); // Met à jour toutes les 16 ms (~60 FPS)
+  }
 }
 
 // Gérer la fin de partie
@@ -675,15 +970,15 @@ function startGame() {
     startBot();
     // renderPlayerTrack();
   } else if (custom) {
-    // Gestion des bots personnalisés
-    let bot = selectedName;
-    let power = selectedPower;
-
-    console.log("botname =", bot);
-    console.log("power =", power);
+    verifyInput();
+    bots.forEach((bot) => {
+      startBot(bot.name, bot.power);
+      //  renderPlayerTrack(bot.name);
+      console.log("botname =", bot.name);
+      console.log("power =", bot.power);
+    });
 
     verifyInput();
-    startBot(bot, power);
   }
 
   // Mode par défaut : vérifier uniquement l'entrée
