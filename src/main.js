@@ -83,11 +83,6 @@ function createUser() {
   );
 }
 
-// function useSelectBot(selectedBot) {
-//   botElement = selectedBot;
-//   console.log(selectedBot);
-// }
-
 function displayUser(container, user, element, onSelect) {
   // Vérifier si les arguments sont valides
   if (!Array.isArray(container) || !user || !element) {
@@ -163,52 +158,114 @@ function select() {
   });
 }
 
-// function select() {
-//   const names = document.querySelector(".select-name");
-//   const powers = document.querySelector(".select-power");
+// function renderPlayerTrack(selectName) {
+//   const defaultBotName = "bot";
+//   let botName = selectName || defaultBotName;
+//   console.log("name", botName);
 
-//   const otherN = document.querySelector(".other-names");
-//   const otherW = document.querySelector(".other-power");
+//   const raceTracker = document.querySelector(".race");
 
-//   names.addEventListener("click", () => {
-//     if (otherN.style.display === "none") {
-//       otherN.innerHTML = "";
-//       displayUser(namesContainer, otherN, names, (selectedBot) => {
-//         selectedName = selectedBot;
-//       });
-//       resetElement(names, "name");
-//       otherN.style.display = "flex";
-//     } else {
-//       otherN.style.display = "none";
-//     }
-//   });
-// powers.addEventListener("click", () => {
-//   if (otherW.style.display === "none") {
-//     otherW.innerHTML = "";
-//     displayUser(powerContainer, otherW, powers, (selectedBot) => {
-//       selectedPower = selectedBot;
-//     });
-//     resetElement(powers, "power");
+//   // Vérifier si le bot existe déjà dans la course
+//   const existingBot = raceTracker.querySelector(`[data-bot-name="${botName}"]`);
 
-//     otherW.style.display = "flex";
-//   } else {
-//     otherW.style.display = "none";
+//   // Si le bot existe déjà, on ne le recrée pas
+//   if (existingBot) {
+//     console.log(`Bot ${botName} already exists in the race.`);
+//     return; // Sortir de la fonction si le bot est déjà affiché
 //   }
-// });
-function renderPlayerTrack(selectName) {
-  let botName = selectName || "bot";
-  console.log("name", botName);
+
+//   // Crée la section des utilisateurs
+//   const userLeft = document.createElement("div");
+//   userLeft.className = "user-left";
+//   userLeft.setAttribute("data-bot-name", botName); // Ajouter un attribut unique pour identifier ce bot
+
+//   const firstUser = document.createElement("div");
+//   firstUser.className = "user";
+
+//   const firstUserText = document.createElement("p");
+//   firstUserText.textContent = botName;
+//   firstUser.appendChild(firstUserText);
+
+//   userLeft.appendChild(firstUser);
+
+//   // Crée la section des voitures et de la route
+//   const carCenter = document.createElement("div");
+//   carCenter.className = "car-center";
+
+//   const firstContainer = document.createElement("div");
+//   firstContainer.className = "first-container";
+
+//   const roadFirst = document.createElement("div");
+//   roadFirst.className = "road";
+//   const userCar = document.createElement("img");
+//   userCar.className = `${botName}-car`;
+//   userCar.src = "/car.svg";
+//   userCar.alt = "Car for user";
+//   const lineFirst = document.createElement("div");
+//   lineFirst.className = "line";
+//   roadFirst.appendChild(userCar);
+//   roadFirst.appendChild(lineFirst);
+
+//   const flagFirst = document.createElement("div");
+//   flagFirst.className = "flag";
+//   const finishFirst = document.createElement("span");
+//   finishFirst.textContent = "Finish";
+//   flagFirst.appendChild(finishFirst);
+
+//   firstContainer.appendChild(roadFirst);
+//   firstContainer.appendChild(flagFirst);
+
+//   carCenter.appendChild(firstContainer);
+
+//   // Crée la section des paramètres
+//   const paramsRight = document.createElement("div");
+//   paramsRight.className = "params-right";
+
+//   const firstParams = document.createElement("div");
+//   firstParams.className = "params";
+//   const userWpm = document.createElement("p");
+//   userWpm.className = `${botName}-wpm`;
+//   userWpm.textContent = "wpm:0";
+//   const userCpm = document.createElement("p");
+//   userCpm.className = `${botName}-cpm`;
+//   userCpm.textContent = "cpm:0";
+//   firstParams.appendChild(userWpm);
+//   firstParams.appendChild(userCpm);
+//   console.log("bot name is", botName);
+//   paramsRight.appendChild(firstParams);
+
+//   // Ajouter tous les éléments à la structure principale de la course
+//   raceTracker.appendChild(userLeft);
+//   raceTracker.appendChild(carCenter);
+//   raceTracker.appendChild(paramsRight);
+
+//   initializeRoadLines();
+
+//   if (normal) {
+//     raceTracker.innerHTML = "";
+//     return;
+//   } else if (custom) {
+//     if (botName === defaultBotName) {
+//       return;
+//     }
+//   } else if (computer) {
+//     if (botName !== defaultBotName) {
+//       return;
+//     }
+//   }
+// }
+function renderPlayerTrack(selectName, mode) {
+  const defaultBotName = "bot";
+  let botName = selectName || defaultBotName;
+  console.log("Selected bot name:", botName);
 
   const raceTracker = document.querySelector(".race");
 
-  // Vérifier si le bot existe déjà dans la course
-  const existingBot = raceTracker.querySelector(`[data-bot-name="${botName}"]`);
+  // Réinitialiser la course si le mode est "normal"
 
-  // Si le bot existe déjà, on ne le recrée pas
-  if (existingBot) {
-    console.log(`Bot ${botName} already exists in the race.`);
-    return; // Sortir de la fonction si le bot est déjà affiché
-  }
+  // if (normal || custom || computer) {
+  //   raceTracker.innerHTML = ""; // Supprime tous les éléments existants
+  // }
 
   // Crée la section des utilisateurs
   const userLeft = document.createElement("div");
@@ -267,7 +324,7 @@ function renderPlayerTrack(selectName) {
   userCpm.textContent = "cpm:0";
   firstParams.appendChild(userWpm);
   firstParams.appendChild(userCpm);
-  console.log("bot name is", botName);
+  console.log("Bot name is", botName);
   paramsRight.appendChild(firstParams);
 
   // Ajouter tous les éléments à la structure principale de la course
@@ -277,85 +334,6 @@ function renderPlayerTrack(selectName) {
 
   initializeRoadLines();
 }
-
-// function renderPlayerTrack(selectName) {
-//   let botName = selectName || "bot";
-
-//   console.log("name", botName);
-
-//   const raceTracker = document.querySelector(".race");
-//   // Crée la section des utilisateurs
-//   const userLeft = document.createElement("div");
-//   userLeft.className = "user-left";
-
-//   const firstUser = document.createElement("div");
-//   firstUser.className = "user";
-
-//   const firstUserText = document.createElement("p");
-//   firstUserText.textContent = botName;
-//   firstUser.appendChild(firstUserText);
-
-//   userLeft.appendChild(firstUser);
-//   // userLeft.appendChild(secondUser);
-
-//   // Crée la section des voitures et de la route
-//   const carCenter = document.createElement("div");
-//   carCenter.className = "car-center";
-
-//   const firstContainer = document.createElement("div");
-//   firstContainer.className = " first-container";
-
-//   const roadFirst = document.createElement("div");
-//   roadFirst.className = "road";
-//   const userCar = document.createElement("img");
-//   userCar.className = `${botName}-car`;
-//   userCar.src = "/car.svg";
-//   userCar.alt = "Car for user";
-//   const lineFirst = document.createElement("div");
-//   lineFirst.className = "line";
-//   roadFirst.appendChild(userCar);
-//   roadFirst.appendChild(lineFirst);
-
-//   const flagFirst = document.createElement("div");
-//   flagFirst.className = "flag";
-//   const finishFirst = document.createElement("span");
-//   finishFirst.textContent = "Finish";
-//   flagFirst.appendChild(finishFirst);
-
-//   firstContainer.appendChild(roadFirst);
-//   firstContainer.appendChild(flagFirst);
-
-//   carCenter.appendChild(firstContainer);
-//   // carCenter.appendChild(secondContainer);
-
-//   // Crée la section des paramètres
-//   const paramsRight = document.createElement("div");
-//   paramsRight.className = "params-right";
-
-//   const firstParams = document.createElement("div");
-//   firstParams.className = "params";
-//   const userWpm = document.createElement("p");
-//   userWpm.className = "bot-wpm";
-//   userWpm.textContent = "0: wpm";
-//   const userCpm = document.createElement("p");
-//   userCpm.className = "bot-cpm";
-//   userCpm.textContent = "0: cpm";
-//   firstParams.appendChild(userWpm);
-//   firstParams.appendChild(userCpm);
-
-//   paramsRight.appendChild(firstParams);
-//   // paramsRight.appendChild(secondParams);
-
-//   // Ajouter tous les éléments à la structure principale de la course
-//   raceTracker.appendChild(userLeft);
-//   raceTracker.appendChild(carCenter);
-//   raceTracker.appendChild(paramsRight);
-//   initializeRoadLines();
-//   // Ajouter l'élément container à l'élément du DOM qui doit contenir la course
-//   // raceTracker.appendChild(container); // Vous pouvez remplacer "document.body" par un autre élément de votre choix.
-// }
-
-// Appel de la fonction pour générer la course
 
 function addPlayer() {
   const name = document.querySelector(".select-name").value;
@@ -424,54 +402,6 @@ function manageUser() {
   });
 }
 
-// function manageUser() {
-//   const normal = document.querySelector(".normal");
-//   const custom = document.querySelector(".custom");
-//   const comput = document.querySelector(".computer");
-//   const items = document.querySelector(".addItems");
-//   const add = document.querySelector(".add-section");
-//   const added = document.querySelector(".added");
-//   const player = document.querySelector(".start");
-//   const addsection = document.querySelector(".select-area");
-
-//   normal.addEventListener("click", () => {
-//     normalRace();
-//   });
-
-//   custom.addEventListener("click", () => {
-//     if (addsection.style.display === "none") {
-//       addsection.style.display = "block";
-//     } else {
-//       addsection.style.display = "none";
-//     }
-//   });
-
-//   comput.addEventListener("click", () => {
-//     computerRace();
-//   });
-
-//   items.addEventListener("click", () => {
-//     if (add.style.display === "none") {
-//       add.style.display = "block";
-//     } else {
-//       add.style.display = "none";
-//     }
-//   });
-
-//   added.addEventListener("click", () => {
-//     createUser();
-//     alert("enregistre avec succes");
-//   });
-
-//   player.addEventListener("click", () => {
-//     customRace();
-//     bots.forEach((bot) => {
-//       renderPlayerTrack(bot.name);
-//     });
-//     addsection.style.display = "none";
-//   });
-// }
-
 function normalRace() {
   resetGame();
   normal = true;
@@ -496,6 +426,7 @@ function customRace() {
     return;
     // Si le bot existe déjà, ne rien faire
   } else {
+    resetGame();
     bots.push({ name: selectedName, power: selectedPower });
     console.log("container", bots);
     createdBot();
@@ -506,7 +437,6 @@ function customRace() {
     );
   }
 
-  resetGame(); // Réinitialiser le jeu
 
   console.log("custom is clicked");
   console.log("custom = ", custom);
@@ -617,7 +547,9 @@ function resetGame() {
 
     userCar.style.transform = "translateX(0)";
   } else if (custom && computer && botCreated) {
-    const botCar = document.querySelector(".bot-car");
+    const raceTracker = document.querySelector(".race");
+    raceTracker.innerHTML = "";
+    bots = [];
 
     clearInterval(timerInterval);
     startTime = null;
