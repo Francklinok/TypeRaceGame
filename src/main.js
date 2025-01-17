@@ -870,8 +870,11 @@ function initializeGame() {
   select();
   addPlayer();
 }
+
+function toStartGame(){
+  const id = document.querySelectore(".")
+}
 document.addEventListener("DOMContentLoaded", () => {
-  initializeGame();
 });
 
 function callTostartGame() {
