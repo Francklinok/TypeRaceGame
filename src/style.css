@@ -123,11 +123,11 @@ main {
 .main-section .tostart {
   display: flex;
   z-index: 1000;
-  align-items:center;
+  align-items: center;
   position: absolute;
   justify-content: center;
   bottom: 40%;
-  left:45%;
+  left: 45%;
 }
 
 .main-section .tostart .toStart {
@@ -136,20 +136,20 @@ main {
   border: 1px solid;
   width: 350px;
   height: auto;
-  border-radius:10px;
+  border-radius: 10px;
 }
 
 .main-section .tostart .toStart h2 {
   font-size: 16px;
-  margin-left:100px;
+  margin-left: 100px;
 }
 
-.main-section  .tostart .toStart p {
+.main-section .tostart .toStart p {
   font-size: 14px;
   margin: 10%;
   padding: 10px;
 }
-.main-section  .tostart .toStart button {
+.main-section .tostart .toStart button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -158,8 +158,9 @@ main {
   height: 40px;
   background-color: white;
   border: 1px solid;
-  margin:0px 10px 10px 90px;
-  border-radius:10px;
+  margin: 0px 10px 10px 90px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 .main-section .center-section .select-area {
@@ -455,7 +456,7 @@ main {
 }
 
 .main-section .center-section .main-area {
-  display: flex;
+  display: none;
   flex-direction: column;
   margin-top: 20px;
 }

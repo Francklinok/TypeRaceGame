@@ -254,7 +254,7 @@ function select() {
 //     }
 //   }
 // }
-function renderPlayerTrack(selectName, mode) {
+function renderPlayerTrack(selectName) {
   const defaultBotName = "bot";
   let botName = selectName || defaultBotName;
   console.log("Selected bot name:", botName);
@@ -436,7 +436,6 @@ function customRace() {
       `Bot ajouté : ${selectedName} avec la puissance ${selectedPower}`
     );
   }
-
 
   console.log("custom is clicked");
   console.log("custom = ", custom);
@@ -832,10 +831,11 @@ function displayScores() {
 // }
 function startGame() {
   // Réinitialiser le jeu et le minuteur
-  resetGame();
-  resetTimer();
+
 
   if (computer && botCreated) {
+      resetGame();
+      resetTimer();
     // Lancer le bot et vérifier l'entrée pour le mode ordinateur
     verifyInput();
     startBot();
@@ -871,10 +871,20 @@ function initializeGame() {
   addPlayer();
 }
 
-function toStartGame(){
-  const id = document.querySelectore(".")
+function toStartGame() {
+  const mainArea = document.querySelector(".main-area");
+  const submit = document.querySelector(".startButton");
+  const openToStart = document.querySelector(".tostart");
+
+  submit.addEventListener("click", () => {
+    mainArea.style.display = "flex";
+    openToStart.style.display = "none";
+    initializeGame();
+  });
 }
+
 document.addEventListener("DOMContentLoaded", () => {
+  toStartGame();
 });
 
 function callTostartGame() {
