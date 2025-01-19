@@ -731,7 +731,6 @@ function endGame(result) {
   }
   // resetGame();
   displayFinalChart();
-  gameResult();
 }
 
 // Afficher les scores
@@ -1030,9 +1029,9 @@ function gameResult() {
 
     countErrors(userTyped, targetText);
 
-    const userWPM = Math.max(Math.floor(...userWPMData), 0); // Meilleur score WPM
-    const userCPM = Math.max(Math.floor(...userCPMData), 0); // Meilleur score CPM
-    const timeElapsed = timeData[-1];
+    const userWPM = Math.max(...userWPMData, 0); // Meilleur score WPM
+    const userCPM = Math.max(...userCPMData, 0); // Meilleur score CPM
+    const timeElapsed = Math.max(...timeData, 0); 
     const accuracy = calculateAccuracy(userTyped, targetText);
     const errorCount = userErrors;
 
@@ -1049,7 +1048,14 @@ function gameResult() {
       }
       element.textContent = value;
     };
-
+    console.log(
+      userWPM,
+      userCPM,
+      timeElapsed,
+      accuracy,
+      errorCount,
+      words.length
+    );
     updateResultElement("wpm", `WPM: ${userWPM}`);
     updateResultElement("cpm", `CPM: ${userCPM}`);
     updateResultElement("time-data", `Time: ${timeElapsed}s`);
@@ -1058,3 +1064,4 @@ function gameResult() {
     updateResultElement("word-data", `Words: ${words.length}`);
   });
 }
+gameResult();
