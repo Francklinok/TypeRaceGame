@@ -721,7 +721,7 @@ main {
 
 .main-section .center-section .main-area .graph {
   text-align: center;
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 20px;
   border: 1px solid white;
@@ -731,22 +731,32 @@ main {
 .main-section .center-section .main-area .graph-section {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content:space-between;
   gap: 10px;
   margin: 10px;
 }
 
 .main-section .center-section .main-area .graph .graph-section .performance {
   border: 1px solid white;
-  /* padding: 100px; */
   margin: 0;
+  width:450px;
+  height:400px;
 }
 
-.main-section .center-section .main-area .graph .graph-section .result {
+.main-section .center-section .main-area .graph .graph-section .resultElement {
+  display:flex;
+  flex-direction:column;
   border: 1px solid white;
-  padding: 50px;
-  width: 100px;
-  height: 200px;
+  width: 300px;
+  height: 400px;
+  margin-right:10px;
+}
+
+.main-section .center-section .main-area .graph .graph-section .resultElement span{
+  display:flex;
+  justify-content:space-between;
+  padding:5px;
+  font-size:14px;  
 }
 
 .main-section .center-section .main-area .graph .replay {
@@ -759,4 +769,97 @@ main {
 }
 .main-section .center-section .main-area .graph .replay button:hover {
   color: green;
+}
+
+
+
+/* Styles spécifiques pour mobile et tablette */
+@media (max-width: 1024px) {
+  .title h1 {
+    font-size: 20px;
+  }
+
+  .main-section {
+    flex-direction: column;
+  }
+
+  .main-section .left-section,
+  .main-section .center-section {
+    width: 100%;
+    height: auto;
+    margin: 0;
+  }
+
+  .main-section .left-section .container .first-race,
+  .main-section .left-section .container .second-race,
+  .main-section .left-section .container .third-race {
+    grid-template-rows: auto auto auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .title img {
+    margin: 0;
+  }
+
+  .main-section .left-section .container h2 {
+    font-size: 16px;
+  }
+
+  .main-section .center-section {
+    height: auto;
+  }
+
+  .main-section .tostart .toStart {
+    width: 90%;
+    margin: auto;
+  }
+
+  .main-section .center-section .select-area {
+    width: 100%;
+    right: 0;
+    left: 0;
+    position: relative;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title h1 {
+    font-size: 18px;
+  }
+
+  .main-section .left-section .container h2,
+  .main-section .left-section .container p,
+  .main-section .left-section .container span {
+    font-size: 12px;
+  }
+
+  .main-section .center-section {
+    margin: 5px;
+    padding: 10px;
+  }
+
+  .main-section .tostart .toStart h2 {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .main-section .tostart .toStart p {
+    font-size: 12px;
+  }
+
+  .main-section .center-section .select-area {
+    padding: 10px;
+  }
+
+  .main-section .center-section .select-area .creat .submit button {
+    width: 100%;
+  }
 }
