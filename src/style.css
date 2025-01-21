@@ -35,7 +35,7 @@ main {
 .main-section {
   display: flex;
   position: fixed;
-  max-width: 98%;
+  width: 98%;
 }
 
 .main-section .left-section {
@@ -118,7 +118,6 @@ main {
   margin: 10px;
   border-radius: 10px;
   height: 500px;
-
 }
 
 .main-section .tostart {
@@ -792,12 +791,10 @@ main {
     position: fixed;
     max-width: 96%;
     margin-right: 10px;
-    /* background-color: blue; */
   }
 
   .main-section .left-section {
     width: 80px;
-    background-color: red;
   }
 
   .main-section .left-section .container h2 {
