@@ -126,27 +126,34 @@ main {
   align-items: center;
   position: absolute;
   justify-content: center;
-  bottom: 40%;
-  left: 45%;
+  bottom: 240px;
+  width: 400px;
+  left: 480px;
+  margin: 0;
+  padding: 0;
+  border-radius: 10px;
 }
 
 .main-section .tostart .toStart {
   display: flex;
   flex-direction: column;
-  border: 1px solid;
-  width: 350px;
+  border: 1px solid white;
+  box-shadow: 0px 1px 5px 1px rgb(143, 155, 155);
+  /* width: 45%; */
   height: auto;
   border-radius: 10px;
 }
 
 .main-section .tostart .toStart h2 {
-  font-size: 16px;
+  font-size: 18px;
   margin-left: 100px;
 }
 
 .main-section .tostart .toStart p {
   font-size: 14px;
+  font-weight: 200;
   margin: 10%;
+  gap: 8px;
   padding: 10px;
 }
 .main-section .tostart .toStart button {
@@ -157,17 +164,17 @@ main {
   width: 155px;
   height: 40px;
   background-color: white;
-  border: 1px solid;
-  margin: 0px 10px 10px 90px;
+  border: 1px solid white;
+  margin: 0px 10px 10px 120px;
   border-radius: 10px;
   cursor: pointer;
 }
 
 .main-section .center-section .select-area {
   display: none;
-  margin: 10px 10px 200px 30px;
+  margin: 10px 10px 50px 30px;
   padding: 10px;
-  border: 1px solid rgb(212, 203, 203);
+  border: 1px solid rgb(187, 184, 184);
   border-radius: 10px;
   position: absolute;
   right: 25%;
@@ -180,21 +187,23 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* background-color:red; */
 }
 
 .main-section .center-section .select-area .creat .custom-race {
   display: flex;
   flex-direction: column;
   align-items: center;
+
   /* border: 1px solid rgb(189, 187, 187);
   box-shadow: 0px 0px 0px 1px rgb(216, 205, 205);
   border-radius: 10px; */
 }
-.main-section .center-sect .select-area .creat .custom-race h2 {
+.main-section .center-section .select-area .creat .custom-race h2 {
   align-items: center;
   text-align: center;
   padding: 15px;
-  font-size: 16px;
+  font-size: 18px;
   border: 1px solid rgb(212, 203, 203);
   /* box-shadow: 0px 0px 0px 1px rgb(216, 205, 205); */
   border-radius: 10px;
@@ -207,10 +216,13 @@ main {
   align-items: center;
   text-align: center;
   font-size: 14px;
+  font-weight:100;
+  background-color:white;
   border: 1px solid rgb(210, 203, 203);
   /* box-shadow: 0px 0px 0px 1px rgb(216, 205, 205); */
   border-radius: 10px;
   margin: 5px;
+  
 }
 .main-section .center-section .select-area .creat .select {
   display: grid;
@@ -219,21 +231,26 @@ main {
   margin-top: 10px;
   gap: 40px;
   text-align: center;
-  padding: 1px;
+  padding: 10px;
 }
 .main-section .center-section .select-area .creat .select .name {
-  grid-column: 1;
-  grid-row: 1;
+    grid-column: 1;
+    grid-row: 1;
+
+  background-color:red;
+
+  
+}
+.main-section .center-section .select-area .creat .select .name .select-name{
+  background-color:white;
+  padding:10px;
+  /* margin:0; */
+
   text-align: center;
   border: 1px solid rgb(210, 203, 203);
-
-  /* box-shadow: 0px 0px 0px 1px rgb(216, 205, 205); */
   border-radius: 10px;
   gap: 10px;
   cursor: pointer;
-
-  /* width: 150px;
-  height: 20px; */
 }
 
 .main-section .center-section .select .name .other-names {
@@ -245,9 +262,12 @@ main {
   border: 1px solid rgb(221, 190, 190);
   margin: 2px 2px 2px 30px;
   position: absolute;
-  bottom: 80px;
+  bottom: 210px;
   left: 0;
   z-index: 100;
+  padding:15px;
+  background-color:white;
+
 }
 
 .main-section .center-section .select span {
@@ -264,6 +284,8 @@ main {
   border-radius: 10px;
   gap: 10px;
   cursor: pointer;
+    background-color:white;
+
 }
 .main-section .center-section .select .power .other-power {
   display: none;
@@ -275,10 +297,12 @@ main {
   border: 1px solid rgb(209, 203, 203);
   position: absolute;
   border-radius: 8px;
-  bottom: 80px;
+  bottom: 211px;
   right: 30px;
   gap: 2px;
   z-index: 1000;
+  background-color:white;
+
 }
 
 .main-section .center-section .select-area .creat .select .add {
@@ -287,6 +311,8 @@ main {
   border: 1px solid rgb(210, 203, 203);
   border-radius: 10px;
   cursor: pointer;
+    background-color:white;
+
 }
 
 .main-section .center-section .select-area .creat .select .remove {
@@ -295,6 +321,8 @@ main {
   border: 1px solid rgb(210, 203, 203);
   border-radius: 10px;
   cursor: pointer;
+  background-color:red;
+
 }
 
 .main-section .center-section .select-area .creat .submit {
@@ -808,10 +836,14 @@ main {
   .main-section .center-section {
     height: auto;
   }
-
+  .main-section .tostart {
+    /* bottom: 40%;
+    left: 50%; */
+    margin-right: 50px;
+  }
   .main-section .tostart .toStart {
-    width: 90%;
-    margin: auto;
+    /* width: 90%; */
+    /* margin: auto; */
   }
 
   .main-section .center-section .select-area {
