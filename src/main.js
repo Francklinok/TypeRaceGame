@@ -792,6 +792,7 @@ function toStartGame() {
 
 document.addEventListener("DOMContentLoaded", () => {
   toStartGame();
+  themLoader();
 });
 
 function callTostartGame() {
@@ -1065,3 +1066,26 @@ function gameResult() {
   });
 }
 gameResult();
+
+
+function themLoader(){
+
+  const themeSelector = document.getElementById("theme-selector");
+  const body = document.body;
+
+  // Charger le thème sauvegardé
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    body.className = `theme-${savedTheme}`;
+    themeSelector.value = savedTheme;
+  }
+
+  // Appliquer le thème sélectionné
+  themeSelector.addEventListener("change", (event) => {
+    const selectedTheme = event.target.value;
+    body.className = `theme-${selectedTheme}`;
+
+    // Sauvegarder le thème dans le localStorage
+    localStorage.setItem("theme", selectedTheme);
+  });
+}

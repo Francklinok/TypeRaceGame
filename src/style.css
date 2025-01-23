@@ -3,42 +3,87 @@
   font-family: "Times New Roman", Times, serif;
   font-size: 14px;
   background-color: rgb(233, 238, 228);
+  /* dislay:flex;
+  flex-direction:column; */
   /* text-color:white; */
 }
 
-.title {
-  display: flex;
+:root {
+  --background-color: #ffffff;
+  --text-color: #000000;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+body.theme-dark {
+  --background-color: #1e1e1e;
+  --text-color: #ffffff;
+}
+
+body.theme-light {
+  --background-color: #f5f5f5;
+  --text-color: #333333;
+}
+
+body.theme-blue {
+  --background-color: #001f3f;
+  --text-color: #ffffff;
+}
+
+body.theme-green {
+  --background-color: #2ecc71;
+  --text-color: #ffffff;
+}
+header{
+  display:flex;
+}
+
+header .title{
+  display:flex;
   justify-content: space-between;
   position: fixed;
   padding: 8px;
   top: 0;
   width: 100%;
+  /* height:20px; */
   z-index: 1000;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optionnel : ajoute une ombre */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
 }
 
-.title h1 {
+/* header .title {
+  display: flex;
+} */
+
+header .title h1 {
   font-size: 25px;
   color: red;
 }
 
-.title img {
+header .title .logo {
   align-self: flex-end;
   margin-right: 20px;
 }
 
 main {
+  display:flex;
   margin-top: 70px;
   padding: 20px;
+  width:100%;
+  height:80%;
+
 }
 
-.main-section {
+main .main-section {
   display: flex;
   position: fixed;
   width: 98%;
+  height:100%;
 }
 
-.main-section .left-section {
+main .main-section .left-section {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -47,14 +92,14 @@ main {
   overflow-y: auto;
 }
 
-.main-section .left-section .container {
+main .main-section .left-section .container {
   /* border: 1px solid black; Correction de "solide" en "solid" */
   padding: 10px;
 }
 
-.main-section .left-section .container .first-race,
-.main-section .left-section .container .second-race,
-.main-section .left-section .container .third-race {
+main .main-section .left-section .container .first-race,
+main .main-section .left-section .container .second-race,
+main .main-section .left-section .container .third-race {
   border: 1px solid rgba(207, 198, 198, 0.801);
   display: grid;
   padding: 10px;
@@ -65,9 +110,9 @@ main {
   border-radius: 10px;
 }
 
-.main-section .left-section .container .first-race h2,
-.main-section .left-section .container .second-race h2,
-.main-section .left-section .container .third-race h2 {
+main .main-section .left-section .container .first-race h2,
+main .main-section .left-section .container .second-race h2,
+main .main-section .left-section .container .third-race h2 {
   grid-row: 1;
   text-align: center;
   border: 1px solid rgba(207, 198, 198, 0.801);
@@ -78,9 +123,9 @@ main {
   font-family: Roboto;
 }
 
-.main-section .left-section .container .first-race p,
-.main-section .left-section .container .second-race p,
-.main-section .left-section .container .third-race p {
+main .main-section .left-section .container .first-race p,
+main .main-section .left-section .container .second-race p,
+main .main-section .left-section .container .third-race p {
   grid-row: 2;
   text-align: center;
   font-size: 14px;
@@ -90,9 +135,9 @@ main {
   border-radius: 10px;
 }
 
-.main-section .left-section .container .first-race span,
-.main-section .left-section .container .second-race span,
-.main-section .left-section .container .third-race span {
+main .main-section .left-section .container .first-race span,
+main .main-section .left-section .container .second-race span,
+main .main-section .left-section .container .third-race span {
   grid-row: 3;
   text-align: center;
   padding: 5px;
@@ -103,13 +148,13 @@ main {
   font-size: 16px;
 }
 
-.main-section .left-section .container .first-race span:hover,
-.main-section .left-section .container .second-race span:hover,
-.main-section .left-section .container .third-race span:hover {
+main .main-section .left-section .container .first-race span:hover,
+main .main-section .left-section .container .second-race span:hover,
+main .main-section .left-section .container .third-race span:hover {
   background-color: cadetblue;
 }
 
-.main-section .center-section {
+main .main-section .center-section {
   flex: 3;
   display: flex;
   flex-direction: column;
@@ -120,7 +165,7 @@ main {
   height: 500px;
 }
 
-.main-section .tostart {
+main .main-section .tostart {
   display: flex;
   z-index: 1000;
   align-items: center;
@@ -134,7 +179,7 @@ main {
   border-radius: 10px;
 }
 
-.main-section .tostart .toStart {
+main .main-section .tostart .toStart {
   display: flex;
   flex-direction: column;
   border: 1px solid white;
@@ -144,19 +189,19 @@ main {
   border-radius: 10px;
 }
 
-.main-section .tostart .toStart h2 {
+main .main-section .tostart .toStart h2 {
   font-size: 18px;
   margin-left: 100px;
 }
 
-.main-section .tostart .toStart p {
+main .main-section .tostart .toStart p {
   font-size: 14px;
   font-weight: 200;
   margin: 10%;
   gap: 8px;
   padding: 10px;
 }
-.main-section .tostart .toStart button {
+main .main-section .tostart .toStart button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -170,7 +215,7 @@ main {
   cursor: pointer;
 }
 
-.main-section .center-section .select-area {
+main .main-section .center-section .select-area {
   display: none;
   margin: 10px 10px 50px 30px;
   padding: 10px;
@@ -183,14 +228,14 @@ main {
   z-index: 1000;
 }
 
-.main-section .center-section .select-area .creat {
+main .main-section .center-section .select-area .creat {
   display: flex;
   flex-direction: column;
   align-items: center;
   /* background-color:red; */
 }
 
-.main-section .center-section .select-area .creat .custom-race {
+main .main-section .center-section .select-area .creat .custom-race {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -199,7 +244,7 @@ main {
   box-shadow: 0px 0px 0px 1px rgb(216, 205, 205);
   border-radius: 10px; */
 }
-.main-section .center-section .select-area .creat .custom-race h2 {
+main .main-section .center-section .select-area .creat .custom-race h2 {
   align-items: center;
   text-align: center;
   padding: 15px;
@@ -209,41 +254,34 @@ main {
   border-radius: 10px;
 }
 
-.main-section .center-section .select-area .creat .custom-race p {
+main .main-section .center-section .select-area .creat .custom-race p {
   display: flex;
   width: 350px;
   height: 100px;
   align-items: center;
   text-align: center;
   font-size: 14px;
-  font-weight:100;
-  background-color:white;
+  font-weight: 100;
+  background-color: white;
   border: 1px solid rgb(210, 203, 203);
   /* box-shadow: 0px 0px 0px 1px rgb(216, 205, 205); */
   border-radius: 10px;
   margin: 5px;
-  
 }
-.main-section .center-section .select-area .creat .select {
+main .main-section .center-section .select-area .creat .select {
   display: grid;
   grid-template-columns: 150px 150px;
-  grid-template-rows: 20px 20px;
+  grid-template-rows: 50px 50px;
   margin-top: 10px;
-  gap: 40px;
+  gap: 20px;
   text-align: center;
   padding: 10px;
 }
-.main-section .center-section .select-area .creat .select .name {
-    grid-column: 1;
-    grid-row: 1;
-
-  background-color:red;
-
-  
-}
-.main-section .center-section .select-area .creat .select .name .select-name{
-  background-color:white;
-  padding:10px;
+main .main-section .center-section .select-area .creat .select .name .select-name {
+  grid-column: 1;
+  grid-row: 1;
+  background-color: white;
+  padding: 10px;
   /* margin:0; */
 
   text-align: center;
@@ -251,9 +289,14 @@ main {
   border-radius: 10px;
   gap: 10px;
   cursor: pointer;
+
+  /* background-color:red; */
+  /* padding:10px */
+}
+.main-section .center-section .select-area .creat .select .name .select-name {
 }
 
-.main-section .center-section .select .name .other-names {
+main .main-section .center-section .select .name .other-names {
   display: none;
   flex-direction: column;
   height: auto;
@@ -265,17 +308,16 @@ main {
   bottom: 210px;
   left: 0;
   z-index: 100;
-  padding:15px;
-  background-color:white;
-
+  padding: 15px;
+  background-color: white;
 }
 
-.main-section .center-section .select span {
+main .main-section .center-section .select span {
   margin-bottom: 8px;
   text-align: center;
 }
 
-.main-section .center-section .select-area .creat .select .power {
+main .main-section .center-section .select-area .creat .select .power {
   grid-column: 2;
   grid-row: 1;
   border: 1px solid rgb(210, 203, 203);
@@ -284,10 +326,9 @@ main {
   border-radius: 10px;
   gap: 10px;
   cursor: pointer;
-    background-color:white;
-
+  background-color: white;
 }
-.main-section .center-section .select .power .other-power {
+main .main-section .center-section .select .power .other-power {
   display: none;
   flex-direction: column;
   justify-content: space-around;
@@ -301,35 +342,32 @@ main {
   right: 30px;
   gap: 2px;
   z-index: 1000;
-  background-color:white;
-
+  background-color: white;
 }
 
-.main-section .center-section .select-area .creat .select .add {
+main .main-section .center-section .select-area .creat .select .add {
   grid-column: 1;
   grid-row: 2;
   border: 1px solid rgb(210, 203, 203);
   border-radius: 10px;
   cursor: pointer;
-    background-color:white;
-
+  background-color: white;
 }
 
-.main-section .center-section .select-area .creat .select .remove {
+main .main-section .center-section .select-area .creat .select .remove {
   grid-column: 2;
   grid-row: 2;
   border: 1px solid rgb(210, 203, 203);
   border-radius: 10px;
   cursor: pointer;
-  background-color:red;
-
+  background-color: red;
 }
 
-.main-section .center-section .select-area .creat .submit {
+main .main-section .center-section .select-area .creat .submit {
   margin: 20px 0px 20px 80px;
 }
 
-.main-section .center-section .select-area .creat .submit button {
+main .main-section .center-section .select-area .creat .submit button {
   all: unset;
   width: 200px;
   height: 30px;
@@ -339,11 +377,11 @@ main {
   border-radius: 10px;
   background-color: rgb(185, 185, 209);
 }
-.main-section .center-section .select-area .creat .submit button:hover {
+main .main-section .center-section .select-area .creat .submit button:hover {
   background-color: rgb(105, 185, 209);
 }
 
-.main-section .center-section .add-section {
+main .main-section .center-section .add-section {
   display: none;
   /* display: flex; */
   flex-direction: column;
@@ -357,29 +395,29 @@ main {
   align-items: center;
   z-index: 1000;
 }
-.main-section .center-section .add-section .text-register {
+main .main-section .center-section .add-section .text-register {
   font-size: 14px;
   text-align: center;
 }
 
-.main-section .center-section .add-section .addElement {
+main .main-section .center-section .add-section .addElement {
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.main-section .center-section .add-section .addElement .user-name {
+main .main-section .center-section .add-section .addElement .user-name {
   grid-column: 1;
   grid-row: 1;
   gap: 1px;
 }
-.main-section .center-section .add-section .addElement span {
+main .main-section .center-section .add-section .addElement span {
   font-size: 12px;
   padding-bottom: 8px;
   text-align: center;
   margin-right: 5px;
 }
-.main-section .center-section .add-section .addElement input {
+main .main-section .center-section .add-section .addElement input {
   all: unset;
   border: 1px solid rgb(196, 190, 190);
   border-radius: 8px;
@@ -389,16 +427,16 @@ main {
   font: size 10px;
 }
 
-.main-section .center-section .add-section .addElement .user-power {
+main .main-section .center-section .add-section .addElement .user-power {
   grid-column: 2;
   grid-row: 1;
 }
 
-.main-section .center-section .add-section .addElement .bot-color {
+main .main-section .center-section .add-section .addElement .bot-color {
   grid-column: 3;
   grid-row: 1;
 }
-.main-section .center-section .add-section .addElement .bot-color button {
+main .main-section .center-section .add-section .addElement .bot-color button {
   all: unset;
   font-size: 12px;
   cursor: pointer;
@@ -408,10 +446,10 @@ main {
   border-radius: 8px;
 }
 
-.main-section .center-section .add-section .register {
+main .main-section .center-section .add-section .register {
   padding: 2px 8px;
 }
-.main-section .center-section .add-section .register button {
+main .main-section .center-section .add-section .register button {
   all: unset;
   align-items: center;
   width: 80px;
@@ -425,18 +463,18 @@ main {
   border-radius: 8px;
 }
 
-.main-section .center-section .other {
+main .main-section .center-section .other {
   /* display:flex; */
   /* display: flex; */
   /* border: 1px solid red;
   gap: 40px; */
 }
 
-.main-section .center-section .open {
+main .main-section .center-section .open {
   display: none;
 }
 
-.main-section .center-section .open .container {
+main .main-section .center-section .open .container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -450,12 +488,12 @@ main {
   padding: 15px;
 }
 
-.main-section .center-section .open h2 {
+main .main-section .center-section .open h2 {
   font-size: 16px;
   text-align: center;
 }
 
-.main-section .center-section .open .container p {
+main .main-section .center-section .open .container p {
   width: 300px;
   margin: 5px;
   word-wrap: break-word;
@@ -465,13 +503,13 @@ main {
   text-align: center;
 }
 
-.main-section .center-section .open .container span {
+main .main-section .center-section .open .container span {
   margin-top: 12px;
   text-align: center;
   font-size: 14px;
 }
 
-.main-section .center-section .open .container button {
+main .main-section .center-section .open .container button {
   all: unset;
   width: 80px;
   height: 25px;
@@ -483,13 +521,13 @@ main {
   border-radius: 5px;
 }
 
-.main-section .center-section .main-area {
+main .main-section .center-section .main-area {
   display: none;
   flex-direction: column;
   margin-top: 20px;
 }
 
-.main-section .center-section .main-area .race {
+main .main-section .center-section .main-area .race {
   padding: 10px;
   display: grid;
   /* grid-template-rows: repeat 1fr 1fr; */
@@ -501,7 +539,7 @@ main {
   /* gap: 10; */
 }
 
-.main-section .center-section .main-area .race .user {
+main .main-section .center-section .main-area .race .user {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -514,7 +552,7 @@ main {
   /* border: 1px solid #ccc; */
 }
 
-.main-section .center-section .main-area .race .user-left .user p {
+main .main-section .center-section .main-area .race .user-left .user p {
   display: flex;
   /* grid-row: 1; */
   /* grid-column: 1; */
@@ -527,7 +565,7 @@ main {
   padding: 10px;
 }
 
-.main-section .center-section .main-area .race .car-center {
+main .main-section .center-section .main-area .race .car-center {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -539,7 +577,7 @@ main {
   /* margin: 5px 1px 10px 1px; */
 }
 
-.main-section .center-section .main-area .race .car-center .first-container {
+main .main-section .center-section .main-area .race .car-center .first-container {
   display: flex;
   text-align: center;
   /* grid-row: 1; */
@@ -552,7 +590,7 @@ main {
   margin: 0;
 }
 
-.main-section .center-section .main-area .race .car-center .road {
+main .main-section .center-section .main-area .race .car-center .road {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -560,7 +598,7 @@ main {
   height: 41px;
 }
 
-.main-section .center-section .main-area .race .car-center .road img {
+main .main-section .center-section .main-area .race .car-center .road img {
   width: 80px;
   height: 55px;
   background-color: transparent;
@@ -569,7 +607,7 @@ main {
   transition: left 0.2s linear;
 }
 
-.main-section .center-section .main-area .race .car-center .road .line {
+main .main-section .center-section .main-area .race .car-center .road .line {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -580,14 +618,14 @@ main {
   position: relative;
   overflow: hidden;
 }
-.main-section .center-section .main-area .race .car-center .road .line div {
+main .main-section .center-section .main-area .race .car-center .road .line div {
   width: 10%;
   height: 1px;
   background-color: white;
   border-radius: 5px;
 }
 
-.main-section .center-section .main-area .race .car-center .flag {
+main .main-section .center-section .main-area .race .car-center .flag {
   display: flex;
   height: 40px;
   width: 5px;
@@ -595,7 +633,7 @@ main {
   /* position:absolute; */
 }
 
-.main-section .center-section .main-area .race .car-center .flag span {
+main .main-section .center-section .main-area .race .car-center .flag span {
   background-color: white;
   width: 35px;
   height: 15px;
@@ -605,7 +643,7 @@ main {
   right: 25px;
 }
 
-.main-section .center-section .main-area .race .params-right {
+main .main-section .center-section .main-area .race .params-right {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -618,7 +656,7 @@ main {
   /* background-color: yellow; */
 }
 
-.main-section .center-section .main-area .race .params-right .params {
+main .main-section .center-section .main-area .race .params-right .params {
   /* grid-row: 1; */
   grid-column: 3;
   display: flex;
@@ -631,7 +669,7 @@ main {
   /* margin: 20px 0px 10px 2px; */
 }
 
-.main-section .center-section .main-area .race .params-right p {
+main .main-section .center-section .main-area .race .params-right p {
   display: flex;
   justify-content: space-between;
   padding: 5px;
@@ -639,7 +677,7 @@ main {
   margin: 0;
 }
 
-.main-section .center-section .main-area .text-container {
+main .main-section .center-section .main-area .text-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -650,7 +688,7 @@ main {
   border-radius: 10px;
   position: relative;
 }
-.main-section .center-section .main-area .text-container .full {
+main .main-section .center-section .main-area .text-container .full {
   display: flex;
   padding: 10px;
   /* text-align: center; */
@@ -668,7 +706,7 @@ main {
   color: red;
 }
 
-.main-section .center-section .main-area .text-container .counter {
+main .main-section .center-section .main-area .text-container .counter {
   display: flex;
   text-align: center;
   align-items: center;
@@ -689,7 +727,7 @@ main {
   /* background-color: black; */
 }
 
-.main-section .center-section .main-area .text-container .togo {
+main .main-section .center-section .main-area .text-container .togo {
   display: flex;
   font-size: 16px;
   font-weight: bold;
@@ -703,26 +741,26 @@ main {
   z-index: 1000;
 }
 
-.main-section .center-section .text-container .text .full span {
+main .main-section .center-section .text-container .text .full span {
   font-size: 14px;
   transition: color 0.2s;
 }
 
-.main-section .center-section .main-area .text-container .form {
+main .main-section .center-section .main-area .text-container .form {
   padding: 8px;
   border: 1px solid rgb(194, 182, 182);
   border-radius: 10px;
   margin-top: 5px;
   box-shadow: 1px px 1px 0px white;
 }
-.main-section .center-section .main-area .text-container input {
+main .main-section .center-section .main-area .text-container input {
   all: unset;
   padding: 10px;
   width: 95%;
   font-family: Arial;
 }
 
-.main-section .center-section .main-area .text-container .time {
+main .main-section .center-section .main-area .text-container .time {
   position: absolute;
   right: 0;
   border: 1px solid rgb(209, 192, 192);
@@ -732,7 +770,7 @@ main {
   border-radius: 10px;
 }
 
-.main-section .center-section .main-area .text-container button {
+main .main-section .center-section .main-area .text-container button {
   width: 210px;
   height: 40px;
   background-color: rgb(140, 250, 140);
@@ -743,11 +781,11 @@ main {
   border-radius: 8px;
   margin-left: 35%;
 }
-.main-section .center-section .main-area .text-container button:hover {
+main .main-section .center-section .main-area .text-container button:hover {
   background-color: rgb(14, 175, 14);
 }
 
-.main-section .center-section .main-area .graph {
+main .main-section .center-section .main-area .graph {
   text-align: center;
   display: none;
   flex-direction: column;
@@ -756,7 +794,7 @@ main {
   margin: 50px 30px 5px 30px;
 }
 
-.main-section .center-section .main-area .graph-section {
+main .main-section .center-section .main-area .graph-section {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -764,14 +802,14 @@ main {
   margin: 10px;
 }
 
-.main-section .center-section .main-area .graph .graph-section .performance {
+main .main-section .center-section .main-area .graph .graph-section .performance {
   border: 1px solid white;
   margin: 0;
   width: 450px;
   height: 400px;
 }
 
-.main-section .center-section .main-area .graph .graph-section .resultElement {
+main .main-section .center-section .main-area .graph .graph-section .resultElement {
   display: flex;
   flex-direction: column;
   border: 1px solid white;
@@ -780,7 +818,7 @@ main {
   margin-right: 10px;
 }
 
-.main-section
+main .main-section
   .center-section
   .main-area
   .graph
@@ -793,15 +831,15 @@ main {
   font-size: 14px;
 }
 
-.main-section .center-section .main-area .graph .replay {
+main .main-section .center-section .main-area .graph .replay {
   padding: 8px;
 }
 
-.main-section .center-section .main-area .graph .replay button {
+main .main-section .center-section .main-area .graph .replay button {
   color: red;
   border-radius: 8px;
 }
-.main-section .center-section .main-area .graph .replay button:hover {
+main .main-section .center-section .main-area .graph .replay button:hover {
   color: green;
 }
 
@@ -814,39 +852,41 @@ main {
     text-align: center;
   }
 
-  .main-section {
+  main .main-section {
     display: flex;
     position: fixed;
     max-width: 96%;
     margin-right: 10px;
   }
 
-  .main-section .left-section {
+  main .main-section .left-section {
     width: 80px;
   }
 
-  .main-section .left-section .container h2 {
+  main .main-section .left-section .container h2 {
     font-size: 14px;
     padding: 5px;
   }
-  .main-section .left-section .container p {
+  main .main-section .left-section .container p {
     padding: 8px;
   }
 
-  .main-section .center-section {
+  main .main-section .center-section {
     height: auto;
   }
-  .main-section .tostart {
-    /* bottom: 40%;
-    left: 50%; */
+
+ main  .main-section .center-section .tostart {
+    bottom: 40%;
+    left: 20%;
     margin-right: 50px;
+    background-color: red;
   }
-  .main-section .tostart .toStart {
+  main .main-section .tostart .toStart {
     /* width: 90%; */
     /* margin: auto; */
   }
 
-  .main-section .center-section .select-area {
+  main .main-section .center-section .select-area {
     width: 100%;
     right: 0;
     left: 0;
@@ -860,31 +900,50 @@ main {
     font-size: 18px;
   }
 
-  .main-section .left-section .container h2,
-  .main-section .left-section .container p,
-  .main-section .left-section .container span {
+  main .main-section .left-section .container h2,
+  main .main-section .left-section .container p,
+  main .main-section .left-section .container span {
     font-size: 12px;
   }
 
-  .main-section .center-section {
+  main .main-section .center-section {
     margin: 5px;
     padding: 10px;
   }
 
-  .main-section .tostart .toStart h2 {
+  main .main-section .tostart .toStart h2 {
     font-size: 14px;
     text-align: center;
   }
 
-  .main-section .tostart .toStart p {
+  main .main-section .tostart .toStart p {
     font-size: 12px;
   }
 
-  .main-section .center-section .select-area {
+  main .main-section .center-section .select-area {
     padding: 10px;
   }
 
-  .main-section .center-section .select-area .creat .submit button {
+  main .main-section .center-section .select-area .creat .submit button {
     width: 100%;
   }
+}
+
+footer{
+  display:flex;
+  width:50%;
+  height:20px;
+  position:absolute;
+  bottom:0;
+  margin-left:60%;
+
+
+}
+
+footer .theme {
+  display: flex;
+  flex-direction: center;
+  /* background-color: red; */
+  /* width: 100%;
+  height: 20px; */
 }

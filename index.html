@@ -17,9 +17,9 @@
         <img class="logo" src="#" alt="Logo of the game" />
       </div>
     </header>
+    
     <main>
       <section class="main-section">
-        
         <section class="tostart">
           <div class="toStart">
             <h2>You Vs Computer Race</h2>
@@ -28,7 +28,7 @@
               100wpm. Your mission is to type the text faster than the bot. Good
               Luck!!!
             </p>
-            <button class = "startButton">start</button>
+            <button class="startButton">start</button>
           </div>
         </section>
 
@@ -221,7 +221,6 @@
             <!-- Graph Section -->
             <div class="graph">
               <div class="graph-section">
-
                 <div class="performance">
                   <canvas
                     class="chart"
@@ -231,23 +230,29 @@
                 </div>
 
                 <div class="resultElement"></div>
-
-                
               </div>
               <div class="replay">
-                  <button class="start">
-                    Start New Race
-                  </button>
-                </div>
+                <button class="start">Start New Race</button>
+              </div>
             </div>
-
           </section>
         </section>
       </section>
     </main>
+
     <footer>
       <section class="theme">
-        <div class="theme-change"></div>
+        <div class="theme-change">
+          <label for="theme-selector">
+            <select id="theme-selector">
+              <option value="default">Deafult</option>
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+              <option value="blue">Blue</option>
+              <option value="green">Green</option>
+            </select>
+          </label>
+        </div>
       </section>
     </footer>
   </body>
