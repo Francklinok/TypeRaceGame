@@ -1032,7 +1032,7 @@ function gameResult() {
 
     const userWPM = Math.max(...userWPMData, 0); // Meilleur score WPM
     const userCPM = Math.max(...userCPMData, 0); // Meilleur score CPM
-    const timeElapsed = Math.max(...timeData, 0); 
+    const timeElapsed = Math.max(...timeData, 0);
     const accuracy = calculateAccuracy(userTyped, targetText);
     const errorCount = userErrors;
 
@@ -1067,25 +1067,52 @@ function gameResult() {
 }
 gameResult();
 
+// function themLoader(){
 
-function themLoader(){
+//   const themeSelector = document.getElementById("theme-selector");
+//   const body = document.body;
 
+//   // Charger le thème sauvegardé
+//   const savedTheme = localStorage.getItem("theme");
+//   if (savedTheme) {
+//     body.className = `theme-${savedTheme}`;
+//     themeSelector.value = savedTheme;
+//   }
+
+//   // Appliquer le thème sélectionné
+//   themeSelector.addEventListener("change", (event) => {
+//     const selectedTheme = event.target.value;
+//     body.className = `theme-${selectedTheme}`;
+
+//     // Sauvegarder le thème dans le localStorage
+//     localStorage.setItem("theme", selectedTheme);
+//   });
+// }
+
+function themLoader() {
   const themeSelector = document.getElementById("theme-selector");
   const body = document.body;
 
+  if (!themeSelector) {
+    console.error("Element with id 'theme-selector' not found");
+    return;
+  }
+
   // Charger le thème sauvegardé
   const savedTheme = localStorage.getItem("theme");
+  console.log("Saved theme:", savedTheme);
   if (savedTheme) {
     body.className = `theme-${savedTheme}`;
     themeSelector.value = savedTheme;
   }
 
-  // Appliquer le thème sélectionné
+  // Écouteur d'événement pour le changement de thème
   themeSelector.addEventListener("change", (event) => {
     const selectedTheme = event.target.value;
+    console.log("Selected theme:", selectedTheme);
     body.className = `theme-${selectedTheme}`;
 
-    // Sauvegarder le thème dans le localStorage
+    // Sauvegarder dans le localStorage
     localStorage.setItem("theme", selectedTheme);
   });
 }

@@ -2,12 +2,44 @@
   /* background-color: rgb(247, 221, 190); */
   font-family: "Times New Roman", Times, serif;
   font-size: 14px;
-  background-color: rgb(233, 238, 228);
+  /* background-color: rgb(233, 238, 228); */
   /* dislay:flex;
   flex-direction:column; */
   /* text-color:white; */
 }
+/* Styles de base */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
+/* Thème Light */
+.theme-light {
+  background-color: white;
+  color: black;
+}
+
+/* Thème Dark */
+.theme-dark {
+  background-color: black;
+  color: white;
+}
+
+
+ /* Thème Peach */
+.theme-peach {
+  background-color: rgb(247, 221, 190);
+  color: #2a3921;
+} 
+
+/* Thème Forest */
+.theme-forest {
+  background-color: #2e8b57;
+  color: #f0fff0;
+}
+///
 :root {
   --background-color: #ffffff;
   --text-color: #000000;
@@ -37,12 +69,13 @@ body.theme-green {
   --background-color: #2ecc71;
   --text-color: #ffffff;
 }
-header{
-  display:flex;
+
+header {
+  display: flex;
 }
 
-header .title{
-  display:flex;
+header .title {
+  display: flex;
   justify-content: space-between;
   position: fixed;
   padding: 8px;
@@ -50,7 +83,7 @@ header .title{
   width: 100%;
   /* height:20px; */
   z-index: 1000;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* header .title {
@@ -68,19 +101,18 @@ header .title .logo {
 }
 
 main {
-  display:flex;
+  display: flex;
   margin-top: 70px;
   padding: 20px;
-  width:100%;
-  height:80%;
-
+  width: 100%;
+  height: 80%;
 }
 
 main .main-section {
   display: flex;
   position: fixed;
   width: 98%;
-  height:100%;
+  height: 100%;
 }
 
 main .main-section .left-section {
@@ -268,6 +300,7 @@ main .main-section .center-section .select-area .creat .custom-race p {
   border-radius: 10px;
   margin: 5px;
 }
+
 main .main-section .center-section .select-area .creat .select {
   display: grid;
   grid-template-columns: 150px 150px;
@@ -277,7 +310,15 @@ main .main-section .center-section .select-area .creat .select {
   text-align: center;
   padding: 10px;
 }
-main .main-section .center-section .select-area .creat .select .name .select-name {
+
+main
+  .main-section
+  .center-section
+  .select-area
+  .creat
+  .select
+  .name
+  .select-name {
   grid-column: 1;
   grid-row: 1;
   background-color: white;
@@ -328,6 +369,7 @@ main .main-section .center-section .select-area .creat .select .power {
   cursor: pointer;
   background-color: white;
 }
+
 main .main-section .center-section .select .power .other-power {
   display: none;
   flex-direction: column;
@@ -577,7 +619,13 @@ main .main-section .center-section .main-area .race .car-center {
   /* margin: 5px 1px 10px 1px; */
 }
 
-main .main-section .center-section .main-area .race .car-center .first-container {
+main
+  .main-section
+  .center-section
+  .main-area
+  .race
+  .car-center
+  .first-container {
   display: flex;
   text-align: center;
   /* grid-row: 1; */
@@ -618,7 +666,15 @@ main .main-section .center-section .main-area .race .car-center .road .line {
   position: relative;
   overflow: hidden;
 }
-main .main-section .center-section .main-area .race .car-center .road .line div {
+main
+  .main-section
+  .center-section
+  .main-area
+  .race
+  .car-center
+  .road
+  .line
+  div {
   width: 10%;
   height: 1px;
   background-color: white;
@@ -802,14 +858,26 @@ main .main-section .center-section .main-area .graph-section {
   margin: 10px;
 }
 
-main .main-section .center-section .main-area .graph .graph-section .performance {
+main
+  .main-section
+  .center-section
+  .main-area
+  .graph
+  .graph-section
+  .performance {
   border: 1px solid white;
   margin: 0;
   width: 450px;
   height: 400px;
 }
 
-main .main-section .center-section .main-area .graph .graph-section .resultElement {
+main
+  .main-section
+  .center-section
+  .main-area
+  .graph
+  .graph-section
+  .resultElement {
   display: flex;
   flex-direction: column;
   border: 1px solid white;
@@ -818,7 +886,8 @@ main .main-section .center-section .main-area .graph .graph-section .resultEleme
   margin-right: 10px;
 }
 
-main .main-section
+main
+  .main-section
   .center-section
   .main-area
   .graph
@@ -875,7 +944,7 @@ main .main-section .center-section .main-area .graph .replay button:hover {
     height: auto;
   }
 
- main  .main-section .center-section .tostart {
+  main .main-section .center-section .tostart {
     bottom: 40%;
     left: 20%;
     margin-right: 50px;
@@ -929,15 +998,13 @@ main .main-section .center-section .main-area .graph .replay button:hover {
   }
 }
 
-footer{
-  display:flex;
-  width:50%;
-  height:20px;
-  position:absolute;
-  bottom:0;
-  margin-left:60%;
-
-
+footer {
+  display: flex;
+  width: 50%;
+  height: 20px;
+  position: absolute;
+  bottom: 0;
+  margin-left: 60%;
 }
 
 footer .theme {
