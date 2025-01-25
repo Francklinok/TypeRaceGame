@@ -27,12 +27,11 @@ body {
   color: white;
 }
 
-
- /* Thème Peach */
+/* Thème Peach */
 .theme-peach {
   background-color: rgb(247, 221, 190);
-  color: #2a3921;
-} 
+  color: #2a3321;
+}
 
 /* Thème Forest */
 .theme-forest {

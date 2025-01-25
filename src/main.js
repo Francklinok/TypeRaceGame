@@ -886,6 +886,107 @@ const textContainer = [
   "Choose exactly what you want for your next race. You can choose your bots (challengers).",
 ];
 
+// function displayFinalChart() {
+//   const canvas = document.querySelector(".chart");
+//   if (!canvas) {
+//     console.error("Canvas avec la classe 'chart' introuvable !");
+//     return;
+//   }
+
+//   const ctx = canvas.getContext("2d");
+
+//   // Détruire un ancien graphique s'il existe
+//   if (startChart) {
+//     startChart.destroy();
+//   }
+
+//   // Calcul de l'échelle maximale pour les axes Y
+//   const maxWPM = Math.max(...userWPMData, 0);
+//   const maxCPM = Math.max(...userCPMData, 0);
+//   const maxYScale = Math.ceil(Math.max(maxWPM, maxCPM) / 10) * 10; // Arrondi supérieur à la dizaine
+
+//   // Création du graphique
+//   startChart = new Chart(ctx, {
+//     type: "line",
+//     data: {
+//       labels: timeData, // Les données de temps
+//       datasets: [
+//         {
+//           label: "User WPM",
+//           borderColor: "rgba(0, 123, 255, 1)",
+//           backgroundColor: "rgba(0, 123, 255, 0.2)",
+//           data: userWPMData,
+//           fill: true,
+//           tension: 0.4,
+//         },
+//         {
+//           label: "User CPM",
+//           borderColor: "rgba(40, 167, 69, 1)",
+//           backgroundColor: "rgba(40, 167, 69, 0.2)",
+//           data: userCPMData,
+//           fill: true,
+//           tension: 0.4,
+//         },
+//         // {
+//         //   label: "Bot WPM",
+//         //   borderColor: "rgba(255, 193, 7, 1)",
+//         //   backgroundColor: "rgba(255, 193, 7, 0.2)",
+//         //   data: botWPMData,
+//         //   fill: true,
+//         //   tension: 0.4,
+//         // },
+//         // {
+//         //   label: "Bot CPM",
+//         //   borderColor: "rgba(220, 53, 69, 1)",
+//         //   backgroundColor: "rgba(220, 53, 69, 0.2)",
+//         //   data: botCPMData,
+//         //   fill: true,
+//         //   tension: 0.4,
+//         // },
+//       ],
+//     },
+//     options: {
+//       responsive: true,
+//       plugins: {
+//         legend: {
+//           display: true,
+//           position: "bottom",
+//         },
+//         tooltip: {
+//           mode: "index",
+//           intersect: false,
+//         },
+//       },
+//       scales: {
+//         x: {
+//           title: {
+//             display: true,
+//             text: "Temps (secondes)",
+//           },
+//         },
+//         y: {
+//           title: {
+//             display: true,
+//             text: "Vitesse (WPM / CPM)",
+//           },
+//           beginAtZero: true,
+//           max: maxYScale, // Limite de l'échelle Y
+//         },
+//       },
+//       animation: {
+//         duration: 1000,
+//         easing: "easeOutCubic",
+//       },
+//     },
+//   });
+
+//   console.log("Graphique final affiché :", {
+//     timeData,
+//     userWPMData,
+//     // botWPMData,
+//   });
+// }
+
 function displayFinalChart() {
   const canvas = document.querySelector(".chart");
   if (!canvas) {
@@ -900,48 +1001,35 @@ function displayFinalChart() {
     startChart.destroy();
   }
 
-  // Calcul de l'échelle maximale pour les axes Y
-  const maxWPM = Math.max(...userWPMData, ...botWPMData);
-  const maxCPM = Math.max(...userCPMData, ...botCPMData);
-  const maxYScale = Math.ceil(Math.max(maxWPM, maxCPM) / 10) * 10; // Arrondi supérieur à la dizaine
+  // Définir des limites réalistes pour les axes
+  const minWPM = 0; // Minimum pour WPM
+  const maxWPM = 100; // Maximum réaliste pour WPM
+  const minCPM = 0; // Minimum pour CPM
+  const maxCPM = Math.ceil(Math.max(...userCPMData, 0) / 10) * 10; // Calcul basé sur vos données
 
-  // Création du graphique
+  // Création du graphique avec deux axes Y
   startChart = new Chart(ctx, {
     type: "line",
     data: {
-      labels: timeData, // Les données de temps
+      labels: timeData, // Les données de temps sur l'axe des X
       datasets: [
         {
           label: "User WPM",
+          data: userWPMData,
           borderColor: "rgba(0, 123, 255, 1)",
           backgroundColor: "rgba(0, 123, 255, 0.2)",
-          data: userWPMData,
           fill: true,
           tension: 0.4,
+          yAxisID: "y1", // Associe cette série de données à l'axe Y1
         },
         {
           label: "User CPM",
+          data: userCPMData,
           borderColor: "rgba(40, 167, 69, 1)",
           backgroundColor: "rgba(40, 167, 69, 0.2)",
-          data: userCPMData,
           fill: true,
           tension: 0.4,
-        },
-        {
-          label: "Bot WPM",
-          borderColor: "rgba(255, 193, 7, 1)",
-          backgroundColor: "rgba(255, 193, 7, 0.2)",
-          data: botWPMData,
-          fill: true,
-          tension: 0.4,
-        },
-        {
-          label: "Bot CPM",
-          borderColor: "rgba(220, 53, 69, 1)",
-          backgroundColor: "rgba(220, 53, 69, 0.2)",
-          data: botCPMData,
-          fill: true,
-          tension: 0.4,
+          yAxisID: "y2", // Associe cette série de données à l'axe Y2
         },
       ],
     },
@@ -964,13 +1052,40 @@ function displayFinalChart() {
             text: "Temps (secondes)",
           },
         },
-        y: {
+        y1: {
           title: {
             display: true,
-            text: "Vitesse (WPM / CPM)",
+            text: "Vitesse WPM",
           },
           beginAtZero: true,
-          max: maxYScale, // Limite de l'échelle Y
+          min: minWPM, // Minimum fixé
+          max: maxWPM, // Maximum fixé
+          position: "left", // Positionner cet axe à gauche
+          ticks: {
+            stepSize: 10, // Intervalle entre les graduations
+            callback: function (value) {
+              return value + " WPM"; // Ajouter une unité à l'échelle
+            },
+          },
+        },
+        y2: {
+          title: {
+            display: true,
+            text: "Vitesse CPM",
+          },
+          beginAtZero: true,
+          min: minCPM, // Minimum calculé pour CPM
+          max: maxCPM, // Maximum calculé pour CPM
+          position: "right", // Positionner cet axe à droite
+          grid: {
+            drawOnChartArea: false, // Empêche les lignes de grille de se superposer
+          },
+          ticks: {
+            stepSize: 50, // Intervalle entre les graduations pour CPM
+            callback: function (value) {
+              return value + " CPM"; // Ajouter une unité à l'échelle
+            },
+          },
         },
       },
       animation: {
@@ -983,7 +1098,7 @@ function displayFinalChart() {
   console.log("Graphique final affiché :", {
     timeData,
     userWPMData,
-    botWPMData,
+    userCPMData,
   });
 }
 
@@ -1064,30 +1179,81 @@ function gameResult() {
     updateResultElement("error-data", `Errors: ${errorCount}`);
     updateResultElement("word-data", `Words: ${words.length}`);
   });
+
 }
-gameResult();
-
-// function themLoader(){
-
-//   const themeSelector = document.getElementById("theme-selector");
-//   const body = document.body;
-
-//   // Charger le thème sauvegardé
-//   const savedTheme = localStorage.getItem("theme");
-//   if (savedTheme) {
-//     body.className = `theme-${savedTheme}`;
-//     themeSelector.value = savedTheme;
+ 
+// function countErrors(userInput, targetText) {
+//   let errors = 0;
+//   for (let i = 0; i < userInput.length; i++) {
+//     if (userInput[i] !== targetText[i]) {
+//       errors++;
+//     }
 //   }
+//   userErrors = errors; // Met à jour la variable globale userErrors
+//   return errors;
+// }
 
-//   // Appliquer le thème sélectionné
-//   themeSelector.addEventListener("change", (event) => {
-//     const selectedTheme = event.target.value;
-//     body.className = `theme-${selectedTheme}`;
+// function calculateAccuracy(userInput, targetText) {
+//   const errors = countErrors(userInput, targetText);
+//   const totalCharacters = userInput.length;
+//   if (totalCharacters === 0) return 0; // Pour éviter la division par zéro
+//   const accuracy = ((totalCharacters - errors) / totalCharacters) * 100;
 
-//     // Sauvegarder le thème dans le localStorage
-//     localStorage.setItem("theme", selectedTheme);
+//   return Math.round(accuracy); // Arrondi pour éviter les valeurs avec des virgules
+// }
+
+// function calculateWPM(userInput, startTime) {
+//   const words = userInput.split(/\s+/).length; // Nombre de mots saisis
+//   const timeElapsedMinutes = (Date.now() - startTime) / 60000; // Temps écoulé en minutes
+//   if (timeElapsedMinutes === 0) return 0; // Évite les divisions par zéro
+//   return Math.floor(words / timeElapsedMinutes); // Arrondi au nombre entier inférieur
+// }
+
+// function calculateCPM(userInput, startTime) {
+//   const characters = userInput.length; // Nombre total de caractères saisis
+//   const timeElapsedMinutes = (Date.now() - startTime) / 60000; // Temps écoulé en minutes
+//   if (timeElapsedMinutes === 0) return 0; // Évite les divisions par zéro
+//   return Math.floor(characters / timeElapsedMinutes); // Arrondi au nombre entier inférieur
+// }
+
+// function gameResult() {
+//   const inputArea = document.querySelector(".text-input");
+//   const targetText = textContainer[0];
+//   let startTime = null; // Initialise le temps de départ
+
+//   inputArea.addEventListener("input", () => {
+//     if (!startTime) startTime = Date.now(); // Définit le temps de départ au premier input
+//     const userTyped = inputArea.value.trim(); // Texte saisi par l'utilisateur
+
+//     const wpm = calculateWPM(userTyped, startTime);
+//     const cpm = calculateCPM(userTyped, startTime);
+//     const timeElapsed = Math.floor((Date.now() - startTime) / 1000); // Temps écoulé en secondes
+//     const accuracy = calculateAccuracy(userTyped, targetText);
+//     const errorCount = countErrors(userTyped, targetText);
+
+//     // Mise à jour des résultats
+//     const resultContainer = document.querySelector(".resultElement");
+//     resultContainer.style.display = "flex";
+
+//     const updateResultElement = (className, value) => {
+//       let element = resultContainer.querySelector(`.${className}`);
+//       if (!element) {
+//         element = document.createElement("span");
+//         element.className = className;
+//         resultContainer.appendChild(element);
+//       }
+//       element.textContent = value;
+//     };
+
+//     updateResultElement("wpm", `WPM: ${wpm}`);
+//     updateResultElement("cpm", `CPM: ${cpm}`);
+//     updateResultElement("time-data", `Time: ${timeElapsed}s`);
+//     updateResultElement("accuracy-data", `Accuracy: ${accuracy}%`);
+//     updateResultElement("error-data", `Errors: ${errorCount}`);
 //   });
 // }
+
+gameResult();
 
 function themLoader() {
   const themeSelector = document.getElementById("theme-selector");
