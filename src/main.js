@@ -1,5 +1,16 @@
 import Chart from "chart.js/auto";
 
+const textContainer = [
+  "Choose your bots and start the race.",
+  "Select your challengers and prepare to compete.",
+  "Pick your bots, select your track, and get ready!",
+  "Prepare for victory by choosing your bots and customizing your race settings.",
+  "Choose exactly what you need to dominate the competition. Customize your bots, opponents, and track.",
+  "The next race is yours to command! Select your bots, decide the terrain, and challenge opponents for ultimate glory.",
+  "Unleash your racing strategy by choosing your bots, defining your terrain, and handpicking challengers. Every decision shapes your path to victory—are you ready to race?",
+    
+];
+
 const namesContainer = ["jacques", "firmain", "sam", "paul"];
 const powerContainer = [
   "80 wpm",
@@ -15,7 +26,7 @@ const powerContainer = [
 const carsConainer = ["car0", "car1", "car2", "car3", "car6"];
 
 let bots = [];
-let botElement = null;
+// let botElement = null;
 
 let normal = false;
 let custom = false;
@@ -32,6 +43,8 @@ let userScore = 0;
 let botScore = 0;
 let userFinished = false;
 let botFinished = false;
+let carFinished = false;
+
 
 let userWPMData = [];
 let userCPMData = [];
@@ -39,6 +52,7 @@ let botWPMData = [];
 let botCPMData = [];
 let timeData = [];
 let userErrors = 0;
+
 
 let startTime; // Le temps de départ
 let elapsedTime = 0;
@@ -48,10 +62,29 @@ let milliseconds = 0;
 let seconds = 0;
 let minutes = 0;
 
-let startTimer = null;
+// let startTimer = null;
 let elapsedTimer = 0;
 // let timerInterval = null;
 let startChart = null;
+
+
+let currentIndex = 0;
+
+function gameManager() {
+  if (userFinished && !botFinished || !carFinished) {
+     endGame('user win')
+    // Passer au texte suivant si l'utilisateur a gagné
+    if (currentIndex < textContainer.length - 1) {
+      currentIndex++;
+    }
+  } else {
+    // Si l'utilisateur perd, garder le texte actuel
+    // L'index ne change pas.
+  }
+
+  // Retourner le texte correspondant à l'index actuel
+  return textContainer[currentIndex];
+}
 
 function createUser() {
   const nameInput = document.querySelector(".input-name");
@@ -442,7 +475,7 @@ function initializeRoadLines() {
 // Afficher le texte d'introduction
 function displayText() {
   const textElement = document.querySelector(".full");
-  const text = textContainer[0];
+  const text = gameManager();
   text.split("").forEach((char) => {
     const span = document.createElement("span");
 
@@ -611,7 +644,7 @@ function updateChart(wpm, cpm, player) {
 // Vérifier la saisie de l'utilisateur
 function verifyInput() {
   const inputArea = document.querySelector(".text-input");
-  const targetText = textContainer[0];
+  const targetText = gameManager();
   const userCar = document.querySelector(".user-car");
   const graphElement = document.querySelector(".graph");
   inputArea.addEventListener("input", () => {
@@ -625,7 +658,8 @@ function verifyInput() {
       updateWPMCPMRealtime(userTyped, targetText, "user");
 
       if (userTyped === targetText) {
-        endGame("win");
+        userFinished = true;
+        // endGame("win");
         graphElement.scrollIntoView({ behavior: "smooth" });
         graphElement.style.display = "flex";
       }
@@ -643,7 +677,8 @@ function startBot(bot = null, power = null) {
   const botCar = document.querySelector(`.${bot ? bot + "-car" : "bot-car"}`);
   console.log("botcar", botCar);
 
-  const textLength = textContainer[0].length;
+  const text = gameManager();
+  const textLength = text.length()
   // let botProgress = 0;
   // let startTime = null;
 
@@ -676,6 +711,7 @@ function startBot(bot = null, power = null) {
 
       // Si le bot atteint la fin
       if (botProgress >= 1) {
+        carFinished = true;
         botProgress = 1; // Assure que la progression ne dépasse pas 1
         clearInterval(botInterval); // Arrête l'intervalle
         console.log(`Bot "${bot}" a terminé avec ${wpm} WPM !`);
@@ -685,6 +721,7 @@ function startBot(bot = null, power = null) {
     // Cas par défaut si aucun bot ou power n'est défini
     bot = "bot";
     power = 0;
+    const textContainer = gameManager()
     const defaultbaseSpeed = 3;
     // const minSpeed = 0.5;
     const botSpeed = (defaultbaseSpeed + Math.random() * 0.5) / textLength;
@@ -696,10 +733,10 @@ function startBot(bot = null, power = null) {
       // const elapsedTime = (Date.now() - startTime) / 60000;
       botProgress += adjustedSpeed;
 
-      const botTypedLength = Math.floor(botProgress * textContainer[0].length);
-      const botText = textContainer[0].substring(0, botTypedLength);
+      const botTypedLength = Math.floor(botProgress * textContainer.length);
+      const botText = textContainer.substring(0, botTypedLength);
 
-      updateWPMCPMRealtime(botText, textContainer[0], bot);
+      updateWPMCPMRealtime(botText, textContainer, bot);
       console.log("botText", botText);
       console.log("textConntainer", textContainer);
       console.log(
@@ -708,6 +745,7 @@ function startBot(bot = null, power = null) {
 
       if (botProgress >= 1) {
         botProgress = 1;
+        botFinished = true;
         moveCar(botCar, botProgress);
         // requestAnimationFrame(startBot)
         clearInterval(botInterval);
@@ -793,6 +831,8 @@ function toStartGame() {
 document.addEventListener("DOMContentLoaded", () => {
   toStartGame();
   themLoader();
+  gameResult();
+
 });
 
 function callTostartGame() {
@@ -882,110 +922,8 @@ function resetTimer() {
   updateDisplay();
 }
 
-const textContainer = [
-  "Choose exactly what you want for your next race. You can choose your bots (challengers).",
-];
 
-// function displayFinalChart() {
-//   const canvas = document.querySelector(".chart");
-//   if (!canvas) {
-//     console.error("Canvas avec la classe 'chart' introuvable !");
-//     return;
-//   }
 
-//   const ctx = canvas.getContext("2d");
-
-//   // Détruire un ancien graphique s'il existe
-//   if (startChart) {
-//     startChart.destroy();
-//   }
-
-//   // Calcul de l'échelle maximale pour les axes Y
-//   const maxWPM = Math.max(...userWPMData, 0);
-//   const maxCPM = Math.max(...userCPMData, 0);
-//   const maxYScale = Math.ceil(Math.max(maxWPM, maxCPM) / 10) * 10; // Arrondi supérieur à la dizaine
-
-//   // Création du graphique
-//   startChart = new Chart(ctx, {
-//     type: "line",
-//     data: {
-//       labels: timeData, // Les données de temps
-//       datasets: [
-//         {
-//           label: "User WPM",
-//           borderColor: "rgba(0, 123, 255, 1)",
-//           backgroundColor: "rgba(0, 123, 255, 0.2)",
-//           data: userWPMData,
-//           fill: true,
-//           tension: 0.4,
-//         },
-//         {
-//           label: "User CPM",
-//           borderColor: "rgba(40, 167, 69, 1)",
-//           backgroundColor: "rgba(40, 167, 69, 0.2)",
-//           data: userCPMData,
-//           fill: true,
-//           tension: 0.4,
-//         },
-//         // {
-//         //   label: "Bot WPM",
-//         //   borderColor: "rgba(255, 193, 7, 1)",
-//         //   backgroundColor: "rgba(255, 193, 7, 0.2)",
-//         //   data: botWPMData,
-//         //   fill: true,
-//         //   tension: 0.4,
-//         // },
-//         // {
-//         //   label: "Bot CPM",
-//         //   borderColor: "rgba(220, 53, 69, 1)",
-//         //   backgroundColor: "rgba(220, 53, 69, 0.2)",
-//         //   data: botCPMData,
-//         //   fill: true,
-//         //   tension: 0.4,
-//         // },
-//       ],
-//     },
-//     options: {
-//       responsive: true,
-//       plugins: {
-//         legend: {
-//           display: true,
-//           position: "bottom",
-//         },
-//         tooltip: {
-//           mode: "index",
-//           intersect: false,
-//         },
-//       },
-//       scales: {
-//         x: {
-//           title: {
-//             display: true,
-//             text: "Temps (secondes)",
-//           },
-//         },
-//         y: {
-//           title: {
-//             display: true,
-//             text: "Vitesse (WPM / CPM)",
-//           },
-//           beginAtZero: true,
-//           max: maxYScale, // Limite de l'échelle Y
-//         },
-//       },
-//       animation: {
-//         duration: 1000,
-//         easing: "easeOutCubic",
-//       },
-//     },
-//   });
-
-//   console.log("Graphique final affiché :", {
-//     timeData,
-//     userWPMData,
-//     // botWPMData,
-//   });
-// }
 
 function displayFinalChart() {
   const canvas = document.querySelector(".chart");
@@ -1134,7 +1072,7 @@ function calculateAccuracy(userInput, targetText) {
 
 function gameResult() {
   const inputArea = document.querySelector(".text-input");
-  const targetText = textContainer[0];
+  const targetText = gameManager();
   // document.querySelector(".text-container")
   // .textContent.trim(); // Correction
   const words = targetText.split(/\s+/);
@@ -1182,78 +1120,6 @@ function gameResult() {
 
 }
  
-// function countErrors(userInput, targetText) {
-//   let errors = 0;
-//   for (let i = 0; i < userInput.length; i++) {
-//     if (userInput[i] !== targetText[i]) {
-//       errors++;
-//     }
-//   }
-//   userErrors = errors; // Met à jour la variable globale userErrors
-//   return errors;
-// }
-
-// function calculateAccuracy(userInput, targetText) {
-//   const errors = countErrors(userInput, targetText);
-//   const totalCharacters = userInput.length;
-//   if (totalCharacters === 0) return 0; // Pour éviter la division par zéro
-//   const accuracy = ((totalCharacters - errors) / totalCharacters) * 100;
-
-//   return Math.round(accuracy); // Arrondi pour éviter les valeurs avec des virgules
-// }
-
-// function calculateWPM(userInput, startTime) {
-//   const words = userInput.split(/\s+/).length; // Nombre de mots saisis
-//   const timeElapsedMinutes = (Date.now() - startTime) / 60000; // Temps écoulé en minutes
-//   if (timeElapsedMinutes === 0) return 0; // Évite les divisions par zéro
-//   return Math.floor(words / timeElapsedMinutes); // Arrondi au nombre entier inférieur
-// }
-
-// function calculateCPM(userInput, startTime) {
-//   const characters = userInput.length; // Nombre total de caractères saisis
-//   const timeElapsedMinutes = (Date.now() - startTime) / 60000; // Temps écoulé en minutes
-//   if (timeElapsedMinutes === 0) return 0; // Évite les divisions par zéro
-//   return Math.floor(characters / timeElapsedMinutes); // Arrondi au nombre entier inférieur
-// }
-
-// function gameResult() {
-//   const inputArea = document.querySelector(".text-input");
-//   const targetText = textContainer[0];
-//   let startTime = null; // Initialise le temps de départ
-
-//   inputArea.addEventListener("input", () => {
-//     if (!startTime) startTime = Date.now(); // Définit le temps de départ au premier input
-//     const userTyped = inputArea.value.trim(); // Texte saisi par l'utilisateur
-
-//     const wpm = calculateWPM(userTyped, startTime);
-//     const cpm = calculateCPM(userTyped, startTime);
-//     const timeElapsed = Math.floor((Date.now() - startTime) / 1000); // Temps écoulé en secondes
-//     const accuracy = calculateAccuracy(userTyped, targetText);
-//     const errorCount = countErrors(userTyped, targetText);
-
-//     // Mise à jour des résultats
-//     const resultContainer = document.querySelector(".resultElement");
-//     resultContainer.style.display = "flex";
-
-//     const updateResultElement = (className, value) => {
-//       let element = resultContainer.querySelector(`.${className}`);
-//       if (!element) {
-//         element = document.createElement("span");
-//         element.className = className;
-//         resultContainer.appendChild(element);
-//       }
-//       element.textContent = value;
-//     };
-
-//     updateResultElement("wpm", `WPM: ${wpm}`);
-//     updateResultElement("cpm", `CPM: ${cpm}`);
-//     updateResultElement("time-data", `Time: ${timeElapsed}s`);
-//     updateResultElement("accuracy-data", `Accuracy: ${accuracy}%`);
-//     updateResultElement("error-data", `Errors: ${errorCount}`);
-//   });
-// }
-
-gameResult();
 
 function themLoader() {
   const themeSelector = document.getElementById("theme-selector");
