@@ -25,22 +25,6 @@ function gameManager() {
   return textManager.getCurrentText()[0]; // Retourne le texte actuel
 }
 
-
-
-// function gameManager() { 
-//   if ((gameState.userFinished && !gameState.botFinished) || !gameState.carFinished) {
-//     endGame('user win');
-
-//     // Passe au texte suivant seulement si on n'a pas atteint la fin du tableau
-//     textManager.nextText();
-//   } else {
-//     console.log('Game is ongoing...');
-//   }
-// console.log('current text is', textManager.getCurrentText()[0])
-//   return textManager.getCurrentText()[0]; // Retourne la chaîne de caractères, et non un tableau
-
-// }
-
 function check() {
   const inputText = document.querySelector(".text-input").value; // Texte saisi par l'utilisateur
   const textElement = document.querySelector(".full");
@@ -63,53 +47,6 @@ function check() {
     }
   }
 }
-
-// function gameManager() {
-//   // Vérifie si l'utilisateur a terminé et que le bot n'a pas encore terminé, ou si la voiture n'a pas terminé
-//   if ((gameState.userFinished && !gameState.botFinished) || !gameState.carFinished) {
-//     endGame('user win');
-    
-//     // Incrémente currentIndex seulement si on n'est pas déjà à la fin du tableau
-//     if (gameState.currentIndex < textContainer.length - 1) {
-//       gameState.currentIndex++;
-//     }
-//   } else {
-//     // Si la condition n'est pas remplie, tu peux ajouter d'autres actions ou un message
-//     console.log('Game is ongoing...');
-//   }
-
-//   // Retourne le texte à afficher en fonction de l'index actuel
-//   return textContainer[gameState.currentIndex];
-// }
-// 
-
-// function gameManager() {
-//   if ((gameState.userFinished && !gameState.botFinished) || !gameState.carFinished) {
-//     // Si l'utilisateur a gagné, on appelle la fonction de fin du jeu
-//     endGame('user win');
-    
-//     if (gameState.currentIndex < textContainer.length - 1) {
-//       gameState.currentIndex++;
-//     }
-//   } else {
-//     // Jeu en cours
-//     console.log('Game is ongoing...');
-//   }
-
-//   return textContainer[gameState.currentIndex];
-// }
-// function gameManager() {
-//   if ((gameState.userFinished && !gameState.botFinished) || !gameState.carFinished) {
-//     endGame('user win');
-
-//     // Passe au texte suivant seulement si on n'a pas atteint la fin du tableau
-//     textManager.nextText();
-//   } else {
-//     console.log('Game is ongoing...');
-//   }
-
-//   return textManager.getCurrentText();
-// }
 
 
 function createUser() {
@@ -168,6 +105,7 @@ function displayUser(container, user, element, onSelect) {
     user.appendChild(span);
   }
 }
+
 
 function resetElement(domelement, names) {
   const remove = document.querySelector(".remove-element");
@@ -392,9 +330,9 @@ function normalRace() {
     console.log("Mode normal déjà actif, aucune action effectuée.");
     return;
   }
+  resetGame()
 
   // Passer en mode "normal"
-  resetGame();
   gameState.normal = true;
   gameState.custom = false;
   gameState.computer = false;
@@ -410,9 +348,8 @@ function customRace() {
     console.log("Mode custom déjà actif, aucune action effectuée.");
     return;
   }
-
+  resetGame()
   // Passer en mode "custom"
-  resetGame();
   gameState.normal = false;
   gameState.custom = true;
   gameState.computer = false;
@@ -464,9 +401,9 @@ function computerRace() {
     console.log("Mode computer déjà actif, aucune action effectuée.");
     return;
   }
+  resetGame()
 
   // Passer en mode "computer"
-  resetGame();
   gameState.normal = false;
   gameState.custom = false;
   gameState.computer = true;
@@ -513,112 +450,65 @@ function displayText() {
     textElement.appendChild(span);
   });
 }
-
-// function check() {
-//   const inputText = document.querySelector(".text-input").value.trim(); // Texte saisi par l'utilisateur (on supprime les espaces en début et fin)
-//   const textElement = document.querySelector(".full");
-//   const spans = textElement.getElementsByTagName("span"); // Les <span> du texte cible
-//   const textContainer = gameManager(); // Texte retourné par gameManager()
-
-//   console.log('Spans:', spans); // Affiche les spans pour débogage
-//   console.log("Text:", textContainer);
-
-//   // Parcourt le texte cible caractère par caractère
-//   for (let i = 0; i < textContainer.length; i++) {
-//     if (spans[i]) {
-//       if (i < inputText.length) {
-//         // Vérifie si le caractère saisi correspond au caractère cible
-//         const inputChar = inputText[i].toLowerCase(); // Convertir en minuscule pour normalisation
-//         const targetChar = textContainer[i].toLowerCase(); // Convertir en minuscule pour normalisation
-
-//         if (inputChar === targetChar) {
-//           spans[i].className = "correct"; // Correct
-//           console.log('Correct span:', spans[i].textContent);
-//         } else {
-//           spans[i].className = "incorrect"; // Incorrect
-//           console.log('Incorrect span:', spans[i].textContent);
-//         }
-//       } else {
-//         spans[i].className = ""; // Pas encore saisi
-//       }
-//     } else {
-//       // Si l'index dépasse le nombre de spans, on arrête la boucle
-//       break;
-//     }
-//   }
-// }
-
-// function check() {
-//   const inputText = document.querySelector(".text-input").value; // Texte saisi par l'utilisateur
-//   const textElement = document.querySelector(".full");
-//   const spans = textElement.getElementsByTagName("span"); // Les <span> du texte cible
-//   const textContainer = gameManager()
-//   // Parcourt le texte cible caractère par caractère
-//   for (let i = 0; i < textContainer.length; i++) {
-//     if (spans[i]) {
-//       if (i < inputText.length) {
-//         // Vérifie si le caractère saisi correspond au caractère cible
-//         if (inputText[i] === textContainer[i]) {
-//           spans[i].className = "correct"; // Correct
-//         } else {
-//           spans[i].className = "incorrect"; // Incorrect
-//         }
-//       } else {
-//         spans[i].className = ""; // Pas encore saisi
-//       }
-//     }
-//   }
-// }
-
-
 // Réinitialiser les paramètres du jeu
+
+
 function resetGame() {
   const userCar = document.querySelector(".user-car");
+  const botCar = document.querySelector("#robot-car");
   const inputArea = document.querySelector(".text-input");
-  if (gameState.normal) {
+
+  // Arrêter le timer si actif
+  if (gameState.timerInterval) {
     clearInterval(gameState.timerInterval);
-    gameState.startTime = null;
-
-    gameState.userProgress = 0;
-    gameState.userWPMData = [];
-    gameState.userCPMData = [];
-    gameState.timeData = [];
-    inputArea.value = "";
-
-    if (gameState.startChart) {
-      gameState.startChart.destroy();
-      gameState.startChart = null;
-    }
-
-    userCar.style.transform = "translateX(0)";
-  } else if ( gameState.custom &&  gameState.computer &&  gameState.botCreated) {
-    const botCar = document.querySelector("#robot-car");
-    gameState.bots = [];
-
-    clearInterval( gameState.timerInterval);
-    gameState.startTime = null;
-    gameState.botCreated = false;
-
-    gameState.userProgress = 0;
-    gameState.userWPMData = [];
-    gameState.userCPMData = [];
-
-    gameState.botProgress = 0;
-    gameState.botWPMData = [];
-    gameState.botCPMData = [];
-    gameState.timeData = [];
-    gameState.inputArea.value = "";
-
-    if ( gameState.startChart) {
-      gameState.startChart.destroy();
-      gameState.startChart = null;
-    }
-
-    // botCar.style.transform = "translateX(0)";
-    botCar.style.transform = "translateX(0)";
+    gameState.timerInterval = null;
   }
-  gameState.timeData = [];
+  clearInterval(gameState.botInterval); 
+
+  if (gameState.botInterval) {
+    clearInterval(gameState.botInterval);
+    gameState.botInterval = null;
+  }
+
+
+  // Réinitialiser les valeurs générales
+  gameState.startTime = null;
+  gameState.userProgress = 0;
+  gameState.botProgress = 0;
+  gameState.botFinished = false;
+  gameState.userFinished = false;
+  gameState.userErrors = 0;
   inputArea.value = "";
+  resetTimer()
+
+  // Réinitialiser les tableaux (force un nouvel objet en mémoire)
+  gameState.userWPMData = [...[]];
+  gameState.userCPMData = [...[]];
+  gameState.botWPMData = [...[]];
+  gameState.botCPMData = [...[]];
+  gameState.timeData = [...[]];
+
+console.log("time is ", gameState.timeData)
+  // Réinitialiser l'affichage des voitures
+  userCar.style.transform = "translateX(0)";
+  if (botCar) botCar.style.transform = "translateX(0)";
+
+  if (gameState.normal) {
+    // Mode normal : rien d'autre à faire
+  } else if (gameState.custom && gameState.computer && gameState.botCreated) {
+    // Mode personnalisé avec bots
+    gameState.bots = [...[]];
+    gameState.botCreated = false;
+  }
+
+  // Réinitialiser le graphique s'il existe
+  if (gameState.startChart) {
+    gameState.startChart.destroy();
+    gameState.startChart = null;
+  }
+
+  // Log pour vérifier la réinitialisation
+  console.log("Game reset:", JSON.parse(JSON.stringify(gameState)));
 }
 
 function moveCar(car, progress) {
@@ -640,6 +530,7 @@ function updateWPMCPM(wpm, cpm, player) {
   updateChart(wpm, cpm, player);
 }
 
+
 function updateWPMCPMRealtime(inputText, targetText, player) {
   const elapsedTime = (Date.now() - gameState.startTime) / 60000; // Temps en minutes
   const totalCharacters = inputText.length;
@@ -655,11 +546,16 @@ function updateWPMCPMRealtime(inputText, targetText, player) {
   console.log(`Joueur: ${player}, WPM: ${wpm}, CPM: ${cpm}`);
 }
 
+
 // Mettre à jour le graphique
 function updateChart(wpm, cpm, player) {
   const elapsedTime = updateDisplay();
   // const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(1);
   const maxDataPoints = 50;
+  
+  if ((player === "bot" && gameState.botFinished) || (player === "user" && gameState.userFinished)) {
+  return; // Stopper la mise à jour une fois la course terminée
+}
   // const elapsedTime = raceStats.elapsedTime;
   if (! gameState.timeData.includes(elapsedTime)) {
     gameState.timeData.push(elapsedTime);
@@ -718,7 +614,8 @@ function verifyInput() {
 
       if (userTyped === targetText) {
         gameState.userFinished = true;
-        // endGame("win");
+        endGame("");
+        stopTimer()
         graphElement.scrollIntoView({ behavior: "smooth" });
         graphElement.style.display = "flex";
       }
@@ -756,32 +653,46 @@ function startBot(bot = null, power = null) {
     );
 
     const botInterval = setInterval(() => {
-      if (! gameState.startTime)  gameState.startTime = Date.now(); // Démarre le chronomètre au début
+      if (!startTime)  startTime = Date.now(); // Démarre le chronomètre au début
 
       // Mise à jour de la progression du bot
-      gameState.botProgress += baseSpeed;
-      gameState.botProgress = Math.min(botProgress, 1); // Limite la progression à 1 (100%)
+      botProgress += baseSpeed;
+      botProgress = Math.min(botProgress, 1); // Limite la progression à 1 (100%)
 
       // Déplace la voiture
-      moveCar(botCar,  gameState.botProgress);
+      moveCar(botCar, botProgress);
 
       // Met à jour WPM et CPM tant que le bot n'a pas terminé
-      if ( gameState.botProgress < 1) {
+      if ( botProgress < 1) {
         updateWPMCPM(wpm, cpm, bot);
       }
 
       // Si le bot atteint la fin
-      if ( gameState.botProgress >= 1) {
-        gameState.carFinished = true;
-        gameState.botProgress = 1; // Assure que la progression ne dépasse pas 1
-        clearInterval( gameState.botInterval); // Arrête l'intervalle
+      if ( botProgress >= 1) {
+       carFinished = true;
+        botProgress = 1; // Assure que la progression ne dépasse pas 1
+        clearInterval( botInterval); // Arrête l'intervalle
         console.log(`Bot "${bot}" a terminé avec ${wpm} WPM !`);
+        return;
       }
     }, 100); // Mettre à jour toutes les 100 ms
   } else if (gameState.computer) {
     // Cas par défaut si aucun bot ou power n'est défini
     bot = "bot";
     power = 0;
+
+    // if (!gameState.startTime) {
+    //   console.log("🚨 ERREUR : Le jeu n'a pas encore commencé !");
+    //   return;
+    // }
+
+    if (gameState.botInterval) {
+      clearInterval(gameState.botInterval); // Stopper l'ancien intervalle
+    }
+  
+    gameState.botProgress = 0; // Réinitialiser la progression
+    gameState.botFinished = false; // Indiquer que le bot n'a pas fini
+  
     const textContainer = gameManager()
     const defaultbaseSpeed = 3;
     // const minSpeed = 0.5;
@@ -794,10 +705,47 @@ function startBot(bot = null, power = null) {
       // const elapsedTime = (Date.now() - startTime) / 60000;
       gameState.botProgress += adjustedSpeed;
 
-      const botTypedLength = Math.floor(botProgress * textContainer.length);
+      const botTypedLength = Math.floor(gameState.botProgress * textContainer.length);
       const botText = textContainer.substring(0, botTypedLength);
+function startBot(bot = null, power = null) {
+  if (!gameState.startTime) {
+    console.log("🚨 ERREUR : Le jeu n'a pas encore commencé !");
+    return;
+  }
 
-      updateWPMCPMRealtime(botText, textContainer, bot);
+  console.log("🚗 Démarrage du bot...");
+
+  const botCar = document.querySelector(`.${bot ? bot + "-car" : "bot-car"}`);
+  let botProgress = 0;
+  let startTime = null;
+
+  const text = gameManager();
+  const textLength = text.length;
+  const wpm = parseInt(power, 10);
+  const cpm = wpm * 5;
+  const baseSpeed = wpm / (60 * textLength);
+
+  console.log(`Bot: ${bot}, WPM: ${wpm}, CPM: ${cpm}, Base Speed: ${baseSpeed}`);
+
+  const botInterval = setInterval(() => {
+    if (!startTime) startTime = Date.now();
+
+    botProgress += baseSpeed;
+    botProgress = Math.min(botProgress, 1);
+
+    moveCar(botCar, botProgress);
+
+    if (botProgress < 1) {
+      updateWPMCPM(wpm, cpm, bot);
+    } else {
+      clearInterval(botInterval);
+      console.log(`🏁 Bot "${bot}" a terminé !`);
+    }
+  }, 100);
+
+  gameState.botInterval = botInterval;
+}
+
       console.log("botText", botText);
       console.log("textConntainer", textContainer);
       console.log(
@@ -808,10 +756,11 @@ function startBot(bot = null, power = null) {
         gameState.botProgress = 1;
         gameState.botFinished = true;
         moveCar(botCar,  gameState.botProgress);
-        // requestAnimationFrame(startBot)
         clearInterval( gameState.botInterval);
         endGame("lose");
+        return;
       }
+      updateWPMCPMRealtime(botText, textContainer, bot);
       moveCar(botCar,  gameState.botProgress);
     }, 16); // Mettre à jour toutes les 50 ms
   }
@@ -822,7 +771,6 @@ function endGame(result) {
   // const inputArea = document.querySelector(".text-input");
   if (result === "win") {
     gameState.userScore++;
-    stopTimer();
     // alert("Bravo ! Vous avez gagné !");
   } else if (result === "lose") {
     gameState.botScore++;
@@ -830,6 +778,12 @@ function endGame(result) {
   }
   // resetGame();
   displayFinalChart();
+}
+
+function resetBots() {
+  gameState.botProgress = 0;
+  gameState.botFinished = false;
+  clearInterval(gameState.botInterval); // Assure qu'il n'y a pas d'ancien intervalle en cours
 }
 
 // Afficher les scores
@@ -840,9 +794,7 @@ function displayScores() {
 
 function startGame() {
   // Réinitialiser le jeu et le minuteur
-
   if ( gameState.computer &&  gameState.botCreated) {
-    resetGame();
     resetTimer();
     verifyInput();
     startBot();
@@ -859,44 +811,8 @@ function startGame() {
   verifyInput();
 }
 
-function toStart() {
-  const start = document.querySelector(".starter");
-  start.addEventListener("click", () => {
-    const count = document.querySelector(".counter");
-    count.style.display = "block";
-    startCountdown();
-  });
-}
-
-function initializeGame() {
-  toStart();
-  initializeRoadLines();
-  displayText();
-  manageUser();
-  select();
-  addPlayer();
-}
-
-function toStartGame() {
-  const mainArea = document.querySelector(".main-area");
-  const submit = document.querySelector(".startButton");
-  const openToStart = document.querySelector(".tostart");
-
-  submit.addEventListener("click", () => {
-    mainArea.style.display = "flex";
-    openToStart.style.display = "none";
-    initializeGame();
-  });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  toStartGame();
-  themLoader();
-  gameResult();
-
-});
-
 function callTostartGame() {
+  resetGame()
   displayScores();
   startGame();
   startTimerFunction();
@@ -925,11 +841,49 @@ function startCountdown() {
     if (counter === 0) {
       clearInterval(interval);
       count.style.display = "none";
-      callTostart();
+      return callTostart();
     }
     counter--;
   }, 1000);
 }
+function toStart() {
+  const start = document.querySelector(".starter");
+  start.addEventListener("click", () => {
+    const count = document.querySelector(".counter");
+    count.style.display = "block";
+    startCountdown();
+    resetGame()
+  });
+}
+
+function initializeGame() {
+  toStart();
+  initializeRoadLines();
+  displayText();
+  manageUser();
+  select();
+  addPlayer();
+}
+
+function toStartGame() {
+  const mainArea = document.querySelector(".main-area");
+  const submit = document.querySelector(".startButton");
+  const openToStart = document.querySelector(".tostart");
+
+  submit.addEventListener("click", () => {
+    mainArea.style.display = "flex";
+    openToStart.style.display = "none";
+    initializeGame();
+
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  toStartGame();
+  themLoader();
+  gameResult();
+
+});
 
 function updateTimer() {
   gameState.milliseconds += 100; // On incrémente par 10 ms
@@ -1036,11 +990,11 @@ function gameResult() {
       element.textContent = value;
     };
   
-    updateResultElement("wpm", `WPM: ${ gameState.userWPM}`);
-    updateResultElement("cpm", `CPM: ${ gameState.userCPM}`);
-    updateResultElement("time-data", `Time: ${ gameState.timeElapsed}s`);
-    updateResultElement("accuracy-data", `Accuracy: ${ gameState.accuracy}%`);
-    updateResultElement("error-data", `Errors: ${ gameState.errorCount}`);
+    updateResultElement("wpm", `WPM: ${ userWPM}`);
+    updateResultElement("cpm", `CPM: ${ userCPM}`);
+    updateResultElement("time-data", `Time: ${ timeElapsed}s`);
+    updateResultElement("accuracy-data", `Accuracy: ${ accuracy}%`);
+    updateResultElement("error-data", `Errors: ${ errorCount}`);
     updateResultElement("word-data", `Words: ${words.length}`);
   });
 
