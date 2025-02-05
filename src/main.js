@@ -4,6 +4,7 @@ import {displayFinalChart} from "./graph"
 
 
 function gameManager() { 
+  console.log("🔄 gameManager() appelé");
   console.log("Checking game state..."); 
 
   // Vérifier que la partie a bien commencé avant d'avancer le texte
@@ -512,11 +513,13 @@ console.log("time is ", gameState.timeData)
 }
 
 function moveCar(car, progress) {
+  console.log("🔄 moveCar() appelé");
   const trackWidth = document.querySelector("#race-track").offsetWidth;
   const carWidth = car.offsetWidth;
   const maxPosition = trackWidth - carWidth;
   const position = progress * maxPosition;
   car.style.transform = `translateX(${position}px)`;
+  return;
 }
 
 // Fonction pour mettre à jour les WPM et CPM
@@ -532,6 +535,8 @@ function updateWPMCPM(wpm, cpm, player) {
 
 
 function updateWPMCPMRealtime(inputText, targetText, player) {
+  console.log("🔄 updateWPMCPMRealtime() appelé");
+
   const elapsedTime = (Date.now() - gameState.startTime) / 60000; // Temps en minutes
   const totalCharacters = inputText.length;
 
@@ -630,6 +635,19 @@ function verifyInput() {
 }
 
 function startBot(bot = null, power = null) {
+  console.log("🔄 startBot() appelé");
+
+  // if (gameState.botInterval) {
+  //   console.log("🛑 Arrêt de l'ancien intervalle");
+  //   clearInterval(gameState.botInterval);
+  //   gameState.botInterval = null;
+  // }
+  // if (!gameState.startTime) {
+  //   console.log("🚨 ERREUR : Le jeu n'a pas encore commencé !");
+  //   return;
+  // }
+
+
   const botCar = document.querySelector(`.${bot ? bot + "-car" : "bot-car"}`);
   console.log("botcar", botCar);
 
@@ -680,15 +698,6 @@ function startBot(bot = null, power = null) {
     // Cas par défaut si aucun bot ou power n'est défini
     bot = "bot";
     power = 0;
-
-    // if (!gameState.startTime) {
-    //   console.log("🚨 ERREUR : Le jeu n'a pas encore commencé !");
-    //   return;
-    // }
-
-    if (gameState.botInterval) {
-      clearInterval(gameState.botInterval); // Stopper l'ancien intervalle
-    }
   
     gameState.botProgress = 0; // Réinitialiser la progression
     gameState.botFinished = false; // Indiquer que le bot n'a pas fini
@@ -707,45 +716,7 @@ function startBot(bot = null, power = null) {
 
       const botTypedLength = Math.floor(gameState.botProgress * textContainer.length);
       const botText = textContainer.substring(0, botTypedLength);
-function startBot(bot = null, power = null) {
-  if (!gameState.startTime) {
-    console.log("🚨 ERREUR : Le jeu n'a pas encore commencé !");
-    return;
-  }
-
-  console.log("🚗 Démarrage du bot...");
-
-  const botCar = document.querySelector(`.${bot ? bot + "-car" : "bot-car"}`);
-  let botProgress = 0;
-  let startTime = null;
-
-  const text = gameManager();
-  const textLength = text.length;
-  const wpm = parseInt(power, 10);
-  const cpm = wpm * 5;
-  const baseSpeed = wpm / (60 * textLength);
-
-  console.log(`Bot: ${bot}, WPM: ${wpm}, CPM: ${cpm}, Base Speed: ${baseSpeed}`);
-
-  const botInterval = setInterval(() => {
-    if (!startTime) startTime = Date.now();
-
-    botProgress += baseSpeed;
-    botProgress = Math.min(botProgress, 1);
-
-    moveCar(botCar, botProgress);
-
-    if (botProgress < 1) {
-      updateWPMCPM(wpm, cpm, bot);
-    } else {
-      clearInterval(botInterval);
-      console.log(`🏁 Bot "${bot}" a terminé !`);
-    }
-  }, 100);
-
-  gameState.botInterval = botInterval;
-}
-
+ 
       console.log("botText", botText);
       console.log("textConntainer", textContainer);
       console.log(
@@ -756,35 +727,50 @@ function startBot(bot = null, power = null) {
         gameState.botProgress = 1;
         gameState.botFinished = true;
         moveCar(botCar,  gameState.botProgress);
-        clearInterval( gameState.botInterval);
+        clearInterval(botInterval);
+        gameState.botInterval = null;
         endGame("lose");
         return;
       }
       updateWPMCPMRealtime(botText, textContainer, bot);
       moveCar(botCar,  gameState.botProgress);
     }, 16); // Mettre à jour toutes les 50 ms
+    gameState.botInterval = botInterval;
   }
 }
 
-// Gérer la fin de partie
 function endGame(result) {
-  // const inputArea = document.querySelector(".text-input");
+  if (gameState.botFinished) return; // Empêche l'appel multiple
+  console.log("🔄 endGame() appelé");
+  
+  gameState.botFinished = true; // Marque le jeu comme terminé
+
   if (result === "win") {
     gameState.userScore++;
-    // alert("Bravo ! Vous avez gagné !");
   } else if (result === "lose") {
     gameState.botScore++;
-    // alert("Dommage ! Le robot a gagné.");
   }
-  // resetGame();
+
   displayFinalChart();
 }
 
-function resetBots() {
-  gameState.botProgress = 0;
-  gameState.botFinished = false;
-  clearInterval(gameState.botInterval); // Assure qu'il n'y a pas d'ancien intervalle en cours
-}
+// Gérer la fin de partie
+
+// function endGame(bot,result) {
+//   if(gameState.botFinished) return ;
+//   console.log("🔄 endGame() appelé");
+//   // const inputArea = document.querySelector(".text-input");
+//   if (result === "win") {
+//     gameState.userScore++;
+
+//     // alert("Bravo ! Vous avez gagné !");
+//   } else if (result === "lose") {
+//     gameState.botScore++;
+//     // alert("Dommage ! Le robot a gagné.");
+//   }
+//   displayFinalChart();
+// }
+
 
 // Afficher les scores
 function displayScores() {
@@ -819,6 +805,7 @@ function callTostartGame() {
 
   const textInput = document.querySelector(".text-input");
   textInput.addEventListener("input", check);
+  return;
 }
 
 async function callTostart() {
@@ -831,6 +818,7 @@ async function callTostart() {
 
   // startTimerFunction();
   callTostartGame();
+  return;
 }
 
 function startCountdown() {
@@ -841,18 +829,20 @@ function startCountdown() {
     if (counter === 0) {
       clearInterval(interval);
       count.style.display = "none";
-      return callTostart();
+       callTostart();
     }
     counter--;
+
   }, 1000);
-}
+} 
+
 function toStart() {
+  resetGame()
   const start = document.querySelector(".starter");
   start.addEventListener("click", () => {
     const count = document.querySelector(".counter");
     count.style.display = "block";
     startCountdown();
-    resetGame()
   });
 }
 
