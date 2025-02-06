@@ -13,12 +13,16 @@ export const textManager = {
   getCurrentText() {
     return this.texts[this.currentIndex]; // Récupère le texte actuel sous forme de tableau
   },
-
   nextText() {
     if (this.currentIndex < this.texts.length - 1) {
       this.currentIndex++; // Passe au texte suivant
+      return this.texts[this.currentIndex]; // Retourne le texte mis à jour
+    } else {
+      alert("🎉 Félicitations ! Vous avez terminé tous les niveaux !");
+      return this.texts[this.currentIndex]; // Retourne le dernier texte disponible
     }
   }
+  
 };
 
 

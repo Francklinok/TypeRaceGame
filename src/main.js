@@ -1,30 +1,92 @@
 import { textManager,namesContainer, powerContainer, gameState } from "./gameData";
 import {themLoader} from "./theme"
 import {displayFinalChart} from "./graph"
+import {initializeRoadLines,renderPlayerTrack } from "./render"
 
+function moveNextLevel() {
+  console.log("🔄 moveNextLevel() appelé");
+  let newText = textManager.nextText();  // Récupère le nouveau texte
+  console.log("🚀 Nouveau texte:", newText);
+  return newText;  // Retourne le texte pour que gameManager() puisse l'utiliser
+}
+
+function reStartLevel() {
+  console.log("🔄 reStartLevel() appelé");
+  let restartText = textManager.getCurrentText(); // Récupère le texte actuel
+  console.log("🔄 Texte du niveau réinitialisé:", restartText);
+  return restartText; // Retourne le texte
+}
 
 function gameManager() { 
   console.log("🔄 gameManager() appelé");
-  console.log("Checking game state..."); 
 
-  // Vérifier que la partie a bien commencé avant d'avancer le texte
-  if (gameState.gameStarted) { 
-    if ((gameState.userFinished && !gameState.botFinished) || !gameState.carFinished) {
-      console.log("User won! Moving to next text...");
-      endGame('user win');
+  let resultText = null; // Stocke le texte de retour
 
-      // Passe au texte suivant seulement si on n'a pas atteint la fin du tableau
-      textManager.nextText();
-    } else {
-      console.log('Game is ongoing...');
+  if (gameState.normal) {
+    if (gameState.userFinished) {
+      alert("🎉 User won the game!");
+      resultText = moveNextLevel(); 
+      alert("🚀 Prochain texte: " + resultText);
+      endGame();
     }
-  } else {
-    console.log("Game has not started yet, text remains the same.");
+  } else if (gameState.computer || gameState.custom) {
+    if (gameState.userFinished && !gameState.botFinished) {
+      alert("🎉 User finished first!");
+      resultText = moveNextLevel();
+      alert("🚀 Prochain texte: " + resultText);
+      endGame();
+    } else if (gameState.botFinished && !gameState.userFinished) {
+      alert("❌ User lost!");  
+      resultText = reStartLevel();
+      alert("🔄 Recommencer avec: " + resultText);
+      endGame();
+    }
   }
 
-  console.log('Current text is:', textManager.getCurrentText()[0]); 
-  return textManager.getCurrentText()[0]; // Retourne le texte actuel
+  console.log("🔄 Texte retourné par gameManager():", resultText);
+  return resultText; // Retourne enfin le texte correct
 }
+
+  // console.log("🔄 gameManager() appelé");
+  // // console.log("Checking game state...");
+  // let newText = moveNextLevel()
+  // console.log("🚀 Texte du niveau suivant :", newText);
+  // let restartText = reStartLevel() 
+  // console.log("🔄 Texte du niveau réinitialisé :", restartText);
+
+  // Vérifier que la partie a bien commencé avant d'avancer le texte
+  // if (gameState.gameStarted) { 
+  //   if ((gameState.userFinished && !gameState.botFinished) || !gameState.carFinished) {
+  //     console.log("User won! Moving to next text...");
+  //     endGame('user win');
+
+  //     // Passe au texte suivant seulement si on n'a pas atteint la fin du tableau
+  //     textManager.nextText();
+  //   } else {
+  //     console.log('Game is ongoing...');
+  //   }
+  // } else {
+  //   console.log("Game has not started yet, text remains the same.");
+  // }
+
+  // console.log('Current text is:', textManager.getCurrentText()[0]); 
+  // return textManager.getCurrentText()[0]; // Retourne le texte actuel
+// }
+
+  
+  // if (gameState.botFinished) return; // Empêche l'appel multiple
+  // console.log("🔄 endGame() appelé");
+  
+  // gameState.botFinished = true; // Marque le jeu comme terminé
+
+  // if (result === "win") {
+  //   gameState.userScore++;
+  // } else if (result === "lose") {
+  //   gameState.botScore++;
+  // }
+
+// }
+
 
 function check() {
   const inputText = document.querySelector(".text-input").value; // Texte saisi par l'utilisateur
@@ -155,85 +217,6 @@ function select() {
   });
 }
 
-function renderPlayerTrack(selectName) {
-  const defaultBotName = "bot";
-  let botName = selectName || defaultBotName;
-  console.log("Selected bot name:", botName);
-
-  const raceTracker = document.querySelector(".race");
-  raceTracker.id = "userRace";
-
-  // Crée la section des utilisateurs
-  const userLeft = document.createElement("div");
-  userLeft.className = `user-left ${botName}`;
-  userLeft.id = "userNames";
-  userLeft.setAttribute("data-bot-name", botName); // Ajouter un attribut unique pour identifier ce bot
-
-  const firstUser = document.createElement("div");
-  firstUser.className = "user";
-
-  const firstUserText = document.createElement("p");
-  firstUserText.textContent = botName;
-  firstUser.appendChild(firstUserText);
-
-  userLeft.appendChild(firstUser);
-
-  // Crée la section des voitures et de la route
-  const carCenter = document.createElement("div");
-  carCenter.className = "car-center";
-  carCenter.id = "cars";
-
-  const firstContainer = document.createElement("div");
-  firstContainer.className = "first-container";
-
-  const roadFirst = document.createElement("div");
-  roadFirst.className = "road";
-  const userCar = document.createElement("img");
-  userCar.className = `${botName}-car`;
-  userCar.id = "robot-car";
-  userCar.src = "/car.svg";
-  userCar.alt = "Car for user";
-  const lineFirst = document.createElement("div");
-  lineFirst.className = "line";
-  roadFirst.appendChild(userCar);
-  roadFirst.appendChild(lineFirst);
-
-  const flagFirst = document.createElement("div");
-  flagFirst.className = "flag";
-  const finishFirst = document.createElement("span");
-  finishFirst.textContent = "Finish";
-  flagFirst.appendChild(finishFirst);
-
-  firstContainer.appendChild(roadFirst);
-  firstContainer.appendChild(flagFirst);
-
-  carCenter.appendChild(firstContainer);
-
-  // Crée la section des paramètres
-  const paramsRight = document.createElement("div");
-  paramsRight.className = "params-right";
-  paramsRight.id = "userParams";
-
-  const firstParams = document.createElement("div");
-  firstParams.className = "params";
-  const userWpm = document.createElement("p");
-  userWpm.className = `${botName}-wpm`;
-  userWpm.textContent = "wpm:0";
-  const userCpm = document.createElement("p");
-  userCpm.className = `${botName}-cpm`;
-  userCpm.textContent = "cpm:0";
-  firstParams.appendChild(userWpm);
-  firstParams.appendChild(userCpm);
-  console.log("Bot name is", botName);
-  paramsRight.appendChild(firstParams);
-
-  // Ajouter tous les éléments à la structure principale de la course
-  raceTracker.appendChild(userLeft);
-  raceTracker.appendChild(carCenter);
-  raceTracker.appendChild(paramsRight);
-
-  initializeRoadLines();
-}
 
 function addPlayer() {
   const name = document.querySelector(".select-name").value;
@@ -420,20 +403,6 @@ function computerRace() {
   return gameState.computer;
 }
 
-function initializeRoadLines() {
-  const lineCounters = document.querySelectorAll(".line");
-  lineCounters.forEach((lineCounter) => {
-    const fragment = document.createDocumentFragment();
-
-    for (let i = 0; i < 40; i++) {
-      const div = document.createElement("div");
-      div.style.height = "4px";
-      fragment.appendChild(div);
-    }
-
-    lineCounter.appendChild(fragment);
-  });
-}
 
 // Afficher le texte d'introduction
 function displayText() {
@@ -619,8 +588,6 @@ function verifyInput() {
 
       if (userTyped === targetText) {
         gameState.userFinished = true;
-        endGame("");
-        stopTimer()
         graphElement.scrollIntoView({ behavior: "smooth" });
         graphElement.style.display = "flex";
       }
@@ -636,18 +603,6 @@ function verifyInput() {
 
 function startBot(bot = null, power = null) {
   console.log("🔄 startBot() appelé");
-
-  // if (gameState.botInterval) {
-  //   console.log("🛑 Arrêt de l'ancien intervalle");
-  //   clearInterval(gameState.botInterval);
-  //   gameState.botInterval = null;
-  // }
-  // if (!gameState.startTime) {
-  //   console.log("🚨 ERREUR : Le jeu n'a pas encore commencé !");
-  //   return;
-  // }
-
-
   const botCar = document.querySelector(`.${bot ? bot + "-car" : "bot-car"}`);
   console.log("botcar", botCar);
 
@@ -687,7 +642,7 @@ function startBot(bot = null, power = null) {
 
       // Si le bot atteint la fin
       if ( botProgress >= 1) {
-       carFinished = true;
+        carFinished = true;
         botProgress = 1; // Assure que la progression ne dépasse pas 1
         clearInterval( botInterval); // Arrête l'intervalle
         console.log(`Bot "${bot}" a terminé avec ${wpm} WPM !`);
@@ -729,7 +684,6 @@ function startBot(bot = null, power = null) {
         moveCar(botCar,  gameState.botProgress);
         clearInterval(botInterval);
         gameState.botInterval = null;
-        endGame("lose");
         return;
       }
       updateWPMCPMRealtime(botText, textContainer, bot);
@@ -739,24 +693,60 @@ function startBot(bot = null, power = null) {
   }
 }
 
-function endGame(result) {
-  if (gameState.botFinished) return; // Empêche l'appel multiple
-  console.log("🔄 endGame() appelé");
+
+// function endGame() {
+//   if(gameState.normal){
+//     if(gameState.userFinished){
+//       alert("user win the game");
+//       moveNextLevel()
+//       displayFinalChart();
+
+//     }
+
+//   }else if(gameState.computer || gameState.costumer){
+//     if(gameState.userFinished && !gameState.botFinished){
+//       alert(userFinished)
+//       displayFinalChart();
+//       moveNextLevel();
+
+
+//     }else if(gameState.botFinished && !gameState.userFinished){
+//       alert('user lose')
+//       reStartLevel()
+//     }
+//   }
   
-  gameState.botFinished = true; // Marque le jeu comme terminé
+  // if (gameState.botFinished) return; // Empêche l'appel multiple
+  // console.log("🔄 endGame() appelé");
+  
+  // gameState.botFinished = true; // Marque le jeu comme terminé
 
-  if (result === "win") {
-    gameState.userScore++;
-  } else if (result === "lose") {
-    gameState.botScore++;
-  }
+  // if (result === "win") {
+  //   gameState.userScore++;
+  // } else if (result === "lose") {
+  //   gameState.botScore++;
+  // }
 
-  displayFinalChart();
-}
+// }
 
 // Gérer la fin de partie
 
-// function endGame(bot,result) {
+function endGame() {
+
+  if(gameState.userFinished){
+    alert("user win")
+    gameState.userScore++;
+    return;
+
+  } else{
+    alert("bot win")
+    gameState.userScore++;
+
+  }
+  displayFinalChart();
+
+}
+
 //   if(gameState.botFinished) return ;
 //   console.log("🔄 endGame() appelé");
 //   // const inputArea = document.querySelector(".text-input");
@@ -779,7 +769,9 @@ function displayScores() {
 }
 
 function startGame() {
-  // Réinitialiser le jeu et le minuteur
+  // Ré
+  // 
+  // ser le jeu et le minuteur
   if ( gameState.computer &&  gameState.botCreated) {
     resetTimer();
     verifyInput();
