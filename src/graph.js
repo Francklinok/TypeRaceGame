@@ -2,6 +2,7 @@ import Chart from "chart.js/auto";
 import { gameState } from "./gameData";
 
 
+
 export function displayFinalChart() {
   const canvas = document.querySelector(".chart");
   if (!canvas) {

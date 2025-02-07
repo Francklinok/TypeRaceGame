@@ -1,3 +1,4 @@
+
 export function initializeRoadLines() {
     const lineCounters = document.querySelectorAll(".line");
     lineCounters.forEach((lineCounter) => {
