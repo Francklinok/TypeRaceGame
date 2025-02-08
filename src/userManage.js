@@ -1,16 +1,18 @@
-import { gameState } from "./gameData";
+import { gameState,namesContainer,powerContainer} from "./gameData";
  import { computerRace, customRace, normalRace } from "./mode";
- 
+ import { renderPlayerTrack } from "./render";
+ // Function to create a new user with name and power
+
+
 function createUser() {
   const nameInput = document.querySelector(".input-name");
   const wpmInput = document.querySelector(".input-wpm");
   const addSec = document.querySelector(".add-section");
-  // Récupérez les valeurs des champs d'entrée
   const name = nameInput.value.trim();
-  // const wpm = parseInt(wpmInput.value.trim(), 10) || 0; // Convertir en nombre (par défaut 0 si invalide)
   const wpm = wpmInput.value.trim();
-  if (!name || wpm <= 0) {
-    alert("Veuillez entrer un nom valide et une valeur WPM supérieure à 0.");
+
+  if (!name || isNaN(wpm) || wpm <= 0) {
+    alert("Please enter a valid name and a WPM greater than 0.");
     return;
   }
 
@@ -58,15 +60,17 @@ function createUser() {
   }
 }
 
-
 function resetElement(domelement, names) {
-  const remove = document.querySelector(".remove-element");
-  remove.addEventListener("click", () => {
-    if (domelement) {
-      domelement.innerHTML = names;
-    }
+  const remove = document.querySelectorAll(".remove-element");
+  remove.forEach(element => {
+    element.addEventListener("click", () => {
+      if (domelement) {
+        domelement.innerHTML = names;
+      }
+    });
   });
 }
+
 
 export function select() {
   const names = document.querySelector(".select-name");
@@ -120,7 +124,63 @@ export function addPlayer() {
   custom.style.display = "none";
 }
 
-export function manageUser() {
+// export function manageUserMode() {
+//   const normal = document.querySelector(".normal");
+//   const custom = document.querySelector(".custom");
+//   const comput = document.querySelector(".computer");
+//   const items = document.querySelector(".addItems");
+//   const add = document.querySelector(".add-section");
+//   const added = document.querySelector(".added");
+//   const player = document.querySelector(".start");
+//   const addsection = document.querySelector(".select-area");
+
+//   normalRace()
+
+//   normal.addEventListener("click", () => {
+//     normalRace();
+//   });
+
+//   custom.addEventListener("click", () => {
+//     if (addsection.style.display === "none") {
+//       addsection.style.display = "block";
+//     } else {
+//       addsection.style.display = "none";
+//     }
+//   });
+// // 
+//   comput.addEventListener("click", () => {
+//     computerRace();
+//   });
+
+//   items.addEventListener("click", () => {
+//     if (add.style.display === "none") {
+//       add.style.display = "block";
+//     } else {
+//       add.style.display = "none";
+//     }
+//   });
+
+//   added.addEventListener("click", () => {
+//     // Enregistrer le bot et afficher un message de confirmation
+//     createUser();
+//     alert("Bot enregistré avec succès !");
+//   });
+
+//   player.addEventListener("click", () => {
+//     customRace(); // Ajouter le bot
+
+//     // Afficher tous les bots créés
+
+//     // Cacher la section d'ajout
+//     addsection.style.display = "none";
+
+//     // Réinitialiser la sélection après l'ajout
+//     gameState.selectedName = ""; // Réinitialiser le nom du bot
+//     gameState.selectedPower = ""; // Réinitialiser la puissance du bot
+//   });
+// }
+
+export function manageUserMode() {
   const normal = document.querySelector(".normal");
   const custom = document.querySelector(".custom");
   const comput = document.querySelector(".computer");
@@ -130,47 +190,45 @@ export function manageUser() {
   const player = document.querySelector(".start");
   const addsection = document.querySelector(".select-area");
 
+  let modeSelected = false; // Variable pour suivre si un mode a été choisi
+
+  // Définir le mode normal par défaut après un délai si aucun autre mode n'est sélectionné
+  setTimeout(() => {
+    if (!modeSelected) {
+      normalRace();
+      console.log("Mode normal activé par défaut.");
+    }
+  }, 2000); // 2 secondes d'attente avant d'activer le mode normal par défaut
+
   normal.addEventListener("click", () => {
+    modeSelected = true;
     normalRace();
   });
 
   custom.addEventListener("click", () => {
-    if (addsection.style.display === "none") {
-      addsection.style.display = "block";
-    } else {
-      addsection.style.display = "none";
-    }
+    modeSelected = true;
+    addsection.style.display = addsection.style.display === "none" ? "block" : "none";
   });
 
   comput.addEventListener("click", () => {
+    modeSelected = true;
     computerRace();
   });
 
   items.addEventListener("click", () => {
-    if (add.style.display === "none") {
-      add.style.display = "block";
-    } else {
-      add.style.display = "none";
-    }
+    add.style.display = add.style.display === "none" ? "block" : "none";
   });
 
   added.addEventListener("click", () => {
-    // Enregistrer le bot et afficher un message de confirmation
     createUser();
     alert("Bot enregistré avec succès !");
   });
 
   player.addEventListener("click", () => {
-    customRace(); // Ajouter le bot
-
-    // Afficher tous les bots créés
-
-    // Cacher la section d'ajout
+    customRace();
     addsection.style.display = "none";
-
-    // Réinitialiser la sélection après l'ajout
-    gameState.selectedName = ""; // Réinitialiser le nom du bot
-    gameState.selectedPower = ""; // Réinitialiser la puissance du bot
+    gameState.selectedName = ""; 
+    gameState.selectedPower = "";
   });
 }
 

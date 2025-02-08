@@ -2,6 +2,8 @@ import { gameState } from "./gameData";
 import { resetTimer } from "./time";
 
 export function resetGame() {
+  
+  console.log('resetgame is called')
   const userCar = document.querySelector(".user-car");
   const botCar = document.querySelector("#robot-car");
   const inputArea = document.querySelector(".text-input");
@@ -11,13 +13,13 @@ export function resetGame() {
     clearInterval(gameState.timerInterval);
     gameState.timerInterval = null;
   }
+
   clearInterval(gameState.botInterval); 
 
   if (gameState.botInterval) {
     clearInterval(gameState.botInterval);
     gameState.botInterval = null;
   }
-
 
   // Réinitialiser les valeurs générales
   gameState.startTime = null;

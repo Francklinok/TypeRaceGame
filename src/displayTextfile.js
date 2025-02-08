@@ -1,9 +1,9 @@
 import { gameState } from "./gameData";
 
 // Afficher le texte d'introduction
-export function displayText() {
+export function displayText(text) {
   const textElement = document.querySelector(".full");
-  const text = gameState.text;
+  // const text = gameState.text;
   text.split("").forEach((char) => {
     const span = document.createElement("span");
 

@@ -1,16 +1,17 @@
-import { resetGame } from "./resetGame";
+import { resetGame } from "./resetGameFile";
 import { clearRaceContainer } from "./userManage";
 import { createdBot } from "./userManage";
 import { renderPlayerTrack } from "./render";
 import { gameState } from "./gameData";
 
 export function normalRace() {
-  if (normal) {
+  resetGame()
+
+  if (gameState.normal) {
     // Si le mode "normal" est déjà actif, ne rien faire
     console.log("Mode normal déjà actif, aucune action effectuée.");
     return;
   }
-  resetGame()
 
   // Passer en mode "normal"
   gameState.normal = true;
