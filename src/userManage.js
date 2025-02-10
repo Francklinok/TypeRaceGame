@@ -2,6 +2,7 @@ import { gameState,namesContainer,powerContainer} from "./gameData";
  import { computerRace, customRace, normalRace } from "./mode";
  import { renderPlayerTrack } from "./render";
  // Function to create a new user with name and power
+ let isManageUserModeInitialized = false; 
 
 
 function createUser() {
@@ -32,6 +33,7 @@ function createUser() {
     powerContainer
   );
 }
+
 
  function displayUser(container, user, element, onSelect) {
   // Vérifier si les arguments sont valides
@@ -124,63 +126,14 @@ export function addPlayer() {
   custom.style.display = "none";
 }
 
-// export function manageUserMode() {
-//   const normal = document.querySelector(".normal");
-//   const custom = document.querySelector(".custom");
-//   const comput = document.querySelector(".computer");
-//   const items = document.querySelector(".addItems");
-//   const add = document.querySelector(".add-section");
-//   const added = document.querySelector(".added");
-//   const player = document.querySelector(".start");
-//   const addsection = document.querySelector(".select-area");
-
-//   normalRace()
-
-//   normal.addEventListener("click", () => {
-//     normalRace();
-//   });
-
-//   custom.addEventListener("click", () => {
-//     if (addsection.style.display === "none") {
-//       addsection.style.display = "block";
-//     } else {
-//       addsection.style.display = "none";
-//     }
-//   });
-// // 
-//   comput.addEventListener("click", () => {
-//     computerRace();
-//   });
-
-//   items.addEventListener("click", () => {
-//     if (add.style.display === "none") {
-//       add.style.display = "block";
-//     } else {
-//       add.style.display = "none";
-//     }
-//   });
-
-//   added.addEventListener("click", () => {
-//     // Enregistrer le bot et afficher un message de confirmation
-//     createUser();
-//     alert("Bot enregistré avec succès !");
-//   });
-
-//   player.addEventListener("click", () => {
-//     customRace(); // Ajouter le bot
-
-//     // Afficher tous les bots créés
-
-//     // Cacher la section d'ajout
-//     addsection.style.display = "none";
-
-//     // Réinitialiser la sélection après l'ajout
-//     gameState.selectedName = ""; // Réinitialiser le nom du bot
-//     gameState.selectedPower = ""; // Réinitialiser la puissance du bot
-//   });
-// }
 
 export function manageUserMode() {
+  if (isManageUserModeInitialized) {
+    console.log("manageUserMode() déjà exécuté, aucune action supplémentaire.");
+    return;
+  }
+  isManageUserModeInitialized = true;
+
   const normal = document.querySelector(".normal");
   const custom = document.querySelector(".custom");
   const comput = document.querySelector(".computer");
@@ -190,19 +143,32 @@ export function manageUserMode() {
   const player = document.querySelector(".start");
   const addsection = document.querySelector(".select-area");
 
-  let modeSelected = false; // Variable pour suivre si un mode a été choisi
+  let modeSelected = false; // Vérifie si un mode a été choisi
+  let isNormalModeActive = false; // Empêche plusieurs activations du mode normal
 
-  // Définir le mode normal par défaut après un délai si aucun autre mode n'est sélectionné
-  setTimeout(() => {
-    if (!modeSelected) {
+  function activateNormalMode() {
+    if (!isNormalModeActive) {
       normalRace();
       console.log("Mode normal activé par défaut.");
+      isNormalModeActive = true; // Marque comme actif
+    } else {
+      console.log("Mode normal déjà actif, aucune action effectuée.");
     }
-  }, 2000); // 2 secondes d'attente avant d'activer le mode normal par défaut
+  }
 
+  // Activer le mode normal après un délai, si aucun mode n'est sélectionné
+  setTimeout(() => {
+    if (!modeSelected) {
+      activateNormalMode();
+    }
+  }, 500); // Délai ajusté pour éviter une exécution instantanée
+
+  // Gestion des événements utilisateur
   normal.addEventListener("click", () => {
-    modeSelected = true;
-    normalRace();
+    if (!isNormalModeActive) {
+      modeSelected = true;
+      activateNormalMode();
+    }
   });
 
   custom.addEventListener("click", () => {
@@ -231,6 +197,7 @@ export function manageUserMode() {
     gameState.selectedPower = "";
   });
 }
+
 
 export function clearRaceContainer() {
   // const raceTracker = document.querySelector("#userRace");

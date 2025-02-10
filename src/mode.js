@@ -5,8 +5,6 @@ import { renderPlayerTrack } from "./render";
 import { gameState } from "./gameData";
 
 export function normalRace() {
-  resetGame()
-
   if (gameState.normal) {
     // Si le mode "normal" est déjà actif, ne rien faire
     console.log("Mode normal déjà actif, aucune action effectuée.");
@@ -19,6 +17,7 @@ export function normalRace() {
   gameState.computer = false;
 
   clearRaceContainer();
+  resetGame()
   console.log("Mode normal activé.");
   return gameState.normal;
 }

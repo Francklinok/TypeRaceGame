@@ -1,90 +1,52 @@
+export class TextManager {
+  constructor() {
+      this.texts = [
+        "Choose your bots and start the race.",
+        "Select your challengers and prepare to compete.",
+        "Pick your bots, select your track, and get ready!",
+        "Prepare for victory by choosing your bots and customizing your race settings.",
+        "Choose exactly what you need to dominate the competition. Customize your bots, opponents, and track.",
+        "The next race is yours to command! Select your bots, decide the terrain, and challenge opponents for ultimate glory.",
+        "Unleash your racing strategy by choosing your bots, defining your terrain, and handpicking challengers. Every decision shapes your path to victory—are you ready to race?"
+      ];
 
-
-export const textManager = {
-  texts: [
-    "Choose your bots and start the race.",
-    "Select your challengers and prepare to compete.",
-    "Pick your bots, select your track, and get ready!",
-    "Prepare for victory by choosing your bots and customizing your race settings.",
-    "Choose exactly what you need to dominate the competition. Customize your bots, opponents, and track.",
-    "The next race is yours to command! Select your bots, decide the terrain, and challenge opponents for ultimate glory.",
-    "Unleash your racing strategy by choosing your bots, defining your terrain, and handpicking challengers. Every decision shapes your path to victory—are you ready to race?"
-  ],
-  currentIndex: 0,
+      this.currentIndex = 0;
+  }
 
   getCurrentText() {
-    return this.texts[this.currentIndex];
-  },
-  nextText() {
-    if (this.currentIndex < this.texts.length - 1) {
-      this.currentIndex++;
-    } else {
-      alert("🎉 Félicitations ! Vous avez terminé tous les niveaux !");
-    }
-    return this.texts[this.currentIndex] || this.texts[this.texts.length - 1];
+      return this.texts[this.currentIndex] || "";
   }
-};
-// // export const textManager = {
-// //   texts: [
-// //     ["Choose your bots and start the race."],
-// //     ["Select your challengers and prepare to compete."],
-// //     ["Pick your bots, select your track, and get ready!"],
-// //     ["Prepare for victory by choosing your bots and customizing your race settings."],
-// //     ["Choose exactly what you need to dominate the competition. Customize your bots, opponents, and track."],
-// //     ["The next race is yours to command! Select your bots, decide the terrain, and challenge opponents for ultimate glory."],
-// //     ["Unleash your racing strategy by choosing your bots, defining your terrain, and handpicking challengers. Every decision shapes your path to victory—are you ready to race?"]
-// //   ],
-// //   currentIndex: 0, // Index actuel
 
-// //   getCurrentText() {
-// //     return this.texts[this.currentIndex]; // Récupère le texte actuel sous forme de tableau
-// //   },
-// //   nextText() {
-// //     if (this.currentIndex < this.texts.length - 1) {
-// //       this.currentIndex++; // Passe au texte suivant
-// //       return this.texts[this.currentIndex]; // Retourne le texte mis à jour
-// //     } else {
-// //       alert("🎉 Félicitations ! Vous avez terminé tous les niveaux !");
-// //       return this.texts[this.currentIndex]; // Retourne le dernier texte disponible
-// //     }
-// //   }
-  
-// // };
+  nextText() {
+      if (this.currentIndex < this.texts.length - 1) {
+          this.currentIndex++;
+      }
+  }
 
-// export const textManager = {
-//   texts: [
-//     "Choose your bots and start the race.",
-//     "Select your challengers and prepare to compete.",
-//     "Pick your bots, select your track, and get ready!",
-//     "Prepare for victory by choosing your bots and customizing your race settings.",
-//     "Choose exactly what you need to dominate the competition. Customize your bots, opponents, and track.",
-//     "The next race is yours to command! Select your bots, decide the terrain, and challenge opponents for ultimate glory.",
-//     "Unleash your racing strategy by choosing your bots, defining your terrain, and handpicking challengers. Every decision shapes your path to victory—are you ready to race?"
-//   ],
-//   currentIndex: 0, // Index actuel
+  reset() {
+      this.currentIndex = 0;
+  }
+}
 
-//   // Retourne le texte courant
-//   getCurrentText() {
-//     return this.texts[this.currentIndex];
-//   },
-//   // Passe au texte suivant et le retourne
-//   nextText() {
-//     if (this.currentIndex < this.texts.length - 1) {
-//       this.currentIndex++; // Passe au texte suivant
-//     } else {
-//       alert("🎉 Félicitations ! Vous avez terminé tous les niveaux !");
-//     }
-//     return this.texts[this.currentIndex];
-//   }
+export class GameLevel {
+  constructor() {
+      this.level = 1;
+      this.textManager = new TextManager();
+      this.text = this.textManager.getCurrentText();
+  }
 
-// };
-let r = textManager.getCurrentText()
-let x = textManager.nextText()
+  nextLevel() {
+      this.level++;
+      this.textManager.nextText();
+      this.text = this.textManager.getCurrentText();
+  }
 
-console.log("text",r)
-
-console.log(textManager.texts[0])
-console.log("new text is", x)
+  restartGame() {
+      this.level = 1;
+      this.textManager.reset();
+      this.text = this.textManager.getCurrentText();
+  }
+}
 
 
 export const namesContainer = ["jacques", "firmain", "sam", "paul"];
@@ -99,6 +61,7 @@ export const powerContainer = [
   "10 wpm",
 ];
 
+const gamelevel = new GameLevel()
 export const gameState = {
   bots: [],
   normal: false,
@@ -131,7 +94,10 @@ export const gameState = {
   startChart: null,
   nbErreurs : 0,
   precision : 0,
-  text:textManager.getCurrentText,
+  text:"",
+  // text:textManager.texts[currentIndex],s
+  // text:textManager.getCurrentText(),
   // currentIndex: 0,
 };
-console.log("gamestate test is", gameState.text)
+// console.log("gamestate test is", gameState.text)
+

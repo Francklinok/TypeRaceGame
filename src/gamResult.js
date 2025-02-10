@@ -2,12 +2,12 @@
 import { gameState } from "./gameData";
  
 
-export function gameResult() {
+export function gameResult(targetText) {
     const inputArea = document.querySelector(".text-input");
-    const targetText = gameState.text;
+    // const targetText = gameState.text || "";
     // document.querySelector(".text-container")
     // .textContent.trim(); // Correction
-    const words = targetText.split(/\s+/);
+    const words = targetText? targetText.split(/\s+/):[]
   
     inputArea.addEventListener("input", () => {
       if (! gameState.startTime)  gameState.startTime = Date.now();

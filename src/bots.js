@@ -1,265 +1,280 @@
 import { gameState } from "./gameData";
 import { stopTimer, updateDisplay } from "./time";
 import { displayFinalChart } from "./graph";
+import { resetGame } from "./resetGameFile";
+// import { textManager } from "./gameData";
+import { gameManager } from "./main";
 
+// Fonction pour déplacer la voiture
 export function moveCar(car, progress) {
-    console.log("🔄 moveCar() appelé");
-    const trackWidth = document.querySelector("#race-track").offsetWidth;
-    const carWidth = car.offsetWidth;
-    const maxPosition = trackWidth - carWidth;
-    const position = progress * maxPosition;
-    car.style.transform = `translateX(${position}px)`;
-    return;
-  }
+  if (!car) return;
+  const trackWidth = document.querySelector("#race-track")?.offsetWidth || 0;
+  const carWidth = car.offsetWidth;
+  const maxPosition = trackWidth - carWidth;
+  const position = Math.min(Math.max(progress * maxPosition, 0), maxPosition);
+  car.style.transform = `translateX(${position}px)`;
+  return;
+}
 
-  export function endGame () {
-    console.log("endgame est appeler")
+export function endGame() {
+  console.log("🏁 Fin de la partie");
+  stopTimer();
   
-    if(gameState.userFinished){
-      console.log(gameState.userFinished)
-      stopTimer()
-      alert("user win")
-      gameState.userScore++;
-      return;
+  // Réinitialise les stats pour les deux joueurs
+  updateWPMCPM(0, 0, "user");
+  updateWPMCPM(0, 0, "bot");
   
-    } else{
-      alert("user lose")
-      gameState.userScore;
-  
-    }
+  if (gameState.userFinished) {
+    gameState.userScore++;
+    alert("🏆 Victoire !");
     displayFinalChart();
-  
+    gameManager()
+    // return textManager.currentIndex ++
+  } else {
+    alert("❌ Défaite");
+    displayFinalChart();
+    // return textManager.currentIndex;
   }
-  /**
- * Calcule le nombre d'erreurs dans la saisie utilisateur.
- * Pour chaque caractère tapé, si celui-ci ne correspond pas
- * au caractère de même position dans targetText, on incrémente le compteur.
- *
- * @param {string} targetText - Le texte attendu.
- * @param {string} userTyped - Le texte saisi par l'utilisateur.
- * @returns {number} - Le nombre d'erreurs.
- */
+  
+  // displayFinalChart();
+  
+  // Arrête tous les intervalles de mise à jour
+  // if (gameState.botInterval) {
+  //   clearInterval(gameState.botInterval);
+  //   gameState.botInterval = null;
+  // }
+}
+
+// Calcul des erreurs amélioré
 export function compterErreurs(targetText, userTyped) {
-    // Parcourir chaque caractère tapé par l'utilisateur
-    for (let i = 0; i < userTyped.length; i++) {
-      // Si le caractère ne correspond pas à celui attendu, c'est une erreur
-      if (userTyped[i] !== targetText[i]) {
-        gameState.nbErreurs++;
-      }
+  gameState.nbErreurs = 0;
+  for (let i = 0; i < userTyped.length; i++) {
+    if (userTyped[i] !== targetText[i]) {
+      gameState.nbErreurs++;
     }
-    return gameState.nbErreurs;
   }
+  return gameState.nbErreurs;
+}
+
+// Calcul de précision amélioré
+export function calculerPrecision(targetText, userTyped) {
+  if (!userTyped.length) return 100;
   
-  /**
-   * Calcule la précision de la saisie utilisateur.
-   * La précision est calculée comme le pourcentage de caractères corrects
-   * parmi la saisie totale.
-   *
-   * @param {string} targetText - Le texte attendu.
-   * @param {string} userTyped - Le texte saisi par l'utilisateur.
-   * @returns {number} - La précision en pourcentage.
-   */
-  export function calculerPrecision(targetText, userTyped) {
-    // Si l'utilisateur n'a rien tapé, on peut considérer la précision comme 100%
-    // (aucune faute n'est commise) ou 0% selon la convention choisie.
-    if (userTyped.length === 0) return 100;
-  
-    gameState.nbErreurs = compterErreurs(targetText, userTyped);
-    gameState.nbCorrects = userTyped.length - gameState.nbErreurs;
-    // Calcul du pourcentage de caractères corrects
-     gameState.precision = (gameState.nbCorrects / userTyped.length) * 100;
-    return gameState.precision;
-  }
-  
-  
-// Vérifier la saisie de l'utilisateur
+  gameState.nbErreurs = compterErreurs(targetText, userTyped);
+  gameState.nbCorrects = userTyped.length - gameState.nbErreurs;
+  gameState.precision = (gameState.nbCorrects / userTyped.length) * 100;
+  return gameState.precision;
+}
+
+// Gestion de la saisie utilisateur améliorée
 export function userBot(targetText) {
   const inputArea = document.querySelector(".text-input");
   const userCar = document.querySelector(".user-car");
   const graphElement = document.querySelector(".graph");
-  inputArea.addEventListener("input", () => {
-    if (! gameState.startTime)  gameState.startTime = Date.now();
-    // const elapsedTime = (Date.now() - startTime) / 60000;
-    const userTyped = inputArea.value;
+  
+  if (!inputArea || !userCar || !graphElement) return;
 
-     compterErreurs(targetText, userTyped);
-     calculerPrecision(targetText, userTyped);
+  const handleInput = () => {
+    if (!gameState.startTime) gameState.startTime = Date.now();
+    
+    const userTyped = inputArea.value;
+    calculerPrecision(targetText, userTyped);
 
     if (targetText.startsWith(userTyped)) {
       gameState.userProgress = userTyped.length / targetText.length;
-      moveCar(userCar,  gameState.userProgress);
+      moveCar(userCar, gameState.userProgress);
       updateWPMCPMRealtime(userTyped, targetText, "user");
 
       if (userTyped === targetText) {
         gameState.userFinished = true;
-        endGame()
+        endGame();
+        // gameManager()
         graphElement.scrollIntoView({ behavior: "smooth" });
         graphElement.style.display = "flex";
+        return;
       }
+      inputArea.style.color = "black";
     } else {
       inputArea.style.color = "red";
     }
-  });
+  };
 
-  inputArea.addEventListener("keydown", () => {
-    inputArea.style.color = "black"; // Réinitialiser la couleur de l'entrée
-  });
+  inputArea.addEventListener("input", handleInput);
 }
 
+// Bot amélioré
 export function botBot(bot = null, power = null) {
-  console.log("🔄 startBot() appelé");
   const botCar = document.querySelector(`.${bot ? bot + "-car" : "bot-car"}`);
-  console.log("botcar", botCar);
+  if (!botCar) return;
 
   const text = gameState.text;
-  console.log('textlenght', text)
-  const textLength = text.length
-  console.log('textlenght of text is',textLength)
-  // let botProgress = 0;
-  // let startTime = null;
+  const textLength = text.length;
 
-  // Vérifie si un bot et un WPM (puissance) sont fournis
-  if ( gameState.custom && bot && power) {
-    let botProgress = 0;
-    let startTime = null;
-    const wpm = parseInt(power, 10); // Vitesse en mots par minute
-    const cpm = wpm * 5; // Caractères par minute
-    const baseSpeed = wpm / (60 * textLength); // Progression par intervalle basée sur WPM et longueur du texte
-
-    console.log(
-      `Bot: ${bot}, WPM: ${wpm}, CPM: ${cpm}, Base Speed: ${baseSpeed}`
-    );
-
-    const botInterval = setInterval(() => {
-      if (!startTime)  startTime = Date.now(); // Démarre le chronomètre au début
-
-      // Mise à jour de la progression du bot
-      botProgress += baseSpeed;
-      botProgress = Math.min(botProgress, 1); // Limite la progression à 1 (100%)
-
-      // Déplace la voiture
-      moveCar(botCar, botProgress);
-
-      // Met à jour WPM et CPM tant que le bot n'a pas terminé
-      if ( botProgress < 1) {
-        updateWPMCPM(wpm, cpm, bot);
-      }
-
-      // Si le bot atteint la fin
-      if ( botProgress >= 1) {
-        gameState.carFinished = true;
-        endGame()
-        botProgress = 1; // Assure que la progression ne dépasse pas 1
-        clearInterval( botInterval); // Arrête l'intervalle
-        console.log(`Bot "${bot}" a terminé avec ${wpm} WPM !`);
-        return;
-      }
-    }, 100); // Mettre à jour toutes les 100 ms
+  if (gameState.custom && bot && power) {
+    handleCustomBot(bot, power, botCar, textLength);
   } else if (gameState.computer) {
-    // Cas par défaut si aucun bot ou power n'est défini
-    bot = "bot";
-    power = 0;
-  
-    gameState.botProgress = 0; // Réinitialiser la progression
-    gameState.botFinished = false; // Indiquer que le bot n'a pas fini
-  
-    const textContainer = gameState.text;
-    const defaultbaseSpeed = 3;
-    // const minSpeed = 0.5;
-    const botSpeed = (defaultbaseSpeed + Math.random() * 0.5) / textLength;
-
-    const adjustedSpeed = botSpeed / textLength; // Ajustement de la vitesse en fonction du texte
-
-    const botInterval = setInterval(() => {
-      if (! gameState.startTime)  gameState.startTime = Date.now();
-      // const elapsedTime = (Date.now() - startTime) / 60000;
-      gameState.botProgress += adjustedSpeed;
-
-      const botTypedLength = Math.floor(gameState.botProgress * textContainer.length);
-      const botText = textContainer.substring(0, botTypedLength);
- 
-      console.log("botText", botText);
-      console.log("textConntainer", textContainer);
-      console.log(
-        `Débogage: botProgress=${ gameState.botProgress}, bot=${bot}, textContainer=${textContainer}`
-      );
-
-      if ( gameState.botProgress >= 1) {
-        gameState.botProgress = 1;
-        gameState.botFinished = true;
-        endGame()
-        // moveCar(botCar,  gameState.botProgress);
-        clearInterval(botInterval);
-        gameState.botInterval = null;
-        return;
-      }
-      updateWPMCPMRealtime(botText, textContainer, bot);
-      moveCar(botCar,  gameState.botProgress);
-    }, 16); // Mettre à jour toutes les 50 ms
-    gameState.botInterval = botInterval;
+    handleDefaultBot(botCar, text);
   }
 }
 
+// Fonctions auxiliaires pour le bot
+export function handleCustomBot(bot, power, botCar, textLength) {
+  let botProgress = 0;
+  const wpm = parseInt(power, 10);
+  const cpm = wpm * 5;
+  const baseSpeed = wpm / (60 * textLength);
 
-// Fonction pour mettre à jour les WPM et CPM
-function updateWPMCPM(wpm, cpm, player) {
+  const botInterval = setInterval(() => {
+    if (!gameState.startTime) gameState.startTime = Date.now();
+    
+    botProgress = Math.min(botProgress + baseSpeed, 1);
+    moveCar(botCar, botProgress);
+    
+    if (botProgress < 1) {
+      updateWPMCPM(wpm, cpm, bot);
+    } else {
+      gameState.carFinished = true;
+      endGame();
+      clearInterval(botInterval);
+    }
+  }, 100);
+}
+
+export function handleDefaultBot(botCar, text) {
+  gameState.botProgress = 0;
+  gameState.botFinished = false;
+  
+  const baseSpeed = 3;
+  const adjustedSpeed = (baseSpeed + Math.random() * 0.5) / (text.length * text.length);
+
+  const botInterval = setInterval(() => {
+    if (!gameState.startTime) gameState.startTime = Date.now();
+    
+    gameState.botProgress = Math.min(gameState.botProgress + adjustedSpeed, 1);
+    const botTypedLength = Math.floor(gameState.botProgress * text.length);
+    const botText = text.substring(0, botTypedLength);
+    
+    moveCar(botCar, gameState.botProgress);
+    updateWPMCPMRealtime(botText, text, "bot");
+
+    if (gameState.botProgress >= 1) {
+      gameState.botFinished = true;
+      endGame();
+      clearInterval(botInterval);
+      gameState.botInterval = null;
+      return;
+    }
+  }, 16);
+  
+  gameState.botInterval = botInterval;
+}
+
+
+export function updateWPMCPM(wpm, cpm, player) {
   const wpmElement = document.querySelector(`.${player}-wpm`);
   const cpmElement = document.querySelector(`.${player}-cpm`);
+  
   if (wpmElement && cpmElement) {
-    wpmElement.innerHTML = `WPM: ${wpm.toFixed(2)}`;
-    cpmElement.innerHTML = `CPM: ${cpm.toFixed(2)}`;
+    // Vérifie si le jeu est terminé pour ce joueur
+   
+      if ((player === "user" && gameState.userFinished) || 
+      (player === "bot" && gameState.botFinished)) {
+      // Réinitialise l'affichage à 0
+      setTimeout(() =>{
+      wpmElement.innerHTML = `WPM: 0.00`;
+      cpmElement.innerHTML = `CPM: 0.00`;
+      // resetGame()
+    },8000)
+    } else {
+      // Affiche les valeurs normalement pendant la partie
+      wpmElement.innerHTML = `WPM: ${wpm.toFixed(2)}`;
+      cpmElement.innerHTML = `CPM: ${cpm.toFixed(2)}`;
+    }
+   
   }
+
   updateChart(wpm, cpm, player);
 }
 
 
-function updateWPMCPMRealtime(inputText, targetText, player) {
-  console.log("🔄 updateWPMCPMRealtime() appelé");
 
-  const elapsedTime = (Date.now() - gameState.startTime) / 60000; // Temps en minutes
-  const totalCharacters = inputText.length;
+export function updateWPMCPMRealtime(inputText, targetText, player) {
+  if (!gameState.startTime) return;
 
-  const wordsArray = inputText.trim().split(/\s+/);
-  // const wordsArray = inputText.trim().split(/\s+/); //erreur est ici----------------------------
-  const totalwords = wordsArray.length;
-
-  const wpm = totalwords / elapsedTime; // Calcul du WPM
-  const cpm = totalCharacters / elapsedTime; // Calcul du CPM
-  console.log(wpm);
-  updateWPMCPM(wpm, cpm, player); // Mise à jour dans l'UI
-  console.log(`Joueur: ${player}, WPM: ${wpm}, CPM: ${cpm}`);
-}
-
-
-export function updateChart(wpm, cpm, player) {
-  const elapsedTime = updateDisplay();
-  // const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(1);
-  const maxDataPoints = 50;
+  // Vérifie si le jeu est terminé pour ce joueur
+  if ((player === "user" && gameState.userFinished) || 
+      (player === "bot" && gameState.botFinished)) {
+    updateWPMCPM(0, 0, player);
+    return;
+  }
   
-  if ((player === "bot" && gameState.botFinished) || (player === "user" && gameState.userFinished)) {
-  return; // Stopper la mise à jour une fois la course terminée
+  const elapsedTime = (Date.now() - gameState.startTime) / 60000;
+  const wordsArray = inputText.trim().split(/\s+/);
+  
+  const wpm = wordsArray.length / elapsedTime;
+  const cpm = inputText.length / elapsedTime;
+  
+  updateWPMCPM(wpm, cpm, player);
 }
-  // const elapsedTime = raceStats.elapsedTime;
-  if (! gameState.timeData.includes(elapsedTime)) {
+
+export  function updateChart(wpm, cpm, player) {
+  const elapsedTime = updateDisplay();
+  const maxDataPoints = 50;
+
+  if ((player === "bot" && gameState.botFinished) || 
+      (player === "user" && gameState.userFinished)) {
+    // Ajoute une dernière valeur à 0 pour montrer la fin
+    updateChartData(elapsedTime, 0, 0, player, maxDataPoints);
+    return; 
+  }
+
+  updateChartData(elapsedTime, wpm, cpm, player, maxDataPoints);
+  updateChartDisplay();
+}
+
+function updateChartDisplay() {
+  if (gameState.startChart) {
+    // Met à jour les labels (axe X - temps)
+    gameState.startChart.data.labels = gameState.timeData;
+    
+    // Met à jour les données des datasets
+    gameState.startChart.data.datasets[0].data = gameState.userWPMData;
+    gameState.startChart.data.datasets[1].data = gameState.userCPMData;
+    
+    // Si vous avez des données pour le bot
+    if (gameState.botWPMData && gameState.botCPMData) {
+      if (gameState.startChart.data.datasets[2]) {
+        gameState.startChart.data.datasets[2].data = gameState.botWPMData;
+      }
+      if (gameState.startChart.data.datasets[3]) {
+        gameState.startChart.data.datasets[3].data = gameState.botCPMData;
+      }
+    }
+    
+    // Rafraîchit le graphique
+    gameState.startChart.update();
+  }
+}
+
+export function updateChartData(elapsedTime, wpm, cpm, player, maxDataPoints) {
+  if (!gameState.timeData.includes(elapsedTime)) {
     gameState.timeData.push(elapsedTime);
-    if ( gameState.timeData.length > maxDataPoints) {
+    if (gameState.timeData.length > maxDataPoints) {
       gameState.timeData.shift();
     }
   }
 
   if (player === "user") {
-    if ( gameState.userProgress >= 1) {
+    if (gameState.userProgress >= 1) {
       gameState.userFinished = true;
-      // L'utilisateur a fini sa course : duplique la dernière valeur
       gameState.userWPMData.push(0);
       gameState.userCPMData.push(0);
     } else {
-      // Course en cours : ajoute les nouvelles données  
       gameState.userWPMData.push(wpm);
       gameState.userCPMData.push(cpm);
     }
-  } else if (player === "bot") {
-    if ( gameState.botProgress >= 1) {
+  } else {
+    if (gameState.botProgress >= 1) {
       gameState.botFinished = true;
       gameState.botWPMData.push(0);
       gameState.botCPMData.push(0);
@@ -268,13 +283,5 @@ export function updateChart(wpm, cpm, player) {
       gameState.botCPMData.push(cpm);
     }
   }
-
-  if ( gameState.startChart) {
-    gameState.startChart.data.labels = gameState.timeData;
-    gameState.startChart.data.datasets[0].data = gameState.userWPMData;
-    gameState.startChart.data.datasets[1].data = gameState.userCPMData;
-    // gameState.startChart.data.datasets[2].data = botWPMData;
-    // gameState.startChart.data.datasets[3].data = botCPMData;
-    gameState.startChart.update();
-  }
 }
+
