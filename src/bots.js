@@ -36,13 +36,7 @@ export function endGame() {
     // return textManager.currentIndex;
   }
   
-  // displayFinalChart();
-  
-  // Arrête tous les intervalles de mise à jour
-  // if (gameState.botInterval) {
-  //   clearInterval(gameState.botInterval);
-  //   gameState.botInterval = null;
-  // }
+
 }
 
 // Calcul des erreurs amélioré
@@ -87,10 +81,9 @@ export function userBot(targetText) {
 
       if (userTyped === targetText) {
         gameState.userFinished = true;
-        endGame();
-        // gameManager()
         graphElement.scrollIntoView({ behavior: "smooth" });
         graphElement.style.display = "flex";
+        endGame();
         return;
       }
       inputArea.style.color = "black";

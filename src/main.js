@@ -25,6 +25,36 @@ export async function gameManager() {
   displayText(gameLevel.text); // Toujours afficher le bon texte après mise à jour
 }
 
+function scrollLeft() {
+  const leftScroll = document.querySelector('.scrollI');
+  const container = document.querySelector('.container');
+
+  leftScroll.addEventListener('click', () => {
+    if (container.classList.contains("hidden")) {
+      container.classList.remove("hidden");
+      container.classList.add("visible");
+    } else {
+      container.classList.remove("visible");
+      container.classList.add("hidden");
+    }
+  });
+}
+
+
+// function scrollLeft(){
+//   const leftScroll = document.querySelector('.scroll')
+//   const container = document.querySelector('.container')
+//   leftScroll.addEventListener('click', ()=>{
+//     if(container.style.display = "none"){
+//       container.style.display = 'flex'
+
+//     }else{
+//       container.style.display = "none"
+
+//     }
+
+//   })
+// }
 // Démarrage du jeu
 document.addEventListener("DOMContentLoaded", async () => {
   toStartGame();
@@ -32,6 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await gameManager();
   displayText(gameLevel.text);
   gameResult(gameState.text);
+  scrollLeft()
 });
 
 

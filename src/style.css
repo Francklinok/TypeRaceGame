@@ -38,7 +38,7 @@ body {
   background-color: #2e8b57;
   color: #f0fff0;
 }
-///
+
 :root {
   --background-color: #ffffff;
   --text-color: #000000;
@@ -110,7 +110,7 @@ main {
 main .main-section {
   display: flex;
   position: fixed;
-  width: 98%;
+  width: 97%;
   height: 100%;
 }
 
@@ -126,7 +126,40 @@ main .main-section .left-section {
 main .main-section .left-section .container {
   /* border: 1px solid black; Correction de "solide" en "solid" */
   padding: 10px;
+  
 }
+
+.hidden {
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.visible {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+main .main-section .left-section .container-scroll{
+  position: relative;
+}
+
+main .main-section .left-section  .scroll{
+  position:absolute;
+  top:250px;
+  left:135px;
+  /* transform: scale(1.5); */
+  font-size: 20px;
+  font-weight: 500px;
+  cursor:pointer;
+ 
+}
+main .main-section .left-section  .scroll img{
+  width:25px;
+  height: 25px;
+  background-color:red; 
+ }
 
 main .main-section .left-section .container .first-race,
 main .main-section .left-section .container .second-race,
@@ -134,11 +167,12 @@ main .main-section .left-section .container .third-race {
   border: 1px solid rgba(207, 198, 198, 0.801);
   display: grid;
   padding: 10px;
-  grid-template-columns: repeat(auto-fit, mminmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, max(150px, 1fr));
   grid-template-rows: auto;
-  box-shadow: 1px 2px 0px 1px #d9d5dbd3;
+  box-shadow: 1px 0px 2px 0px #675d6bd3;
   margin-bottom: 20px;
   border-radius: 10px;
+
 }
 
 main .main-section .left-section .container .first-race h2,
@@ -160,10 +194,11 @@ main .main-section .left-section .container .third-race p {
   grid-row: 2;
   text-align: center;
   font-size: 14px;
-  font-weight: 10;
+  font-weight: 500;
   padding: 10px;
   border: 1px solid rgba(207, 198, 198, 0.801);
   border-radius: 10px;
+  line-height:1.8;
 }
 
 main .main-section .left-section .container .first-race span,
@@ -204,20 +239,21 @@ main .main-section .tostart {
   justify-content: center;
   bottom: 240px;
   width: 400px;
-  left: 480px;
+  left: 620px;
   margin: 0;
   padding: 0;
   border-radius: 10px;
+
 }
 
 main .main-section .tostart .toStart {
   display: flex;
   flex-direction: column;
   border: 1px solid white;
-  box-shadow: 0px 1px 5px 1px rgb(143, 155, 155);
-  /* width: 45%; */
-  height: auto;
-  border-radius: 10px;
+  box-shadow: 0px 1px 0px 2px rgb(223, 225, 225);
+  height:auto;
+  border-radius: 10px;  
+  line-height: 1.8;
 }
 
 main .main-section .tostart .toStart h2 {
@@ -228,7 +264,7 @@ main .main-section .tostart .toStart h2 {
 main .main-section .tostart .toStart p {
   font-size: 14px;
   font-weight: 200;
-  margin: 10%;
+  /* margin: 1%; */
   gap: 8px;
   padding: 10px;
 }
@@ -248,14 +284,15 @@ main .main-section .tostart .toStart button {
 
 main .main-section .center-section .select-area {
   display: none;
-  margin: 10px 10px 50px 30px;
   padding: 10px;
   border: 1px solid rgb(187, 184, 184);
   border-radius: 10px;
   position: absolute;
+  background-color: rgb(255, 255, 255);
+
   right: 25%;
-  top: 50px;
-  bottom: 50px;
+  width:30%;
+  height:65%;
   z-index: 1000;
 }
 
@@ -263,13 +300,16 @@ main .main-section .center-section .select-area .creat {
   display: flex;
   flex-direction: column;
   align-items: center;
+
   /* background-color:red; */
 }
 
 main .main-section .center-section .select-area .creat .custom-race {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; 
+  
+
 
   /* border: 1px solid rgb(189, 187, 187);
   box-shadow: 0px 0px 0px 1px rgb(216, 205, 205);
@@ -280,9 +320,11 @@ main .main-section .center-section .select-area .creat .custom-race h2 {
   text-align: center;
   padding: 15px;
   font-size: 18px;
-  border: 1px solid rgb(212, 203, 203);
+  background-color: #ffffff;
+  border: 1px solid rgb(212, 208, 208);
   /* box-shadow: 0px 0px 0px 1px rgb(216, 205, 205); */
   border-radius: 10px;
+
 }
 
 main .main-section .center-section .select-area .creat .custom-race p {
@@ -293,21 +335,23 @@ main .main-section .center-section .select-area .creat .custom-race p {
   text-align: center;
   font-size: 14px;
   font-weight: 100;
-  background-color: white;
+  background-color: rgb(214, 232, 243);
   border: 1px solid rgb(210, 203, 203);
   /* box-shadow: 0px 0px 0px 1px rgb(216, 205, 205); */
   border-radius: 10px;
   margin: 5px;
+  line-height:1.8
+
 }
 
 main .main-section .center-section .select-area .creat .select {
   display: grid;
   grid-template-columns: 150px 150px;
   grid-template-rows: 50px 50px;
-  margin-top: 10px;
+  margin: 10px 0px 15px 0px;
   gap: 20px;
   text-align: center;
-  padding: 10px;
+  padding: 5px;
 }
 
 main
@@ -316,28 +360,27 @@ main
   .select-area
   .creat
   .select
-  .name
-  .select-name {
-  grid-column: 1;
-  grid-row: 1;
-  background-color: white;
+  .name {
+  /* background-color: red; */
   padding: 10px;
-  /* margin:0; */
-
   text-align: center;
   border: 1px solid rgb(210, 203, 203);
   border-radius: 10px;
+  background-color: rgb(227, 232, 232);
   gap: 10px;
   cursor: pointer;
+  /* width:50px; */
 
   /* background-color:red; */
   /* padding:10px */
 }
-.main-section .center-section .select-area .creat .select .name .select-name {
-}
+/* .main-section .center-section .select-area .creat .select .name .select-name {
+} */
 
 main .main-section .center-section .select .name .other-names {
   display: none;
+  grid-column: 1;
+  grid-row: 1;
   flex-direction: column;
   height: auto;
   width: 80px;
@@ -349,7 +392,7 @@ main .main-section .center-section .select .name .other-names {
   left: 0;
   z-index: 100;
   padding: 15px;
-  background-color: white;
+  background-color: rgb(102, 97, 97);
 }
 
 main .main-section .center-section .select span {
@@ -360,13 +403,15 @@ main .main-section .center-section .select span {
 main .main-section .center-section .select-area .creat .select .power {
   grid-column: 2;
   grid-row: 1;
-  border: 1px solid rgb(210, 203, 203);
+  border: 1px solid rgb(191, 181, 181);
+  padding:10px;
+  background-color: rgb(227, 232, 232);
 
   /* box-shadow: 0px 0px 0px 1px rgb(216, 205, 205); */
   border-radius: 10px;
   gap: 10px;
   cursor: pointer;
-  background-color: white;
+  /* background-color: white; */
 }
 
 main .main-section .center-section .select .power .other-power {
@@ -389,42 +434,43 @@ main .main-section .center-section .select .power .other-power {
 main .main-section .center-section .select-area .creat .select .add {
   grid-column: 1;
   grid-row: 2;
+  padding:10px;
   border: 1px solid rgb(210, 203, 203);
   border-radius: 10px;
   cursor: pointer;
-  background-color: white;
+  background-color: rgba(2, 229, 13, 0.308);
 }
 
 main .main-section .center-section .select-area .creat .select .remove {
   grid-column: 2;
   grid-row: 2;
+  padding:10px;
   border: 1px solid rgb(210, 203, 203);
   border-radius: 10px;
   cursor: pointer;
-  background-color: red;
+  background-color: rgb(239, 100, 100);
 }
 
 main .main-section .center-section .select-area .creat .submit {
-  margin: 20px 0px 20px 80px;
+  margin: 15px 1px 10px 55px;
 }
 
 main .main-section .center-section .select-area .creat .submit button {
   all: unset;
-  width: 200px;
+  width: 205px;
   height: 30px;
   text-align: center;
   cursor: pointer;
   border: 1px solid rgb(216, 205, 205);
   border-radius: 10px;
-  background-color: rgb(185, 185, 209);
+  background-color: rgb(243, 251, 214);
 }
 main .main-section .center-section .select-area .creat .submit button:hover {
-  background-color: rgb(105, 185, 209);
+  background-color: rgb(5, 184, 38);
 }
 
 main .main-section .center-section .add-section {
   display: none;
-  /* display: flex; */
   flex-direction: column;
   padding: 5px;
   margin: 10px 1px 20px 10px;
@@ -589,19 +635,15 @@ main .main-section .center-section .main-area .race .user {
   height: 30px;
   gap: 5px;
   padding: 10px;
-  margin: 5px 8px 0px 5px;
+  margin: 5px 10px 0px 0px;
   /* border: 1px solid #ccc; */
 }
 
 main .main-section .center-section .main-area .race .user-left .user p {
   display: flex;
-  /* grid-row: 1; */
-  /* grid-column: 1; */
   text-align: center;
   align-items: center;
   border: 1px solid rgb(210, 203, 203);
-  /* height: 35px;
-  width: 35px; */
   border-radius: 10px;
   padding: 10px;
 }
@@ -614,8 +656,6 @@ main .main-section .center-section .main-area .race .car-center {
   gap: 8px;
   width: 100%;
   height: 60px;
-  border: 1px solid #ccc;
-  /* margin: 5px 1px 10px 1px; */
 }
 
 main
@@ -625,14 +665,14 @@ main
   .race
   .car-center
   .first-container {
+  /* background-color: rgba(38, 39, 40, 0.831); */
   display: flex;
   text-align: center;
-  /* grid-row: 1; */
   grid-column: 2;
   width: 100%;
   padding: 10px;
-  /* border: 1px solid rgb(201, 191, 191); */
-  box-shadow: 1px 1px 0px 1px rgb(216, 213, 213);
+  border: 1px solid rgb(201, 191, 191);
+  box-shadow: 1px 0px 0px 1px rgb(233, 232, 232);
   border-radius: 10px;
   margin: 0;
 }
@@ -641,7 +681,6 @@ main .main-section .center-section .main-area .race .car-center .road {
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* background-color: rgba(199, 204, 206, 0.76); */
   height: 41px;
 }
 
@@ -658,9 +697,9 @@ main .main-section .center-section .main-area .race .car-center .road .line {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 10px;
+  height: 6px;
   width: 100%;
-  background-color: black;
+  background-color: rgb(0, 0, 0);
   margin: 0 auto;
   position: relative;
   overflow: hidden;
@@ -674,9 +713,9 @@ main
   .road
   .line
   div {
-  width: 10%;
+  width: 2%;
   height: 1px;
-  background-color: white;
+  background-color: rgb(152, 163, 181);
   border-radius: 5px;
 }
 
@@ -685,7 +724,7 @@ main .main-section .center-section .main-area .race .car-center .flag {
   height: 40px;
   width: 5px;
   background-color: white;
-  /* position:absolute; */
+
 }
 
 main .main-section .center-section .main-area .race .car-center .flag span {
@@ -704,15 +743,12 @@ main .main-section .center-section .main-area .race .params-right {
   justify-content: center;
   align-items: center;
   padding: 5px;
-  /* border: 1px solid #ccc; */
   border-radius: 5px;
-  margin-left: 20px;
+  margin-left: 12px;
   height: 50px;
-  /* background-color: yellow; */
 }
 
 main .main-section .center-section .main-area .race .params-right .params {
-  /* grid-row: 1; */
   grid-column: 3;
   display: flex;
   flex-direction: column;
@@ -720,6 +756,8 @@ main .main-section .center-section .main-area .race .params-right .params {
   border: 1px solid rgb(196, 195, 195);
   border-radius: 10px;
   gap: 5px;
+  max-height:50px;
+  max-width:80px;
 
   /* margin: 20px 0px 10px 2px; */
 }
@@ -735,17 +773,25 @@ main .main-section .center-section .main-area .race .params-right p {
 main .main-section .center-section .main-area .text-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 5px;
-  border: 1px solid rgb(185, 177, 148);
-  margin: 20px 115px 1px 120px;
-  box-shadow: 0px 1px 5px 1px rgb(234, 239, 243);
+  /* justify-content: center; */
+  /* align-items: center; */
+  padding: 1px;
+  border: 1px solid rgb(215, 215, 213);
+  margin: 22px 0px 1px 105px;
+  box-shadow: 0px 0px 0px 1px rgb(225, 225, 229);
   border-radius: 10px;
   position: relative;
+  max-width:78%;
 }
+
 main .main-section .center-section .main-area .text-container .full {
   display: flex;
   padding: 10px;
+  word-wrap: break-word;  /* Permet de couper les mots longs */
+  overflow-wrap: break-word; /* Assure que le texte reste dans le conteneur */
+  white-space: normal; /* Permet au texte de passer à la ligne */
+  /* text-overflow: ellipsis; */
+  max-width: 100%; /* Évite le débordement */
   /* text-align: center; */
   border: 1px solid rgb(190, 183, 183);
   /* padding: 10px; */
@@ -770,9 +816,9 @@ main .main-section .center-section .main-area .text-container .counter {
   width: 100px;
   height: 100px;
   padding: 50px;
-  border: 5px solid white;
+  /* border: 5px solid white; */
   border-radius: 50%;
-  box-shadow: 1px 1px 2px 1px white;
+  /* box-shadow: 1px 1px 2px 1px white; */
   z-index: 1000;
   position: absolute;
   right: 50%;
@@ -836,6 +882,7 @@ main .main-section .center-section .main-area .text-container button {
   border-radius: 8px;
   margin-left: 35%;
 }
+
 main .main-section .center-section .main-area .text-container button:hover {
   background-color: rgb(14, 175, 14);
 }
@@ -911,6 +958,15 @@ main .main-section .center-section .main-area .graph .replay button:hover {
   color: green;
 }
 
+footer {
+  display: flex;
+  width: 50%;
+  height: 20px;
+  position: absolute;
+  bottom: 0;
+  margin-left: 60%;
+}
+
 /* Styles spécifiques pour mobile et tablette */
 
 @media (max-width: 768px) {
@@ -928,7 +984,7 @@ main .main-section .center-section .main-area .graph .replay button:hover {
   }
 
   main .main-section .left-section {
-    width: 80px;
+    width: 100px;
   }
 
   main .main-section .left-section .container h2 {
@@ -942,27 +998,54 @@ main .main-section .center-section .main-area .graph .replay button:hover {
   main .main-section .center-section {
     height: auto;
   }
-
-  main .main-section .center-section .tostart {
-    bottom: 40%;
-    left: 20%;
-    margin-right: 50px;
-    background-color: red;
+  main .main-section .center-section .main-area .text-container {
+    margin-right:20px;
+    margin-left:20px;
+    max-width:100%;
   }
-  main .main-section .tostart .toStart {
-    /* width: 90%; */
-    /* margin: auto; */
+  main .main-section .center-section .main-area .text-container button {
+    margin-left: 25%;
   }
 
-  main .main-section .center-section .select-area {
-    width: 100%;
-    right: 0;
-    left: 0;
-    position: relative;
-    margin-top: 10px;
-  }
+  
+main .main-section .tostart {
+ 
+  bottom: 240px;
+  width: 310px;
+  left: 260px;
+ 
 }
 
+main .main-section .tostart .toStart h2 {
+  font-size: 18px;
+  margin-left: 60px;
+}
+
+main .main-section .tostart .toStart p {
+  font-size: 14px;
+  font-weight: 200;
+  margin: 10%;
+  gap: 8px;
+  padding: 10px;
+}
+main .main-section .tostart .toStart button {
+  
+  width: 155px;
+  height: 40px;
+  
+  margin: 0px 10px 10px 75px;
+  
+}
+
+main .main-section .center-section .select-area {
+  top:40px;
+  right: 10%;
+  width:55%;
+  height:65%;
+}
+
+
+/* 
 @media (max-width: 480px) {
   .title h1 {
     font-size: 18px;
@@ -997,14 +1080,6 @@ main .main-section .center-section .main-area .graph .replay button:hover {
   }
 }
 
-footer {
-  display: flex;
-  width: 50%;
-  height: 20px;
-  position: absolute;
-  bottom: 0;
-  margin-left: 60%;
-}
 
 footer .theme {
   display: flex;
@@ -1012,4 +1087,4 @@ footer .theme {
   /* background-color: red; */
   /* width: 100%;
   height: 20px; */
-}
+} */

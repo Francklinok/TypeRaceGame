@@ -4,9 +4,6 @@ import { gameState } from "./gameData";
 
 export function gameResult(targetText) {
     const inputArea = document.querySelector(".text-input");
-    // const targetText = gameState.text || "";
-    // document.querySelector(".text-container")
-    // .textContent.trim(); // Correction
     const words = targetText? targetText.split(/\s+/):[]
   
     inputArea.addEventListener("input", () => {
@@ -15,8 +12,8 @@ export function gameResult(targetText) {
   
     //   countErrors(userTyped, targetText);
   
-      const userWPM = Math.max(...gameState.userWPMData, 0); // Meilleur score WPM
-      const userCPM = Math.max(...gameState.userCPMData, 0); // Meilleur score CPM
+      const userWPM = Math.max(...gameState.userWPMData, 0); 
+      const userCPM = Math.max(...gameState.userCPMData, 0); 
       const timeElapsed = Math.max(...gameState.timeData, 0);
       const accuracy = gameState.accuracy
       const errorCount =  gameState.userErrors;

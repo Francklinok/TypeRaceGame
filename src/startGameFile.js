@@ -3,10 +3,9 @@ import { startTimerFunction } from "./time";
 import { userBot, botBot } from "./bots";
 import { resetGame } from "./resetGameFile";
 import { initializeRoadLines } from "./render";
-import { select, manageUserMode, addPlayer } from "./userManage";
+import { select,  addPlayer } from "./userManage";
 import { displayText } from "./displayTextfile";
 import { check } from "./checkInput";
-import { gameManager } from "./main";
 
 /**
  * Starts the game logic based on the selected mode (computer or custom bots).
@@ -62,6 +61,8 @@ async function callTostart() {
  */
 function startCountdown() {
   const count = document.querySelector(".counter");
+  const graphElement = document.querySelector(".graph");
+
   if (!count) return;
 
   let counter = 3;
@@ -74,6 +75,8 @@ function startCountdown() {
       clearInterval(interval);
       count.style.display = "none";
       resetGame();
+      graphElement.style.display = "none";
+
       callTostart();
     }
 

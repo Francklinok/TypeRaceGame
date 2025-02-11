@@ -4,7 +4,6 @@ import { gameState,namesContainer,powerContainer} from "./gameData";
  // Function to create a new user with name and power
  let isManageUserModeInitialized = false; 
 
-
 function createUser() {
   const nameInput = document.querySelector(".input-name");
   const wpmInput = document.querySelector(".input-wpm");
