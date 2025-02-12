@@ -39,26 +39,119 @@ export function endGame() {
 
 }
 
-// Calcul des erreurs amélioré
+// // Calcul des erreurs amélioré
+// export function compterErreurs(targetText, userTyped) {
+//   gameState.nbErreurs = 0;
+//   for (let i = 0; i < userTyped.length; i++) {
+//     if (userTyped[i] !== targetText[i]) {
+//       gameState.nbErreurs++;
+//     }
+//   }
+//   return gameState.nbErreurs;
+// }
+
+// // Calcul de précision amélioré
+// export function calculerPrecision(targetText, userTyped) {
+//   if (!userTyped.length) return 100;
+  
+//   gameState.nbErreurs = compterErreurs(targetText, userTyped);
+//   gameState.nbCorrects = userTyped.length - gameState.nbErreurs;
+//   gameState.precision = (gameState.nbCorrects / userTyped.length) * 100;
+//   return gameState.precision;
+// }
+// export function compterErreurs(targetText, userTyped) {
+//   gameState.nbErreurs = 0;
+
+//   // Parcourt la longueur la plus courte pour éviter les dépassements
+//   const minLength = Math.min(targetText.length, userTyped.length);
+
+//   for (let i = 0; i < minLength; i++) {
+//     if (userTyped[i] !== targetText[i]) {
+//       gameState.nbErreurs++;
+//     }
+//   }
+
+//   // Ajoute les caractères en trop si `userTyped` est plus long que `targetText`
+//   gameState.nbErreurs += Math.abs(targetText.length - userTyped.length);
+
+//   return gameState.nbErreurs;
+// }
+
+// export function calculerPrecision(targetText, userTyped) {
+//   if (!targetText.length) return 0; // Éviter division par zéro
+
+//   gameState.nbErreurs = compterErreurs(targetText, userTyped);
+//   gameState.nbCorrects = Math.max(0, userTyped.length - gameState.nbErreurs); // Éviter les valeurs négatives
+
+//   // S'assurer qu'on ne divise pas par zéro
+//   gameState.precision = userTyped.length > 0 ? (gameState.nbCorrects / userTyped.length) * 100 : 100;
+
+//   return gameState.precision;
+// }
+
+// export function calculerPrecision(targetText, userTyped) {
+//   if (!targetText.length) return 0;
+
+//   gameState.nbErreurs = compterErreurs(targetText, userTyped);
+//   const nbCorrects = Math.max(0, userTyped.length - gameState.nbErreurs);
+
+//   gameState.precision = targetText.length > 0 
+//     ? (nbCorrects / targetText.length) * 100 
+//     : 100;
+
+//   return gameState.precision.toFixed(2);
+// }
+// export function compterErreurs(targetText, userTyped) {
+//   let erreurs = 0;
+//   const minLength = Math.min(targetText.length, userTyped.length);
+
+//   for (let i = 0; i < minLength; i++) {
+//     if (userTyped[i] !== targetText[i]) {
+//       erreurs++;
+//     }
+//   }
+
+//   erreurs += Math.abs(targetText.length - userTyped.length);
+//   gameState.nbErreurs = erreurs;
+//   return erreurs;
+// }
+
+// Improved error counting function
 export function compterErreurs(targetText, userTyped) {
-  gameState.nbErreurs = 0;
-  for (let i = 0; i < userTyped.length; i++) {
+  let erreurs = 0;
+  const minLength = Math.min(targetText.length, userTyped.length);
+
+  // Compare each character
+  for (let i = 0; i < minLength; i++) {
     if (userTyped[i] !== targetText[i]) {
-      gameState.nbErreurs++;
+      erreurs++;
     }
   }
-  return gameState.nbErreurs;
+
+  // Add remaining characters as errors if lengths differ
+  erreurs += Math.abs(targetText.length - userTyped.length);
+  
+  // Update game state
+  gameState.nbErreurs = erreurs;
+  gameState.userErrors = erreurs;
+  
+  return erreurs;
 }
 
-// Calcul de précision amélioré
+// Improved precision calculation
 export function calculerPrecision(targetText, userTyped) {
-  if (!userTyped.length) return 100;
+  if (!targetText.length) return 0;
+
+  const erreurs = compterErreurs(targetText, userTyped);
+  const correctChars = Math.max(0, userTyped.length - erreurs);
   
-  gameState.nbErreurs = compterErreurs(targetText, userTyped);
-  gameState.nbCorrects = userTyped.length - gameState.nbErreurs;
-  gameState.precision = (gameState.nbCorrects / userTyped.length) * 100;
-  return gameState.precision;
+  // Calculate precision based on total text length
+  const precision = (correctChars / targetText.length) * 100;
+  gameState.precision = Math.max(0, Math.min(100, precision));
+  
+  return gameState.precision.toFixed(2);
 }
+
 
 // Gestion de la saisie utilisateur améliorée
 export function userBot(targetText) {

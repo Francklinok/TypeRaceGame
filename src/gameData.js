@@ -82,6 +82,10 @@ export const gameState = {
   userCPMData: [],
   botWPMData: [],
   botCPMData: [],
+  maxWPM : 0,
+  maxCPM :0,
+  bestTime : Infinity,
+
   timeData: [],
   userErrors: 0,
   startTime: undefined,
