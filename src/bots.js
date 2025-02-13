@@ -35,123 +35,7 @@ export function endGame() {
     displayFinalChart();
     // return textManager.currentIndex;
   }
-  
-
 }
-
-// // Calcul des erreurs amélioré
-// export function compterErreurs(targetText, userTyped) {
-//   gameState.nbErreurs = 0;
-//   for (let i = 0; i < userTyped.length; i++) {
-//     if (userTyped[i] !== targetText[i]) {
-//       gameState.nbErreurs++;
-//     }
-//   }
-//   return gameState.nbErreurs;
-// }
-
-// // Calcul de précision amélioré
-// export function calculerPrecision(targetText, userTyped) {
-//   if (!userTyped.length) return 100;
-  
-//   gameState.nbErreurs = compterErreurs(targetText, userTyped);
-//   gameState.nbCorrects = userTyped.length - gameState.nbErreurs;
-//   gameState.precision = (gameState.nbCorrects / userTyped.length) * 100;
-//   return gameState.precision;
-// }
-// export function compterErreurs(targetText, userTyped) {
-//   gameState.nbErreurs = 0;
-
-//   // Parcourt la longueur la plus courte pour éviter les dépassements
-//   const minLength = Math.min(targetText.length, userTyped.length);
-
-//   for (let i = 0; i < minLength; i++) {
-//     if (userTyped[i] !== targetText[i]) {
-//       gameState.nbErreurs++;
-//     }
-//   }
-
-//   // Ajoute les caractères en trop si `userTyped` est plus long que `targetText`
-//   gameState.nbErreurs += Math.abs(targetText.length - userTyped.length);
-
-//   return gameState.nbErreurs;
-// }
-
-// export function calculerPrecision(targetText, userTyped) {
-//   if (!targetText.length) return 0; // Éviter division par zéro
-
-//   gameState.nbErreurs = compterErreurs(targetText, userTyped);
-//   gameState.nbCorrects = Math.max(0, userTyped.length - gameState.nbErreurs); // Éviter les valeurs négatives
-
-//   // S'assurer qu'on ne divise pas par zéro
-//   gameState.precision = userTyped.length > 0 ? (gameState.nbCorrects / userTyped.length) * 100 : 100;
-
-//   return gameState.precision;
-// }
-
-// export function calculerPrecision(targetText, userTyped) {
-//   if (!targetText.length) return 0;
-
-//   gameState.nbErreurs = compterErreurs(targetText, userTyped);
-//   const nbCorrects = Math.max(0, userTyped.length - gameState.nbErreurs);
-
-//   gameState.precision = targetText.length > 0 
-//     ? (nbCorrects / targetText.length) * 100 
-//     : 100;
-
-//   return gameState.precision.toFixed(2);
-// }
-// export function compterErreurs(targetText, userTyped) {
-//   let erreurs = 0;
-//   const minLength = Math.min(targetText.length, userTyped.length);
-
-//   for (let i = 0; i < minLength; i++) {
-//     if (userTyped[i] !== targetText[i]) {
-//       erreurs++;
-//     }
-//   }
-
-//   erreurs += Math.abs(targetText.length - userTyped.length);
-//   gameState.nbErreurs = erreurs;
-//   return erreurs;
-// }
-
-// Improved error counting function
-export function compterErreurs(targetText, userTyped) {
-  let erreurs = 0;
-  const minLength = Math.min(targetText.length, userTyped.length);
-
-  // Compare each character
-  for (let i = 0; i < minLength; i++) {
-    if (userTyped[i] !== targetText[i]) {
-      erreurs++;
-    }
-  }
-
-  // Add remaining characters as errors if lengths differ
-  erreurs += Math.abs(targetText.length - userTyped.length);
-  
-  // Update game state
-  gameState.nbErreurs = erreurs;
-  gameState.userErrors = erreurs;
-  
-  return erreurs;
-}
-
-// Improved precision calculation
-export function calculerPrecision(targetText, userTyped) {
-  if (!targetText.length) return 0;
-
-  const erreurs = compterErreurs(targetText, userTyped);
-  const correctChars = Math.max(0, userTyped.length - erreurs);
-  
-  // Calculate precision based on total text length
-  const precision = (correctChars / targetText.length) * 100;
-  gameState.precision = Math.max(0, Math.min(100, precision));
-  
-  return gameState.precision.toFixed(2);
-}
-
 
 // Gestion de la saisie utilisateur améliorée
 export function userBot(targetText) {
@@ -165,7 +49,7 @@ export function userBot(targetText) {
     if (!gameState.startTime) gameState.startTime = Date.now();
     
     const userTyped = inputArea.value;
-    calculerPrecision(targetText, userTyped);
+    // calculerPrecision(targetText, userTyped);
 
     if (targetText.startsWith(userTyped)) {
       gameState.userProgress = userTyped.length / targetText.length;
@@ -282,8 +166,6 @@ export function updateWPMCPM(wpm, cpm, player) {
   updateChart(wpm, cpm, player);
 }
 
-
-
 export function updateWPMCPMRealtime(inputText, targetText, player) {
   if (!gameState.startTime) return;
 
@@ -294,14 +176,25 @@ export function updateWPMCPMRealtime(inputText, targetText, player) {
     return;
   }
   
-  const elapsedTime = (Date.now() - gameState.startTime) / 60000;
-  const wordsArray = inputText.trim().split(/\s+/);
+  const elapsedTime = (Date.now() - gameState.startTime) / 60000; // temps en minutes
   
-  const wpm = wordsArray.length / elapsedTime;
-  const cpm = inputText.length / elapsedTime;
+  // Ajoute une protection contre les valeurs trop petites de temps
+  if (elapsedTime < 0.001) { // soit environ 1 seconde
+    updateWPMCPM(0, 0, player);
+    return;
+  }
+
+  const wordsArray = inputText.trim().split(/\s+/);
+  const words = wordsArray.length > 0 ? wordsArray.length : 0;
+  const chars = inputText.length;
+  
+  // Calcule WPM et CPM avec des limites raisonnables
+  const wpm = Math.min(Math.max(words / elapsedTime, 0), 200); // limite max à 200 WPM
+  const cpm = Math.min(Math.max(chars / elapsedTime, 0), 1000); // limite max à 1000 CPM
   
   updateWPMCPM(wpm, cpm, player);
 }
+
 
 export  function updateChart(wpm, cpm, player) {
   const elapsedTime = updateDisplay();
@@ -342,7 +235,12 @@ function updateChartDisplay() {
   }
 }
 
+
 export function updateChartData(elapsedTime, wpm, cpm, player, maxDataPoints) {
+  // Vérifie si le temps est valide
+  if (elapsedTime <= 0) return;
+
+  // Ajoute le temps s'il n'existe pas déjà
   if (!gameState.timeData.includes(elapsedTime)) {
     gameState.timeData.push(elapsedTime);
     if (gameState.timeData.length > maxDataPoints) {
@@ -350,24 +248,37 @@ export function updateChartData(elapsedTime, wpm, cpm, player, maxDataPoints) {
     }
   }
 
+  // Fonction helper pour ajouter des données avec validation
+  const addDataPoint = (dataArray, value) => {
+    if (dataArray.length >= maxDataPoints) {
+      dataArray.shift();
+    }
+    if(elapsedTime < 0.001){
+      data.dataArray.push(0)
+      return ;
+    }else{
+      dataArray.push(Math.min(Math.max(value, 0), value));
+
+    }
+  };
+
   if (player === "user") {
     if (gameState.userProgress >= 1) {
       gameState.userFinished = true;
-      gameState.userWPMData.push(0);
-      gameState.userCPMData.push(0);
+      addDataPoint(gameState.userWPMData, 0);
+      addDataPoint(gameState.userCPMData, 0);
     } else {
-      gameState.userWPMData.push(wpm);
-      gameState.userCPMData.push(cpm);
+      addDataPoint(gameState.userWPMData, wpm);
+      addDataPoint(gameState.userCPMData, cpm);
     }
   } else {
     if (gameState.botProgress >= 1) {
       gameState.botFinished = true;
-      gameState.botWPMData.push(0);
-      gameState.botCPMData.push(0);
+      addDataPoint(gameState.botWPMData, 0);
+      addDataPoint(gameState.botCPMData, 0);
     } else {
-      gameState.botWPMData.push(wpm);
-      gameState.botCPMData.push(cpm);
+      addDataPoint(gameState.botWPMData, wpm);
+      addDataPoint(gameState.botCPMData, cpm);
     }
   }
 }
-

@@ -80,12 +80,8 @@ export const gameState = {
   carFinished: false,
   userWPMData: [],
   userCPMData: [],
-  botWPMData: [],
-  botCPMData: [],
-  maxWPM : 0,
-  maxCPM :0,
-  bestTime : Infinity,
-
+  // botWPMData: [],
+  // botCPMData: [],
   timeData: [],
   userErrors: 0,
   startTime: undefined,
@@ -99,9 +95,10 @@ export const gameState = {
   nbErreurs : 0,
   precision : 0,
   text:"",
-  // text:textManager.texts[currentIndex],s
-  // text:textManager.getCurrentText(),
-  // currentIndex: 0,
+
 };
 // console.log("gamestate test is", gameState.text)
 
+// console.log(userCPMData)
+// console.log(userWPMData)
+// console.log(timeData)

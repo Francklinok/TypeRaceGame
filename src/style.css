@@ -824,7 +824,7 @@ main .main-section .center-section .main-area .text-container .counter {
   right: 50%;
   bottom: 40%;
   font-weight: bold;
-  color: white;
+  color: rgb(55, 36, 36);
   /* background-color: black; */
 }
 
@@ -946,6 +946,40 @@ main
   font-size: 14px;
 }
 
+.main-section
+.center-section
+.main-area
+.graph
+.graph-section
+.resultElement
+.head{
+display:flex;
+flex-direction: column;
+gap:10px;
+}
+
+.main-section
+.center-section
+.main-area
+.graph
+.graph-section
+.resultElement
+.head .header{
+  font-size: 16px;
+  text-align: center;
+}
+
+.main-section
+.center-section
+.main-area
+.graph
+.graph-section
+.resultElement
+.head span{
+  font-size: 14px;
+  gap:10px;
+
+}
 main .main-section .center-section .main-area .graph .replay {
   padding: 8px;
 }

@@ -1,73 +1,125 @@
-
 import { gameState } from "./gameData";
 
-// Updated game result tracking
-export function gameResult(targetText) {
-  const inputArea = document.querySelector(".text-input");
-  const resultContainer = document.querySelector(".resultElement");
-  
-  if (!inputArea || !resultContainer) return;
+export function gameResult() {
+    console.log("Tentative d'affichage des résultats");
 
-  const handleResult = () => {
-    if (!gameState.startTime) return;
+    // Vérifier si le conteneur existe
+    let resultContainer = document.querySelector(".resultElement");
+    if (!resultContainer) {
+        console.log("Conteneur de résultats non trouvé");
+        return;
+    }
 
-    // Calculate elapsed time
-    const timeElapsed = (Date.now() - gameState.startTime) / 1000;
-    const words = targetText.split(/\s+/);
-    
-    // Calculate WPM and CPM
-    const userWPM = Math.round((words.length / timeElapsed) * 60) || 0;
-    const userCPM = Math.round((inputArea.value.length / timeElapsed) * 60) || 0;
+    // Rendre le conteneur visible
+    resultContainer.style.display = "block";
 
-    // Update max values
-    if (userWPM > gameState.maxWPM) gameState.maxWPM = userWPM;
-    if (userCPM > gameState.maxCPM) gameState.maxCPM = userCPM;
-    if (timeElapsed < gameState.bestTime) gameState.bestTime = timeElapsed;
+    // Récupérer les dernières valeurs
+    const lastWPM = gameState.userWPMData[gameState.userWPMData.length - 1] || 0;
+    const lastCPM = gameState.userCPMData[gameState.userCPMData.length - 1] || 0;
+    const timeInSeconds = Math.round(gameState.timeData.length -1 );
 
-    // Update display
-    updateResults(resultContainer, {
-      wpm: userWPM,
-      cpm: userCPM,
-      time: timeElapsed,
-      accuracy: gameState.precision,
-      errors: gameState.userErrors,
-      words: words.length
+    // Préparer les données à afficher
+    const results = {
+        '.cpmdata': `CPM: ${lastCPM}`,
+        '.wpmdata': `WPM: ${lastWPM}`,
+        '.timedata': `Time: ${timeInSeconds}s`,
+        '.errordata': `Errors: ${gameState.userErrors}`,
+        '.precisiondata': `Precision: ${gameState.precision}%`,
+        '.textdata': `Text: ${gameState.text.length}`
+    };
+
+    // Mettre à jour chaque élément
+    for (const [selector, text] of Object.entries(results)) {
+        const element = resultContainer.querySelector(selector);
+        if (element) {
+            element.textContent = text;
+            console.log(`Mis à jour ${selector}:`, text);
+        } else {
+            console.log(`Élément non trouvé:`, selector);
+        }
+    }
+
+    // Afficher un résumé dans la console
+    console.log("Résultats affichés:", {
+        wpm: lastWPM,
+        cpm: lastCPM,
+        time: timeInSeconds,
+        errors: gameState.userErrors,
+        precision: gameState.precision
     });
-  };
-
-  // Update results periodically during typing
-  const updateInterval = setInterval(() => {
-    if (gameState.userFinished) {
-      clearInterval(updateInterval);
-      return;
-    }
-    handleResult();
-  }, 100);
-
-  // Final update when input loses focus
-  inputArea.addEventListener("blur", handleResult);
 }
 
-// Helper function to update result display
-function updateResults(container, stats) {
-  container.style.display = "flex";
-  
-  const updates = {
-    wpm: `WPM: ${stats.wpm}`,
-    cpm: `CPM: ${stats.cpm}`,
-    'time-data': `Time: ${stats.time.toFixed(2)}s`,
-    'accuracy-data': `Accuracy: ${stats.accuracy}%`,
-    'error-data': `Errors: ${stats.errors}`,
-    'word-data': `Words: ${stats.words}`
-  };
+// // Fonction pour obtenir les statistiques actuelles
+// export function getCurrentStats() {
+//     return {
+//         errors: gameState.userErrors,
+//         precision: gameState.precision,
+//         wpm: gameState.userWPMData[gameState.userWPMData.length - 1] || 0,
+//         cpm: gameState.userCPMData[gameState.userCPMData.length - 1] || 0,
+//         time: gameState.elapsedTime,
+//         isFinished: gameState.userFinished
+//     };
+// }
 
-  Object.entries(updates).forEach(([className, value]) => {
-    let element = container.querySelector(`.${className}`);
-    if (!element) {
-      element = document.createElement("span");
-      element.className = className;
-      container.appendChild(element);
-    }
-    element.textContent = value;
-  });
-}
+// Initialisation des écouteurs d'événements
+// export function initializeGame() {
+//     const inputElement = document.querySelector(".text-input");
+//     if (!inputElement) return;
+
+//     // Réinitialiser l'état du jeu
+//     gameState.hasStarted = false;
+//     gameState.userFinished = false;
+//     gameState.nbErreurs = 0;
+//     gameState.precision = 0;
+//     gameState.userErrors = 0;
+//     gameState.userWPMData = [];
+//     gameState.userCPMData = [];
+
+//     // Cacher le conteneur de résultats au début
+//     const resultContainer = document.querySelector(".resultElement");
+//     if (resultContainer) {
+//         resultContainer.style.display = "none";
+//     }
+
+//     console.log("Jeu initialisé");
+// }m
+
+////////
+
+// import { gameState } from "./gameData";
+
+// export function gameResult(inputText) {
+//     if (!gameState.userFinished) {
+//         return;
+//     }
+
+//     const cpm = Math.max(0, gameState.userCPMData.at(-1) || 0);
+//     const wpm = Math.max(0, gameState.userWPMData.at(-1) || 0);
+//     const time = Math.max(0, gameState.timeData.at(-1) || 0);
+//     const error = gameState.nbErreurs;
+//     const precision = gameState.precision;
+//     const textLength = inputText.length;
+
+//     const resultData = {
+//         cpmdata: cpm,
+//         wpmdata: wpm,
+//         timedata: time,
+//         errordata: error,
+//         precision: precision,
+//         textdata: textLength,
+//     };
+
+//     Object.entries(resultData).forEach(([key, value]) => {
+//         Selector(key, value);
+//     });
+// }
+
+// function Selector(className, dataElement) {
+//     if (!className || dataElement === undefined) return;
+//     const data = document.querySelector(`.${className}`);
+//     if (data) {
+//         data.textContent = String(dataElement);
+//     }
+//     return data;
+// }
+
