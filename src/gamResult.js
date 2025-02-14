@@ -1,125 +1,97 @@
+
 import { gameState } from "./gameData";
 
 export function gameResult() {
+    const text = gameState.text;
+
     console.log("Tentative d'affichage des résultats");
 
-    // Vérifier si le conteneur existe
-    let resultContainer = document.querySelector(".resultElement");
+    // 🟡 Ajoute un log des données avant affichage
+    console.log("gameState avant affichage :", gameState);
+
+    const resultContainer = document.querySelector(".resultElement");
     if (!resultContainer) {
-        console.log("Conteneur de résultats non trouvé");
+        console.error("Conteneur de résultats non trouvé !");
         return;
     }
 
-    // Rendre le conteneur visible
+    if (!text) {
+        console.warn("Aucun texte fourni !");
+        return;
+    }
+
     resultContainer.style.display = "block";
 
-    // Récupérer les dernières valeurs
-    const lastWPM = gameState.userWPMData[gameState.userWPMData.length - 1] || 0;
-    const lastCPM = gameState.userCPMData[gameState.userCPMData.length - 1] || 0;
-    const timeInSeconds = Math.round(gameState.timeData.length -1 );
+    // Extraction des données ou valeur par défaut si vide
+    const lastWPM = gameState.userWPMData.length ? Math.floor(gameState.userWPMData.at(-1)) : 0; // Assure que c'est un entier
+    const lastCPM = gameState.userCPMData.length ? Math.floor(gameState.userCPMData.at(-1)) : 0; // Assure que c'est un entier
+    const timeInSeconds = gameState.timeData.length ? gameState.timeData.at(-1) : "0:00"; // Affiche le dernier élément, ou "0:00" si vide
+    const bestWPM = gameState.userWPMData.length ? Math.floor(Math.max(...gameState.userWPMData)) : 0; // Assure que c'est un entier
+    const bestCPM = gameState.userCPMData.length ? Math.floor(Math.max(...gameState.userCPMData)) : 0; // Assure que c'est un entier
 
-    // Préparer les données à afficher
     const results = {
-        '.cpmdata': `CPM: ${lastCPM}`,
-        '.wpmdata': `WPM: ${lastWPM}`,
-        '.timedata': `Time: ${timeInSeconds}s`,
-        '.errordata': `Errors: ${gameState.userErrors}`,
-        '.precisiondata': `Precision: ${gameState.precision}%`,
-        '.textdata': `Text: ${gameState.text.length}`
+        '.cpmdata': `  CPM: ${bestCPM}`,
+        '.wpmdata': ` WPM: ${bestWPM}`,
+        '.timedata': `elapsedTime: ${timeInSeconds}s`,
+        '.errordata': `Error: ${gameState.nbErreurs}`,
+        '.precisiondata':`Accuracy: ${gameState.accuracy}%`,
+        '.textdata': `Longueur du texte: ${text.split(/\s+/).length}`
     };
 
-    // Mettre à jour chaque élément
-    for (const [selector, text] of Object.entries(results)) {
+    for (const [selector, content] of Object.entries(results)) {
         const element = resultContainer.querySelector(selector);
         if (element) {
-            element.textContent = text;
-            console.log(`Mis à jour ${selector}:`, text);
+            element.textContent = content;
+            console.log(`Mis à jour ${selector}: ${content}`);
         } else {
-            console.log(`Élément non trouvé:`, selector);
+            console.warn(`Élément non trouvé: ${selector}`);
         }
     }
 
-    // Afficher un résumé dans la console
-    console.log("Résultats affichés:", {
-        wpm: lastWPM,
-        cpm: lastCPM,
-        time: timeInSeconds,
-        errors: gameState.userErrors,
+    console.log("Résultats affichés :", {
+        dernierWPM: lastWPM,
+        meilleurWPM: bestWPM,
+        dernierCPM: lastCPM,
+        meilleurCPM: bestCPM,
+        dernierTemps: timeInSeconds,
+        erreurs: gameState.userErrors,
         precision: gameState.precision
     });
 }
 
-// // Fonction pour obtenir les statistiques actuelles
-// export function getCurrentStats() {
-//     return {
-//         errors: gameState.userErrors,
-//         precision: gameState.precision,
-//         wpm: gameState.userWPMData[gameState.userWPMData.length - 1] || 0,
-//         cpm: gameState.userCPMData[gameState.userCPMData.length - 1] || 0,
-//         time: gameState.elapsedTime,
-//         isFinished: gameState.userFinished
-//     };
-// }
 
-// Initialisation des écouteurs d'événements
-// export function initializeGame() {
-//     const inputElement = document.querySelector(".text-input");
-//     if (!inputElement) return;
+export function calculeError(target, input){
+    let incorrect = 0;
+    let correct = 0;
+    gameState.nbErreurs = 0;
 
-//     // Réinitialiser l'état du jeu
-//     gameState.hasStarted = false;
-//     gameState.userFinished = false;
-//     gameState.nbErreurs = 0;
-//     gameState.precision = 0;
-//     gameState.userErrors = 0;
-//     gameState.userWPMData = [];
-//     gameState.userCPMData = [];
+    for (let i = 0; i < input.length; i++){
+        if(!target[i] === input [i]){
+            incorrect ++
 
-//     // Cacher le conteneur de résultats au début
-//     const resultContainer = document.querySelector(".resultElement");
-//     if (resultContainer) {
-//         resultContainer.style.display = "none";
-//     }
+        }else{
+            correct ++;
+        }
+    }
+    if(correct && input){
+        calculateAccuracy(correct, input)
+    }
+    gameState.nbErreurs = incorrect;
+    console.log('correct:', correct)
+    console.log('incorrect:', incorrect)
 
-//     console.log("Jeu initialisé");
-// }m
 
-////////
+}
 
-// import { gameState } from "./gameData";
+  
+function calculateAccuracy(correctText, inputText){
+    if(!correctText && !inputText){
+        return ;
+    }
+    gameState.accuracy = 0;
 
-// export function gameResult(inputText) {
-//     if (!gameState.userFinished) {
-//         return;
-//     }
-
-//     const cpm = Math.max(0, gameState.userCPMData.at(-1) || 0);
-//     const wpm = Math.max(0, gameState.userWPMData.at(-1) || 0);
-//     const time = Math.max(0, gameState.timeData.at(-1) || 0);
-//     const error = gameState.nbErreurs;
-//     const precision = gameState.precision;
-//     const textLength = inputText.length;
-
-//     const resultData = {
-//         cpmdata: cpm,
-//         wpmdata: wpm,
-//         timedata: time,
-//         errordata: error,
-//         precision: precision,
-//         textdata: textLength,
-//     };
-
-//     Object.entries(resultData).forEach(([key, value]) => {
-//         Selector(key, value);
-//     });
-// }
-
-// function Selector(className, dataElement) {
-//     if (!className || dataElement === undefined) return;
-//     const data = document.querySelector(`.${className}`);
-//     if (data) {
-//         data.textContent = String(dataElement);
-//     }
-//     return data;
-// }
-
+    const accuracy = (correctText * 100) /  inputText.length
+    gameState.accuracy = accuracy;
+    console.log("acuracy", accuracy)
+    return accuracy
+}

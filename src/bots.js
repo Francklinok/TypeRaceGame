@@ -4,6 +4,7 @@ import { displayFinalChart } from "./graph";
 import { resetGame } from "./resetGameFile";
 // import { textManager } from "./gameData";
 import { gameManager } from "./main";
+import { calculeError, gameResult } from "./gamResult";
 
 // Fonction pour déplacer la voiture
 export function moveCar(car, progress) {
@@ -28,6 +29,7 @@ export function endGame() {
     gameState.userScore++;
     alert("🏆 Victoire !");
     displayFinalChart();
+    gameResult()
     gameManager()
     // return textManager.currentIndex ++
   } else {
@@ -49,7 +51,7 @@ export function userBot(targetText) {
     if (!gameState.startTime) gameState.startTime = Date.now();
     
     const userTyped = inputArea.value;
-    // calculerPrecision(targetText, userTyped);
+    calculeError(targetText, userTyped)
 
     if (targetText.startsWith(userTyped)) {
       gameState.userProgress = userTyped.length / targetText.length;
@@ -71,6 +73,7 @@ export function userBot(targetText) {
 
   inputArea.addEventListener("input", handleInput);
 }
+
 
 // Bot amélioré
 export function botBot(bot = null, power = null) {

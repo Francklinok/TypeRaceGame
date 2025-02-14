@@ -1,58 +1,32 @@
-
-
 import { gameState } from "./gameData";
 
-// Fonction principale de vérification pendant la saisie
-export function check() {
-    const inputText = document.querySelector(".text-input").value;
+
+  export function check() {
+    const inputText = document.querySelector(".text-input").value.trim().toLowerCase();
     const textElement = document.querySelector(".full");
     const spans = textElement.getElementsByTagName("span");
-    const textContainer = gameState.text;
-
-    console.log("Vérification - Longueur saisie:", inputText.length);
-    console.log("Vérification - Longueur cible:", textContainer.length);
-
-    // Initialisation au premier caractère
-    if (!gameState.hasStarted && inputText.length > 0) {
-        gameState.hasStarted = true;
-        gameState.nbErreurs = 0;
-        gameState.precision = 0;
-        gameState.userErrors = 0;
-        console.log("Jeu démarré");
-    }
-
-    let currentErrors = 0;
-    console.log(currentErrors);
-
-    // Vérification des caractères
+    const textContainer = gameState.text.trim().toLowerCase();
+  
+    // let correct = 0;
+    // let incorrect = 0;
+  
     for (let i = 0; i < textContainer.length; i++) {
-        if (spans[i]) { 
-            if (i < inputText.length) {
-                if (inputText[i] === textContainer[i]) {
-                    spans[i].className = "correct";
-                } else {
-                    spans[i].className = "incorrect";
-                    currentErrors++;
-                }
-            } else {
-                spans[i].className = "";
-            }
+      if (spans[i]) {
+        if (i < inputText.length) {
+          const inputChar = inputText[i];
+          const targetChar = textContainer[i];
+  
+          if (inputChar === targetChar) {
+            spans[i].className = "correct";
+            // correct++; 
+          } else {
+            spans[i].className = "incorrect";
+            // incorrect++; 
+          }
+        } else {
+          spans[i].className = ""; // Pas encore tapé
+        //   incorrect++; // Si l'utilisateur n'a pas tapé ce caractère, on le compte comme incorrect
         }
+      }
     }
-
-    // Mise à jour des erreurs
-    gameState.nbErreurs = currentErrors;
-    // gameState.userErrors = currentErrors;
-    console.log('user error', gameState.nbErreurs)
-    // Calculer la précision en temps réel
-    if (inputText.length > 0) {
-        const correctChars = inputText.length - currentErrors;
-        gameState.precision = Math.round((correctChars / inputText.length) * 100);
-    }
-
-    // Vérifier si le jeu est terminé
-    // if (isGameFinished(inputText, textContainer)) {
-    //     calculateFinalStats(inputText.length, textContainer.length);
-    //     gameResult(); // Appel de gameResult pour afficher les résultats
-    // }
 }

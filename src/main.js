@@ -16,7 +16,8 @@ export async function gameManager() {
 
   if (gameState.userFinished && !gameState.botFinished) {
     console.log("🏆 User finished first");
-    gameLevel.nextLevel(); // Corrigé
+      gameLevel.nextLevel(); // Corrigé
+    
   } else if (gameState.botFinished && !gameState.userFinished) {
     console.log("🤖 Bot won");
     gameLevel.restartGame();
@@ -40,28 +41,12 @@ function scrollLeft() {
   });
 }
 
-
-// function scrollLeft(){
-//   const leftScroll = document.querySelector('.scroll')
-//   const container = document.querySelector('.container')
-//   leftScroll.addEventListener('click', ()=>{
-//     if(container.style.display = "none"){
-//       container.style.display = 'flex'
-
-//     }else{
-//       container.style.display = "none"
-
-//     }
-
-//   })
-// }
-// Démarrage du jeu
 document.addEventListener("DOMContentLoaded", async () => {
   toStartGame();
   themLoader();
   await gameManager();
   displayText(gameLevel.text);
-  gameResult(gameState.text);
+  // gameResult(gameState.text);
   scrollLeft()
 });
 

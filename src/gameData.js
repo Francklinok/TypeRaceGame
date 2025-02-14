@@ -93,12 +93,7 @@ export const gameState = {
   elapsedTimer: 0,
   startChart: null,
   nbErreurs : 0,
-  precision : 0,
+  accuracy : 0,
   text:"",
 
 };
-// console.log("gamestate test is", gameState.text)
-
-// console.log(userCPMData)
-// console.log(userWPMData)
-// console.log(timeData)
