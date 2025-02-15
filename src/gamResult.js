@@ -63,10 +63,10 @@ export function gameResult() {
 export function calculeError(target, input){
     let incorrect = 0;
     let correct = 0;
-    gameState.nbErreurs = 0;
+    resetErrorAccuracy()
 
     for (let i = 0; i < input.length; i++){
-        if(!target[i] === input [i]){
+        if(!target[i] == input [i]){
             incorrect ++
 
         }else{
@@ -80,18 +80,20 @@ export function calculeError(target, input){
     console.log('correct:', correct)
     console.log('incorrect:', incorrect)
 
-
 }
-
   
 function calculateAccuracy(correctText, inputText){
+    resetErrorAccuracy()
     if(!correctText && !inputText){
         return ;
     }
-    gameState.accuracy = 0;
-
     const accuracy = (correctText * 100) /  inputText.length
     gameState.accuracy = accuracy;
     console.log("acuracy", accuracy)
     return accuracy
+}
+
+function resetErrorAccuracy(){
+    gameState.nbErreurs = 0;
+    gameState.accuracy = 0;
 }

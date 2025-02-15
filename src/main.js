@@ -26,20 +26,44 @@ export async function gameManager() {
   displayText(gameLevel.text); // Toujours afficher le bon texte après mise à jour
 }
 
+
 function scrollLeft() {
-  const leftScroll = document.querySelector('.scrollI');
-  const container = document.querySelector('.container');
+  const leftScroll = document.querySelector('.scroll');
+  const container = document.querySelector('.left-section');
 
   leftScroll.addEventListener('click', () => {
-    if (container.classList.contains("hidden")) {
-      container.classList.remove("hidden");
-      container.classList.add("visible");
-    } else {
-      container.classList.remove("visible");
-      container.classList.add("hidden");
-    }
-  });
+    console.log('user click');
+    container.style.display = container.style.display === "flex" ? "none" : "flex"
+
+    // Bascule entre visible et caché
+  //   if (container.style.display === "none") {
+  //     container.style.display = "flex";
+  //   } else {
+  //     container.style.display = "none";
+  //   }
+ });
 }
+
+// function scrollLeft() {
+//   const leftScroll = document.querySelector('.scroll');
+//   const container = document.querySelector('.left-section');
+
+
+//   leftScroll.addEventListener('click', () => {
+//     console.log('user click')
+//     if(container.style.display = "flex"){
+//       container.style.display = "none";
+//     } else if(container.style.display = "none"){
+//       container.style.display = "flex";
+//     }
+    // if (container.classList.contains(".hidden")) {
+    //   container.classList.remove(".hidden");
+    //   container.classList.add(".visible");
+    // } else {
+    //   container.classList.remove(".visible");
+    //   container.classList.add(".hidden");
+    // }
+  // })}
 
 document.addEventListener("DOMContentLoaded", async () => {
   toStartGame();

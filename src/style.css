@@ -120,46 +120,62 @@ main .main-section .left-section {
   flex-direction: column;
   justify-content: space-between;
   height: 500px;
+  width:fit-content;
   overflow-y: auto;
+  border:1px solid rgb(104, 123, 141);
+  border-radius:10px;
+  background: #2e8b57;
+
+
 }
 
+
+main .main-section .option{
+position: absolute;
+}
+
+/* main .main-section .option .scroll{
+  top: 100px;
+  left: 50px; 
+  box-sizing: border-box;
+  background-color: red;
+} */
+main .main-section .option .scroll::after {
+  content: '';
+  position:relative;
+  top:200px;
+  left:115px;
+  transform: translateY(-50%);
+  border-style: solid;
+  border-width: 20px 15px;
+  border-color: transparent transparent transparent #ffffff; 
+  z-index: 100;
+  cursor: pointer;
+}
+
+
 main .main-section .left-section .container {
-  /* border: 1px solid black; Correction de "solide" en "solid" */
+  display:flex;
+  flex-direction: column;
   padding: 10px;
   
 }
 
 .hidden {
-  transform: translateX(-100%);
+  display:none;
+  /* transform: translateX(-100%);
   opacity: 0;
-  pointer-events: none;
+  pointer-events: none; */
 }
 
 .visible {
-  transform: translateX(0);
+  display:block;
+  /* transform: translateX(0);
   opacity: 1;
-  pointer-events: all;
+  pointer-events: all; */
 }
 
-main .main-section .left-section .container-scroll{
-  position: relative;
-}
 
-main .main-section .left-section  .scroll{
-  position:absolute;
-  top:250px;
-  left:135px;
-  /* transform: scale(1.5); */
-  font-size: 20px;
-  font-weight: 500px;
-  cursor:pointer;
- 
-}
-main .main-section .left-section  .scroll img{
-  width:25px;
-  height: 25px;
-  background-color:red; 
- }
 
 main .main-section .left-section .container .first-race,
 main .main-section .left-section .container .second-race,
@@ -611,6 +627,8 @@ main .main-section .center-section .open .container button {
 main .main-section .center-section .main-area {
   display: none;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;;
   margin-top: 20px;
 }
 
@@ -623,6 +641,7 @@ main .main-section .center-section .main-area .race {
   border-radius: 10px;
   height: auto;
   margin: 10px;
+  width: 90%;
   /* gap: 10; */
 }
 
@@ -635,7 +654,7 @@ main .main-section .center-section .main-area .race .user {
   height: 30px;
   gap: 5px;
   padding: 10px;
-  margin: 5px 10px 0px 0px;
+  margin: 5px 10px 0px 25px;
   /* border: 1px solid #ccc; */
 }
 
@@ -675,6 +694,7 @@ main
   box-shadow: 1px 0px 0px 1px rgb(233, 232, 232);
   border-radius: 10px;
   margin: 0;
+  width:98%;
 }
 
 main .main-section .center-section .main-area .race .car-center .road {
@@ -777,11 +797,11 @@ main .main-section .center-section .main-area .text-container {
   /* align-items: center; */
   padding: 1px;
   border: 1px solid rgb(215, 215, 213);
-  margin: 22px 0px 1px 105px;
+  margin: 22px 80px 1px 93px;
   box-shadow: 0px 0px 0px 1px rgb(225, 225, 229);
   border-radius: 10px;
   position: relative;
-  max-width:78%;
+  width:80%;
 }
 
 main .main-section .center-section .main-area .text-container .full {
@@ -816,16 +836,14 @@ main .main-section .center-section .main-area .text-container .counter {
   width: 100px;
   height: 100px;
   padding: 50px;
-  /* border: 5px solid white; */
   border-radius: 50%;
-  /* box-shadow: 1px 1px 2px 1px white; */
   z-index: 1000;
   position: absolute;
   right: 50%;
-  bottom: 40%;
+  bottom: 38%;
   font-weight: bold;
-  color: rgb(55, 36, 36);
-  /* background-color: black; */
+  color: rgb(13, 236, 102);
+  background-color: transparent;
 }
 
 main .main-section .center-section .main-area .text-container .togo {
@@ -833,13 +851,15 @@ main .main-section .center-section .main-area .text-container .togo {
   font-size: 16px;
   font-weight: bold;
   padding: 20px;
-  border: 1px solid white;
+  border: 1px  white;
+  border-radius:10px;
   text-align: center;
   align-items: center;
   position: absolute;
   right: 50%;
   bottom: 70%;
   z-index: 1000;
+
 }
 
 main .main-section .center-section .text-container .text .full span {
@@ -872,15 +892,20 @@ main .main-section .center-section .main-area .text-container .time {
 }
 
 main .main-section .center-section .main-area .text-container button {
-  width: 210px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding:10px;
+  width: 240px;
   height: 40px;
   background-color: rgb(140, 250, 140);
   cursor: pointer;
   margin-top: 5px;
-  text-align: center;
   border: 1px;
   border-radius: 8px;
-  margin-left: 35%;
+  margin-left: 36%;
+  position:relative;
+
 }
 
 main .main-section .center-section .main-area .text-container button:hover {
@@ -976,8 +1001,9 @@ gap:10px;
 .graph-section
 .resultElement
 .head span{
-  font-size: 14px;
+  font-size: 16px;
   gap:10px;
+  padding:10px;
 
 }
 main .main-section .center-section .main-area .graph .replay {
@@ -994,11 +1020,24 @@ main .main-section .center-section .main-area .graph .replay button:hover {
 
 footer {
   display: flex;
-  width: 50%;
+  padding:10px;
+  width: 110px;
   height: 20px;
   position: absolute;
   bottom: 0;
-  margin-left: 60%;
+  right:0;
+}
+
+footer #theme-selector{
+  font-size: 18px;
+  font-weight: 600;
+  padding:12px;
+}
+
+footer #theme-selector option{
+  font-size: 14px;
+  gap:10px;
+  background-color: transparent;
 }
 
 /* Styles spécifiques pour mobile et tablette */
