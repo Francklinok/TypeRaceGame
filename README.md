@@ -10,7 +10,7 @@ Type the displayed text as fast as you can to achieve the highest score in words
 
 ## 🖼️ Preview
 
-Here's a preview of the game in action:
+Here's a preview of the game:
 
 ![Game Preview](screenshot/typeracegame.png)
 
