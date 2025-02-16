@@ -1,6 +1,6 @@
 import { gameState } from "./gameData";
 
-
+ 
   export function check() {
     const inputText = document.querySelector(".text-input").value.trim().toLowerCase();
     const textElement = document.querySelector(".full");

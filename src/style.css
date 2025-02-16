@@ -120,61 +120,62 @@ main .main-section .left-section {
   flex-direction: column;
   justify-content: space-between;
   height: 500px;
-  width:fit-content;
+  width:250px;
+  opacity: 1;
+  /* background-color: #2ecc71; */
   overflow-y: auto;
-  border:1px solid rgb(104, 123, 141);
+  /* border:1px solid rgb(104, 123, 141); */
   border-radius:10px;
-  background: #2e8b57;
-
+  transition: opacity 0.3s ease;
+  position: relative;
 
 }
-
-
-main .main-section .option{
-position: absolute;
+main .main-section .left-section.hidden {
+ opacity: 0; 
 }
 
-/* main .main-section .option .scroll{
-  top: 100px;
-  left: 50px; 
-  box-sizing: border-box;
-  background-color: red;
-} */
-main .main-section .option .scroll::after {
-  content: '';
-  position:relative;
-  top:200px;
-  left:115px;
-  transform: translateY(-50%);
-  border-style: solid;
-  border-width: 20px 15px;
-  border-color: transparent transparent transparent #ffffff; 
+main .main-section .leftScroll {
+  margin:0;
+  width:0px;
+  padding:0;
   z-index: 100;
-  cursor: pointer;
+  position:relative;
 }
 
+ main .main-section .leftScroll .scroll{
+  display:flex;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  border-radius: 0 5px 5px 0;
+  position: relative;
+  top: 45%;
+  cursor: pointer;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  user-select: none;
+  transition: right 0.3s ease;
+  font-size: 30px;
+  cursor:pointer;
+  user-select: none;
+}
 
 main .main-section .left-section .container {
   display:flex;
   flex-direction: column;
   padding: 10px;
+  transition: transform 0.3s ease;
+
   
 }
 
-.hidden {
-  display:none;
-  /* transform: translateX(-100%);
-  opacity: 0;
-  pointer-events: none; */
-}
-
-.visible {
-  display:block;
-  /* transform: translateX(0);
-  opacity: 1;
-  pointer-events: all; */
-}
-
+/* main .main-section .left-section.collapsed .container {
+  transform: translateX(-100%);
+} */
 
 
 main .main-section .left-section .container .first-race,
@@ -917,7 +918,8 @@ main .main-section .center-section .main-area .graph {
   display: none;
   flex-direction: column;
   gap: 20px;
-  border: 1px solid white;
+  /* border: 1px solid rgb(114, 155, 202); */
+  border-radius: 14px;
   margin: 50px 30px 5px 30px;
 }
 
@@ -936,7 +938,8 @@ main
   .graph
   .graph-section
   .performance {
-  border: 1px solid white;
+  border: 1px solid rgb(212, 210, 238);
+  border-radius: 14px;
   margin: 0;
   width: 450px;
   height: 400px;
@@ -951,25 +954,12 @@ main
   .resultElement {
   display: flex;
   flex-direction: column;
-  border: 1px solid white;
+  border: 1px solid rgb(212, 210, 238);
+  border-radius: 14px;
   width: 300px;
   height: 400px;
-  margin-right: 10px;
 }
 
-main
-  .main-section
-  .center-section
-  .main-area
-  .graph
-  .graph-section
-  .resultElement
-  span {
-  display: flex;
-  justify-content: space-between;
-  padding: 5px;
-  font-size: 14px;
-}
 
 .main-section
 .center-section
@@ -990,32 +980,38 @@ gap:10px;
 .graph-section
 .resultElement
 .head .header{
-  font-size: 16px;
+  font-size: 26px;
   text-align: center;
+  color: #a1c0fb;
 }
 
-.main-section
-.center-section
-.main-area
-.graph
-.graph-section
-.resultElement
-.head span{
-  font-size: 16px;
-  gap:10px;
-  padding:10px;
 
+.resultElement .cpmdata,
+.resultElement .wpmdata,
+.resultElement .timedata,
+.resultElement .errordata,
+.resultElement .precisiondata,
+.resultElement .textdata {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 10px;
+  border-bottom: 1px solid #444;
+  transition: transform 0.3s;
 }
+
 main .main-section .center-section .main-area .graph .replay {
   padding: 8px;
 }
 
 main .main-section .center-section .main-area .graph .replay button {
-  color: red;
+  color: black;
+  background-color: #2ecc71;
   border-radius: 8px;
+  margin: 0;
+  padding: 8px;
 }
 main .main-section .center-section .main-area .graph .replay button:hover {
-  color: green;
+ background-color: green;
 }
 
 footer {

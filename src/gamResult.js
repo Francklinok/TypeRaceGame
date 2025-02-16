@@ -20,8 +20,14 @@ export function gameResult() {
         return;
     }
 
-    resultContainer.style.display = "block";
+    resultContainer.style.display = "flex";
+    resultContainer.style.color = "white";
+    resultContainer.style.padding = "20px";
+    resultContainer.style.textAlign = "center"; 
+    resultContainer.style.margin = "20px";
+    resultContainer.style.maxWidth = "400px";
 
+    
     // Extraction des données ou valeur par défaut si vide
     const lastWPM = gameState.userWPMData.length ? Math.floor(gameState.userWPMData.at(-1)) : 0; // Assure que c'est un entier
     const lastCPM = gameState.userCPMData.length ? Math.floor(gameState.userCPMData.at(-1)) : 0; // Assure que c'est un entier
@@ -30,12 +36,12 @@ export function gameResult() {
     const bestCPM = gameState.userCPMData.length ? Math.floor(Math.max(...gameState.userCPMData)) : 0; // Assure que c'est un entier
 
     const results = {
-        '.cpmdata': `  CPM: ${bestCPM}`,
-        '.wpmdata': ` WPM: ${bestWPM}`,
-        '.timedata': `elapsedTime: ${timeInSeconds}s`,
-        '.errordata': `Error: ${gameState.nbErreurs}`,
-        '.precisiondata':`Accuracy: ${gameState.accuracy}%`,
-        '.textdata': `Longueur du texte: ${text.split(/\s+/).length}`
+        '.cpmdata': `  CPM:   ${bestCPM}`,
+        '.wpmdata': ` WPM:   ${bestWPM}`,
+        '.timedata': `elapsedTime:   ${timeInSeconds}s`,
+        '.errordata': `Error:   ${gameState.nbErreurs}`,
+        '.precisiondata':`Accuracy:   ${gameState.accuracy}%`,
+        '.textdata': `Longueur du texte:   ${text.split(/\s+/).length}`
     };
 
     for (const [selector, content] of Object.entries(results)) {
@@ -59,39 +65,77 @@ export function gameResult() {
     });
 }
 
+const errorIndices = new Set();
 
-export function calculeError(target, input){
-    let incorrect = 0;
+export function calculeError(target, input) {
     let correct = 0;
-    resetErrorAccuracy()
-
-    for (let i = 0; i < input.length; i++){
-        if(!target[i] == input [i]){
-            incorrect ++
-
-        }else{
-            correct ++;
+    
+    // Utiliser la plus grande longueur pour vérifier tous les caractères
+    const maxLength = Math.max(target.length, input.length);
+    
+    for (let i = 0; i < maxLength; i++) {
+        const targetChar = target[i] || '';
+        const inputChar = input[i] || '';
+        
+        // Ignorer les espaces
+        if (inputChar === ' ' || targetChar === ' ') {
+            continue;
+        }
+        
+        // Si un caractère incorrect est tapé, ajouter son index aux erreurs
+        if (inputChar !== targetChar && inputChar !== '') {
+            errorIndices.add(i);
+        }
+        
+        // Compter les caractères corrects (pour la précision)
+        if (inputChar === targetChar && inputChar !== '') {
+            correct++;
         }
     }
-    if(correct && input){
-        calculateAccuracy(correct, input)
+    
+    // Le nombre total d'erreurs est maintenant la taille du Set
+    gameState.nbErreurs = errorIndices.size;
+    
+    // Calculer la précision avec le nombre total de caractères non-espaces tapés
+    if (correct > 0 || errorIndices.size > 0) {
+        const total = correct + errorIndices.size;
+        const accuracy = Math.round((correct / total) * 100);
+        gameState.accuracy = accuracy;
+    } else {
+        gameState.accuracy = 0;
     }
-    gameState.nbErreurs = incorrect;
-    console.log('correct:', correct)
-    console.log('incorrect:', incorrect)
+    
+    console.log({
+        caractèresCorrects: correct,
+        erreursPermanentes: errorIndices.size,
+        indicesErreurs: Array.from(errorIndices),
+        précision: gameState.accuracy + '%'
+    });
+    
+    return {
+        correct,
+        errors: errorIndices.size,
+        accuracy: gameState.accuracy
+    };
+}
 
+// Fonction pour réinitialiser les erreurs (à appeler au début d'une nouvelle partie)
+export function resetErrors() {
+    errorIndices.clear();
+    gameState.nbErreurs = 0;
+    gameState.accuracy = 0;
 }
-  
-function calculateAccuracy(correctText, inputText){
-    resetErrorAccuracy()
-    if(!correctText && !inputText){
-        return ;
-    }
-    const accuracy = (correctText * 100) /  inputText.length
-    gameState.accuracy = accuracy;
-    console.log("acuracy", accuracy)
-    return accuracy
-}
+ 
+// function calculateAccuracy(correctText, inputText){
+//     resetErrorAccuracy()
+//     if(!correctText && !inputText){
+//         return ;
+//     }
+//     const accuracy = (correctText * 100) /  inputText.length
+//     gameState.accuracy = accuracy;
+//     console.log("acuracy", accuracy)
+//     return accuracy
+// }
 
 function resetErrorAccuracy(){
     gameState.nbErreurs = 0;
