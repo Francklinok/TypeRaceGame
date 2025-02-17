@@ -27,15 +27,13 @@ export function endGame() {
   
   if (gameState.userFinished) {
     gameState.userScore++;
-    alert("🏆 Victoire !");
+    // alert("🏆 Victoire !");
     displayFinalChart();
-    gameResult()
-    gameManager()
-    // return textManager.currentIndex ++
+    gameResult();
+    gameManager();
   } else {
-    alert("❌ Défaite");
+    // alert("❌ Défaite");
     displayFinalChart();
-    // return textManager.currentIndex;
   }
 }
 
@@ -59,10 +57,12 @@ export function userBot(targetText) {
       updateWPMCPMRealtime(userTyped, targetText, "user");
 
       if (userTyped === targetText) {
-        gameState.userFinished = true;
-        graphElement.scrollIntoView({ behavior: "smooth" });
-        graphElement.style.display = "flex";
         endGame();
+        gameState.userFinished = true;
+        graphElement.style.display = "flex";
+        setTimeout(() => {
+          graphElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
         return;
       }
       inputArea.style.color = "black";

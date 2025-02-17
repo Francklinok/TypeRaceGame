@@ -65,7 +65,7 @@ export function gameResult() {
     });
 }
 
-const errorIndices = new Set();
+// const errorIndices = new Set();
 
 export function calculeError(target, input) {
     let correct = 0;
@@ -84,7 +84,7 @@ export function calculeError(target, input) {
         
         // Si un caractère incorrect est tapé, ajouter son index aux erreurs
         if (inputChar !== targetChar && inputChar !== '') {
-            errorIndices.add(i);
+            gameState.errorIndices.add(i);
         }
         
         // Compter les caractères corrects (pour la précision)
@@ -94,11 +94,11 @@ export function calculeError(target, input) {
     }
     
     // Le nombre total d'erreurs est maintenant la taille du Set
-    gameState.nbErreurs = errorIndices.size;
+    gameState.nbErreurs = gameState.errorIndices.size;
     
     // Calculer la précision avec le nombre total de caractères non-espaces tapés
-    if (correct > 0 || errorIndices.size > 0) {
-        const total = correct + errorIndices.size;
+    if (correct > 0 || gameState.errorIndices.size > 0) {
+        const total = correct + gameState.errorIndices.size;
         const accuracy = Math.round((correct / total) * 100);
         gameState.accuracy = accuracy;
     } else {
@@ -107,37 +107,23 @@ export function calculeError(target, input) {
     
     console.log({
         caractèresCorrects: correct,
-        erreursPermanentes: errorIndices.size,
-        indicesErreurs: Array.from(errorIndices),
+        erreursPermanentes: gameState.errorIndices.size,
+        indicesErreurs: Array.from(gameState.errorIndices),
         précision: gameState.accuracy + '%'
     });
     
     return {
         correct,
-        errors: errorIndices.size,
+        errors: gameState.errorIndices.size,
         accuracy: gameState.accuracy
     };
 }
 
 // Fonction pour réinitialiser les erreurs (à appeler au début d'une nouvelle partie)
-export function resetErrors() {
-    errorIndices.clear();
-    gameState.nbErreurs = 0;
-    gameState.accuracy = 0;
-}
+// export function resetErrors() {
+//     console.log("reset error  is call")
+//     errorIndices.clear();
+//     gameState.nbErreurs = 0;
+//     gameState.accuracy = 0;
+//     consolelog('error indices is ',errorIndices)}
  
-// function calculateAccuracy(correctText, inputText){
-//     resetErrorAccuracy()
-//     if(!correctText && !inputText){
-//         return ;
-//     }
-//     const accuracy = (correctText * 100) /  inputText.length
-//     gameState.accuracy = accuracy;
-//     console.log("acuracy", accuracy)
-//     return accuracy
-// }
-
-function resetErrorAccuracy(){
-    gameState.nbErreurs = 0;
-    gameState.accuracy = 0;
-}

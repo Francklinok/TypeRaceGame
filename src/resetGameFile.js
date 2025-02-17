@@ -1,4 +1,5 @@
 import { gameState } from "./gameData";
+// import { resetErrors } from "./gamResult";
 import { resetTimer } from "./time";
 
 export function resetGame() {
@@ -29,7 +30,12 @@ export function resetGame() {
   gameState.userFinished = false;
   gameState.userErrors = 0;
   inputArea.value = "";
+  gameState.errorIndices.clear();
+  gameState.nbErreurs = 0;
+  gameState.accuracy = 0;
   resetTimer()
+  console.log(  gameState.errorIndices)
+  // resetErrors()
 
   // Réinitialiser les tableaux (force un nouvel objet en mémoire)
   gameState.userWPMData = [...[]];

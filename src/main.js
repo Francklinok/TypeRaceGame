@@ -13,6 +13,7 @@ export async function gameManager() {
   console.log("📊 gameState:", gameState);
 
   if (gameState.userFinished && !gameState.botFinished) {
+    await new Promise((resolve) =>setTimeout(resolve, 5000))
     console.log("🏆 User finished first");
       gameLevel.nextLevel(); // Corrigé
     

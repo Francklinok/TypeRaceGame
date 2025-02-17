@@ -100,6 +100,7 @@ export const gameState = {
   startChart: null,
   nbErreurs : 0,
   totalErreurs:0,
+  errorIndices:new Set(),
   accuracy : 0,
   text:"",
 

@@ -78,6 +78,7 @@ function startCountdown() {
       graphElement.style.display = "none";
 
       callTostart();
+
     }
 
     counter--;
